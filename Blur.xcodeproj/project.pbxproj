@@ -1,0 +1,530 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */; };
+		EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF91F0D52C0008662C0 /* ViewController.swift */; };
+		EE78EEFD1F0D52C0008662C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE78EEFB1F0D52C0008662C0 /* Main.storyboard */; };
+		EE78EEFF1F0D52C0008662C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE78EEFE1F0D52C0008662C0 /* Assets.xcassets */; };
+		EE78EF021F0D52C0008662C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE78EF001F0D52C0008662C0 /* LaunchScreen.storyboard */; };
+		EE78EF0D1F0D52C0008662C0 /* BlurTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EF0C1F0D52C0008662C0 /* BlurTests.swift */; };
+		EE78EF181F0D52C1008662C0 /* BlurUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EF171F0D52C1008662C0 /* BlurUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EE78EF091F0D52C0008662C0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE78EEEC1F0D52C0008662C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE78EEF31F0D52C0008662C0;
+			remoteInfo = Blur;
+		};
+		EE78EF141F0D52C1008662C0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE78EEEC1F0D52C0008662C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE78EEF31F0D52C0008662C0;
+			remoteInfo = Blur;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		EE78EEF41F0D52C0008662C0 /* Blur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blur.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		EE78EEF91F0D52C0008662C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EE78EEFC1F0D52C0008662C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		EE78EEFE1F0D52C0008662C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EE78EF011F0D52C0008662C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		EE78EF031F0D52C0008662C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EE78EF081F0D52C0008662C0 /* BlurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE78EF0C1F0D52C0008662C0 /* BlurTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurTests.swift; sourceTree = "<group>"; };
+		EE78EF0E1F0D52C1008662C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EE78EF131F0D52C1008662C0 /* BlurUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlurUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE78EF171F0D52C1008662C0 /* BlurUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurUITests.swift; sourceTree = "<group>"; };
+		EE78EF191F0D52C1008662C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EE78EEF11F0D52C0008662C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE78EF051F0D52C0008662C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE78EF101F0D52C1008662C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EE78EEEB1F0D52C0008662C0 = {
+			isa = PBXGroup;
+			children = (
+				EE78EEF61F0D52C0008662C0 /* Blur */,
+				EE78EF0B1F0D52C0008662C0 /* BlurTests */,
+				EE78EF161F0D52C1008662C0 /* BlurUITests */,
+				EE78EEF51F0D52C0008662C0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EE78EEF51F0D52C0008662C0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EE78EEF41F0D52C0008662C0 /* Blur.app */,
+				EE78EF081F0D52C0008662C0 /* BlurTests.xctest */,
+				EE78EF131F0D52C1008662C0 /* BlurUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EE78EEF61F0D52C0008662C0 /* Blur */ = {
+			isa = PBXGroup;
+			children = (
+				EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */,
+				EE78EEF91F0D52C0008662C0 /* ViewController.swift */,
+				EE78EEFB1F0D52C0008662C0 /* Main.storyboard */,
+				EE78EEFE1F0D52C0008662C0 /* Assets.xcassets */,
+				EE78EF001F0D52C0008662C0 /* LaunchScreen.storyboard */,
+				EE78EF031F0D52C0008662C0 /* Info.plist */,
+			);
+			path = Blur;
+			sourceTree = "<group>";
+		};
+		EE78EF0B1F0D52C0008662C0 /* BlurTests */ = {
+			isa = PBXGroup;
+			children = (
+				EE78EF0C1F0D52C0008662C0 /* BlurTests.swift */,
+				EE78EF0E1F0D52C1008662C0 /* Info.plist */,
+			);
+			path = BlurTests;
+			sourceTree = "<group>";
+		};
+		EE78EF161F0D52C1008662C0 /* BlurUITests */ = {
+			isa = PBXGroup;
+			children = (
+				EE78EF171F0D52C1008662C0 /* BlurUITests.swift */,
+				EE78EF191F0D52C1008662C0 /* Info.plist */,
+			);
+			path = BlurUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EE78EEF31F0D52C0008662C0 /* Blur */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EE78EF1C1F0D52C1008662C0 /* Build configuration list for PBXNativeTarget "Blur" */;
+			buildPhases = (
+				EE78EEF01F0D52C0008662C0 /* Sources */,
+				EE78EEF11F0D52C0008662C0 /* Frameworks */,
+				EE78EEF21F0D52C0008662C0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Blur;
+			productName = Blur;
+			productReference = EE78EEF41F0D52C0008662C0 /* Blur.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EE78EF071F0D52C0008662C0 /* BlurTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EE78EF1F1F0D52C1008662C0 /* Build configuration list for PBXNativeTarget "BlurTests" */;
+			buildPhases = (
+				EE78EF041F0D52C0008662C0 /* Sources */,
+				EE78EF051F0D52C0008662C0 /* Frameworks */,
+				EE78EF061F0D52C0008662C0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EE78EF0A1F0D52C0008662C0 /* PBXTargetDependency */,
+			);
+			name = BlurTests;
+			productName = BlurTests;
+			productReference = EE78EF081F0D52C0008662C0 /* BlurTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		EE78EF121F0D52C1008662C0 /* BlurUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EE78EF221F0D52C1008662C0 /* Build configuration list for PBXNativeTarget "BlurUITests" */;
+			buildPhases = (
+				EE78EF0F1F0D52C1008662C0 /* Sources */,
+				EE78EF101F0D52C1008662C0 /* Frameworks */,
+				EE78EF111F0D52C1008662C0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EE78EF151F0D52C1008662C0 /* PBXTargetDependency */,
+			);
+			name = BlurUITests;
+			productName = BlurUITests;
+			productReference = EE78EF131F0D52C1008662C0 /* BlurUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EE78EEEC1F0D52C0008662C0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "xiandong wang";
+				TargetAttributes = {
+					EE78EEF31F0D52C0008662C0 = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+					};
+					EE78EF071F0D52C0008662C0 = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = EE78EEF31F0D52C0008662C0;
+					};
+					EE78EF121F0D52C1008662C0 = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = EE78EEF31F0D52C0008662C0;
+					};
+				};
+			};
+			buildConfigurationList = EE78EEEF1F0D52C0008662C0 /* Build configuration list for PBXProject "Blur" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EE78EEEB1F0D52C0008662C0;
+			productRefGroup = EE78EEF51F0D52C0008662C0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EE78EEF31F0D52C0008662C0 /* Blur */,
+				EE78EF071F0D52C0008662C0 /* BlurTests */,
+				EE78EF121F0D52C1008662C0 /* BlurUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EE78EEF21F0D52C0008662C0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE78EF021F0D52C0008662C0 /* LaunchScreen.storyboard in Resources */,
+				EE78EEFF1F0D52C0008662C0 /* Assets.xcassets in Resources */,
+				EE78EEFD1F0D52C0008662C0 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE78EF061F0D52C0008662C0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE78EF111F0D52C1008662C0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EE78EEF01F0D52C0008662C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */,
+				EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE78EF041F0D52C0008662C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE78EF0D1F0D52C0008662C0 /* BlurTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE78EF0F1F0D52C1008662C0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE78EF181F0D52C1008662C0 /* BlurUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EE78EF0A1F0D52C0008662C0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EE78EEF31F0D52C0008662C0 /* Blur */;
+			targetProxy = EE78EF091F0D52C0008662C0 /* PBXContainerItemProxy */;
+		};
+		EE78EF151F0D52C1008662C0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EE78EEF31F0D52C0008662C0 /* Blur */;
+			targetProxy = EE78EF141F0D52C1008662C0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EE78EEFB1F0D52C0008662C0 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EE78EEFC1F0D52C0008662C0 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		EE78EF001F0D52C0008662C0 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EE78EF011F0D52C0008662C0 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EE78EF1A1F0D52C1008662C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EE78EF1B1F0D52C1008662C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EE78EF1D1F0D52C1008662C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Blur/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.Blur;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		EE78EF1E1F0D52C1008662C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Blur/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.Blur;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		EE78EF201F0D52C1008662C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = BlurTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.BlurTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blur.app/Blur";
+			};
+			name = Debug;
+		};
+		EE78EF211F0D52C1008662C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = BlurTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.BlurTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blur.app/Blur";
+			};
+			name = Release;
+		};
+		EE78EF231F0D52C1008662C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				INFOPLIST_FILE = BlurUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.BlurUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = Blur;
+			};
+			name = Debug;
+		};
+		EE78EF241F0D52C1008662C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				INFOPLIST_FILE = BlurUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.BlurUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = Blur;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EE78EEEF1F0D52C0008662C0 /* Build configuration list for PBXProject "Blur" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE78EF1A1F0D52C1008662C0 /* Debug */,
+				EE78EF1B1F0D52C1008662C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EE78EF1C1F0D52C1008662C0 /* Build configuration list for PBXNativeTarget "Blur" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE78EF1D1F0D52C1008662C0 /* Debug */,
+				EE78EF1E1F0D52C1008662C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		EE78EF1F1F0D52C1008662C0 /* Build configuration list for PBXNativeTarget "BlurTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE78EF201F0D52C1008662C0 /* Debug */,
+				EE78EF211F0D52C1008662C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		EE78EF221F0D52C1008662C0 /* Build configuration list for PBXNativeTarget "BlurUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE78EF231F0D52C1008662C0 /* Debug */,
+				EE78EF241F0D52C1008662C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EE78EEEC1F0D52C0008662C0 /* Project object */;
+}
