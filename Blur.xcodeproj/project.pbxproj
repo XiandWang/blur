@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E01D406B1CD05776A09F725 /* Pods_Blur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2136EF20E47E4AE4E9656AC8 /* Pods_Blur.framework */; };
+		EE1AB0A01F107CE1009C011E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB09F1F107CE1009C011E /* Extension.swift */; };
+		EE1AB0A21F10A65A009C011E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EE1AB0A11F10A65A009C011E /* GoogleService-Info.plist */; };
 		EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */; };
 		EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF91F0D52C0008662C0 /* ViewController.swift */; };
 		EE78EEFD1F0D52C0008662C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE78EEFB1F0D52C0008662C0 /* Main.storyboard */; };
@@ -34,6 +37,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2136EF20E47E4AE4E9656AC8 /* Pods_Blur.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Blur.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFAF0C7D0360B7E25B549EA7 /* Pods-Blur.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blur.release.xcconfig"; path = "Pods/Target Support Files/Pods-Blur/Pods-Blur.release.xcconfig"; sourceTree = "<group>"; };
+		EBE10876147444CE62B1B0F8 /* Pods-Blur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Blur/Pods-Blur.debug.xcconfig"; sourceTree = "<group>"; };
+		EE1AB09F1F107CE1009C011E /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		EE1AB0A11F10A65A009C011E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EE78EEF41F0D52C0008662C0 /* Blur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EE78EEF91F0D52C0008662C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -54,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E01D406B1CD05776A09F725 /* Pods_Blur.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +83,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1BDEEA30E96C25828141223E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EBE10876147444CE62B1B0F8 /* Pods-Blur.debug.xcconfig */,
+				DFAF0C7D0360B7E25B549EA7 /* Pods-Blur.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		EE1AB09E1F107CCD009C011E /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				EE1AB09F1F107CE1009C011E /* Extension.swift */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
 		EE78EEEB1F0D52C0008662C0 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +107,8 @@
 				EE78EF0B1F0D52C0008662C0 /* BlurTests */,
 				EE78EF161F0D52C1008662C0 /* BlurUITests */,
 				EE78EEF51F0D52C0008662C0 /* Products */,
+				1BDEEA30E96C25828141223E /* Pods */,
+				F17C1C68FD0B06735F0E891A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,10 +126,12 @@
 			isa = PBXGroup;
 			children = (
 				EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */,
+				EE1AB09E1F107CCD009C011E /* Util */,
 				EE78EEF91F0D52C0008662C0 /* ViewController.swift */,
 				EE78EEFB1F0D52C0008662C0 /* Main.storyboard */,
 				EE78EEFE1F0D52C0008662C0 /* Assets.xcassets */,
 				EE78EF001F0D52C0008662C0 /* LaunchScreen.storyboard */,
+				EE1AB0A11F10A65A009C011E /* GoogleService-Info.plist */,
 				EE78EF031F0D52C0008662C0 /* Info.plist */,
 			);
 			path = Blur;
@@ -125,6 +155,14 @@
 			path = BlurUITests;
 			sourceTree = "<group>";
 		};
+		F17C1C68FD0B06735F0E891A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2136EF20E47E4AE4E9656AC8 /* Pods_Blur.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +170,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EE78EF1C1F0D52C1008662C0 /* Build configuration list for PBXNativeTarget "Blur" */;
 			buildPhases = (
+				F0ACD46D990D43506E8AC90E /* [CP] Check Pods Manifest.lock */,
 				EE78EEF01F0D52C0008662C0 /* Sources */,
 				EE78EEF11F0D52C0008662C0 /* Frameworks */,
 				EE78EEF21F0D52C0008662C0 /* Resources */,
+				A99445D595A7CF79D7C5A913 /* [CP] Embed Pods Frameworks */,
+				34EEE74BE7B8F6B0A9323364 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -193,6 +234,7 @@
 				TargetAttributes = {
 					EE78EEF31F0D52C0008662C0 = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = S5TTSBD3PN;
 						ProvisioningStyle = Automatic;
 					};
 					EE78EF071F0D52C0008662C0 = {
@@ -233,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE78EF021F0D52C0008662C0 /* LaunchScreen.storyboard in Resources */,
+				EE1AB0A21F10A65A009C011E /* GoogleService-Info.plist in Resources */,
 				EE78EEFF1F0D52C0008662C0 /* Assets.xcassets in Resources */,
 				EE78EEFD1F0D52C0008662C0 /* Main.storyboard in Resources */,
 			);
@@ -254,11 +297,60 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		34EEE74BE7B8F6B0A9323364 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Blur/Pods-Blur-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A99445D595A7CF79D7C5A913 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Blur/Pods-Blur-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F0ACD46D990D43506E8AC90E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		EE78EEF01F0D52C0008662C0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE1AB0A01F107CE1009C011E /* Extension.swift in Sources */,
 				EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */,
 				EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */,
 			);
@@ -412,8 +504,10 @@
 		};
 		EE78EF1D1F0D52C1008662C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EBE10876147444CE62B1B0F8 /* Pods-Blur.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = S5TTSBD3PN;
 				INFOPLIST_FILE = Blur/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.Blur;
@@ -424,8 +518,10 @@
 		};
 		EE78EF1E1F0D52C1008662C0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DFAF0C7D0360B7E25B549EA7 /* Pods-Blur.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = S5TTSBD3PN;
 				INFOPLIST_FILE = Blur/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.Blur;
@@ -507,6 +603,7 @@
 				EE78EF1E1F0D52C1008662C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EE78EF1F1F0D52C1008662C0 /* Build configuration list for PBXNativeTarget "BlurTests" */ = {
 			isa = XCConfigurationList;
@@ -515,6 +612,7 @@
 				EE78EF211F0D52C1008662C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EE78EF221F0D52C1008662C0 /* Build configuration list for PBXNativeTarget "BlurUITests" */ = {
 			isa = XCConfigurationList;
@@ -523,6 +621,7 @@
 				EE78EF241F0D52C1008662C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
