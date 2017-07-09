@@ -10,6 +10,7 @@
 		2E01D406B1CD05776A09F725 /* Pods_Blur.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2136EF20E47E4AE4E9656AC8 /* Pods_Blur.framework */; };
 		EE1AB0A01F107CE1009C011E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB09F1F107CE1009C011E /* Extension.swift */; };
 		EE1AB0A21F10A65A009C011E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EE1AB0A11F10A65A009C011E /* GoogleService-Info.plist */; };
+		EE1AB0A41F11A530009C011E /* AppHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB0A31F11A530009C011E /* AppHUD.swift */; };
 		EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */; };
 		EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF91F0D52C0008662C0 /* ViewController.swift */; };
 		EE78EEFD1F0D52C0008662C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE78EEFB1F0D52C0008662C0 /* Main.storyboard */; };
@@ -42,6 +43,7 @@
 		EBE10876147444CE62B1B0F8 /* Pods-Blur.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Blur.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Blur/Pods-Blur.debug.xcconfig"; sourceTree = "<group>"; };
 		EE1AB09F1F107CE1009C011E /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		EE1AB0A11F10A65A009C011E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		EE1AB0A31F11A530009C011E /* AppHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppHUD.swift; sourceTree = "<group>"; };
 		EE78EEF41F0D52C0008662C0 /* Blur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EE78EEF91F0D52C0008662C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */,
 				EE1AB09E1F107CCD009C011E /* Util */,
 				EE78EEF91F0D52C0008662C0 /* ViewController.swift */,
+				EE1AB0A31F11A530009C011E /* AppHUD.swift */,
 				EE78EEFB1F0D52C0008662C0 /* Main.storyboard */,
 				EE78EEFE1F0D52C0008662C0 /* Assets.xcassets */,
 				EE78EF001F0D52C0008662C0 /* LaunchScreen.storyboard */,
@@ -351,6 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE1AB0A01F107CE1009C011E /* Extension.swift in Sources */,
+				EE1AB0A41F11A530009C011E /* AppHUD.swift in Sources */,
 				EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */,
 				EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */,
 			);

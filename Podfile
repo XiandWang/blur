@@ -11,4 +11,6 @@ target 'Blur' do
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
 
+  pod 'FontAwesome.swift'
+  pod 'MBProgressHUD'
 end
