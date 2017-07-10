@@ -11,6 +11,8 @@
 		EE1AB0A01F107CE1009C011E /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB09F1F107CE1009C011E /* Extension.swift */; };
 		EE1AB0A21F10A65A009C011E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EE1AB0A11F10A65A009C011E /* GoogleService-Info.plist */; };
 		EE1AB0A41F11A530009C011E /* AppHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB0A31F11A530009C011E /* AppHUD.swift */; };
+		EE1FF2E01F14303A00340F65 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2DF1F14303A00340F65 /* MainTabBarController.swift */; };
+		EE1FF2E21F14322F00340F65 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2E11F14322F00340F65 /* UserProfileController.swift */; };
 		EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */; };
 		EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF91F0D52C0008662C0 /* ViewController.swift */; };
 		EE78EEFD1F0D52C0008662C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE78EEFB1F0D52C0008662C0 /* Main.storyboard */; };
@@ -44,6 +46,8 @@
 		EE1AB09F1F107CE1009C011E /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		EE1AB0A11F10A65A009C011E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EE1AB0A31F11A530009C011E /* AppHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppHUD.swift; sourceTree = "<group>"; };
+		EE1FF2DF1F14303A00340F65 /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		EE1FF2E11F14322F00340F65 /* UserProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
 		EE78EEF41F0D52C0008662C0 /* Blur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EE78EEF91F0D52C0008662C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -131,6 +135,8 @@
 				EE1AB09E1F107CCD009C011E /* Util */,
 				EE78EEF91F0D52C0008662C0 /* ViewController.swift */,
 				EE1AB0A31F11A530009C011E /* AppHUD.swift */,
+				EE1FF2DF1F14303A00340F65 /* MainTabBarController.swift */,
+				EE1FF2E11F14322F00340F65 /* UserProfileController.swift */,
 				EE78EEFB1F0D52C0008662C0 /* Main.storyboard */,
 				EE78EEFE1F0D52C0008662C0 /* Assets.xcassets */,
 				EE78EF001F0D52C0008662C0 /* LaunchScreen.storyboard */,
@@ -355,6 +361,8 @@
 			files = (
 				EE1AB0A01F107CE1009C011E /* Extension.swift in Sources */,
 				EE1AB0A41F11A530009C011E /* AppHUD.swift in Sources */,
+				EE1FF2E21F14322F00340F65 /* UserProfileController.swift in Sources */,
+				EE1FF2E01F14303A00340F65 /* MainTabBarController.swift in Sources */,
 				EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */,
 				EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */,
 			);

@@ -110,8 +110,6 @@ extension ViewController {
                 self.processSignUpError(error: error)
                 return
             }
-            
-            print(user)
             guard let uid = user?.uid else { return }
             let values = [uid: ["username": name]]
             FIRDatabase.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, ref) in

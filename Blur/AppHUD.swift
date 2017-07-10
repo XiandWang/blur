@@ -17,9 +17,7 @@ class AppHUD {
         }
         let hud = MBProgressHUD.showAdded(to: view, animated: true)
         hud.isUserInteractionEnabled = false
-        hud.customView = UIImageView(image: #imageLiteral(resourceName: "Checkmark"))
-//        let image = UIImage.fontAwesomeIcon(name: .check, textColor: UIColor.rgb(red: 76, green: 217, blue: 100, alpha: 1), size: CGSize(width:30, height:30))
-        //hud.customView = UIImageView(image: image)
+        hud.customView = UIImageView(image: #imageLiteral(resourceName: "Checkmark"))     
         hud.mode = .customView
         hud.label.text = message
         hud.hide(animated: true, afterDelay: 1)
