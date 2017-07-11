@@ -32,7 +32,7 @@ class AppHUD {
         hud.mode = .text
         hud.label.text = message
         hud.label.numberOfLines = 0
-        hud.hide(animated: true, afterDelay: 1)
+        hud.hide(animated: true, afterDelay: 2)
     }
     
     static func progress(_ message: String?) {

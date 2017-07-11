@@ -13,6 +13,8 @@
 		EE1AB0A41F11A530009C011E /* AppHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1AB0A31F11A530009C011E /* AppHUD.swift */; };
 		EE1FF2E01F14303A00340F65 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2DF1F14303A00340F65 /* MainTabBarController.swift */; };
 		EE1FF2E21F14322F00340F65 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2E11F14322F00340F65 /* UserProfileController.swift */; };
+		EE1FF2E41F144BEB00340F65 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2E31F144BEB00340F65 /* LoginController.swift */; };
+		EE1FF2E61F14633800340F65 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2E51F14633800340F65 /* constants.swift */; };
 		EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */; };
 		EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF91F0D52C0008662C0 /* ViewController.swift */; };
 		EE78EEFD1F0D52C0008662C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE78EEFB1F0D52C0008662C0 /* Main.storyboard */; };
@@ -48,6 +50,8 @@
 		EE1AB0A31F11A530009C011E /* AppHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppHUD.swift; sourceTree = "<group>"; };
 		EE1FF2DF1F14303A00340F65 /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		EE1FF2E11F14322F00340F65 /* UserProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
+		EE1FF2E31F144BEB00340F65 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		EE1FF2E51F14633800340F65 /* constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = constants.swift; sourceTree = "<group>"; };
 		EE78EEF41F0D52C0008662C0 /* Blur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EE78EEF91F0D52C0008662C0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -135,8 +139,10 @@
 				EE1AB09E1F107CCD009C011E /* Util */,
 				EE78EEF91F0D52C0008662C0 /* ViewController.swift */,
 				EE1AB0A31F11A530009C011E /* AppHUD.swift */,
+				EE1FF2E31F144BEB00340F65 /* LoginController.swift */,
 				EE1FF2DF1F14303A00340F65 /* MainTabBarController.swift */,
 				EE1FF2E11F14322F00340F65 /* UserProfileController.swift */,
+				EE1FF2E51F14633800340F65 /* constants.swift */,
 				EE78EEFB1F0D52C0008662C0 /* Main.storyboard */,
 				EE78EEFE1F0D52C0008662C0 /* Assets.xcassets */,
 				EE78EF001F0D52C0008662C0 /* LaunchScreen.storyboard */,
@@ -365,6 +371,8 @@
 				EE1FF2E01F14303A00340F65 /* MainTabBarController.swift in Sources */,
 				EE78EEFA1F0D52C0008662C0 /* ViewController.swift in Sources */,
 				EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */,
+				EE1FF2E41F144BEB00340F65 /* LoginController.swift in Sources */,
+				EE1FF2E61F14633800340F65 /* constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

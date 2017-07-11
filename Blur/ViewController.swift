@@ -70,9 +70,22 @@ class ViewController: UIViewController {
         return bt
     }()
     
+    let loginButton: UIButton = {
+        let bt = UIButton(type: .system)
+        let attributedTitle = NSMutableAttributedString(string: "Already have an account? ", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName: UIColor.lightGray])
+        
+        attributedTitle.append(NSAttributedString(string: "Login!", attributes: [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 14), NSForegroundColorAttributeName: PRIMARY_COLOR
+            ]))
+        
+        bt.setAttributedTitle(attributedTitle, for: .normal)
+        return bt
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupInputFields()
+        setupLoginButton()
         emailTextField.delegate = self
         usernameTextField.delegate = self
         passwordTextField.delegate = self
@@ -80,6 +93,12 @@ class ViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
+    }
+    
+    fileprivate func setupLoginButton() {
+        view.addSubview(loginButton)
+        loginButton.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        loginButton.addTarget(self, action: #selector(handleShowLogin), for: .touchUpInside)
     }
     
     fileprivate func setupInputFields() {
@@ -121,6 +140,10 @@ extension ViewController {
                 AppHUD.success("Thank you")
             })
         })
+    }
+    
+    func handleShowLogin() {
+        _ = navigationController?.popViewController(animated: true)
     }
     
     fileprivate func processSignUpError(error: Error) {
