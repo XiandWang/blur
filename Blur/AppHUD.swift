@@ -17,8 +17,12 @@ class AppHUD {
         }
         let hud = MBProgressHUD.showAdded(to: view, animated: true)
         hud.isUserInteractionEnabled = false
-        hud.customView = UIImageView(image: #imageLiteral(resourceName: "Checkmark"))     
+        let img = UIImage.fontAwesomeIcon(name: .check, textColor: .green, size: CGSize(width: 40, height: 40))
+        hud.customView = UIImageView(image: img)
         hud.mode = .customView
+        hud.bezelView.color = .black
+        hud.bezelView.style = .solidColor
+        hud.contentColor = .white
         hud.label.text = message
         hud.hide(animated: true, afterDelay: 1)
     }
@@ -28,11 +32,15 @@ class AppHUD {
             return
         }
         let hud = MBProgressHUD.showAdded(to: view, animated: true)
+        
         hud.isUserInteractionEnabled = false
         hud.mode = .text
         hud.label.text = message
         hud.label.numberOfLines = 0
-        hud.hide(animated: true, afterDelay: 2)
+        hud.bezelView.style = .solidColor
+        hud.bezelView.color = .black
+        hud.contentColor = .white
+        hud.hide(animated: true, afterDelay: 3)
     }
     
     static func progress(_ message: String?) {
@@ -40,6 +48,10 @@ class AppHUD {
             return
         }
         hud = MBProgressHUD.showAdded(to: view, animated: true)
+        hud?.alpha = 0.9
+        hud?.bezelView.style = .solidColor
+        hud?.bezelView.color = .black
+        hud?.contentColor = .white
         hud?.label.text = message;
     }
     

@@ -8,5 +8,20 @@
 
 import UIKit
 
-let PRIMARY_COLOR = UIColor.rgb(red: 255, green: 153, blue: 0, alpha: 1)
-let PRIMARY_COLOR_LIGHT = UIColor.rgb(red: 255, green: 153, blue: 0, alpha: 0.5)
+let PRIMARY_COLOR = UIColor.rgb(red: 194, green: 12, blue: 12, alpha: 1)
+let PRIMARY_COLOR_LIGHT = UIColor.rgb(red: 194, green: 12, blue: 12, alpha: 0.7)
+let BACKGROUND_GRAY = UIColor.rgb(red: 233, green: 235, blue: 238, alpha: 1)
+
+let GREEN_COLOR =  UIColor.rgb(red: 69, green: 182, blue: 73, alpha: 1)
+
+let USERS_NODE = "users"
+let PROFILE_IMAGES_NODE = "profileImages"
+let RECEIVER_FRIEND_REQUESTS_NODE = "receiverFriendRequests"
+let SENDER_FRIEND_REQUESTS_NODE = "senderFriendRequests"
+let FRIENDS_NODE = "friends"
+
+enum FriendStatus : String {
+    case Pending
+    case Added
+}
+

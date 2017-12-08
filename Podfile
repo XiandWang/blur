@@ -7,10 +7,15 @@ target 'Blur' do
 
   # Pods for Blur
 
+  pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
+  pod 'Firebase/Firestore'
 
-  pod 'FontAwesome.swift'
+
+  pod 'FontAwesome.swift', '~> 1.2.0’
   pod 'MBProgressHUD'
+  pod 'Kingfisher'
+  pod 'TDBadgedCell', '~> 4.2'
 end
