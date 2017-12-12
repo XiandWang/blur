@@ -29,7 +29,7 @@ class HomeChatCell: UITableViewCell {
     var messages : [Message]? {
         didSet {
             if let unreadNum = self.messages?.filter({ (message) -> Bool in
-                return message.isRead == false
+                return !message.isAcknowledged
             }).count, unreadNum > 0 {
                 let badgeImage = BadgeHelper.createBadge(string: "\(unreadNum)", fontSize: 11, backgroundColor: .red)
                 badgeImageView.image = badgeImage
@@ -40,7 +40,7 @@ class HomeChatCell: UITableViewCell {
             }
             
             if let hiddenNum = self.messages?.filter({ (message) -> Bool in
-                return message.isUneditedViewed  == false
+                return !message.isOriginalViewed
             }).count, hiddenNum > 0 {
                 hiddenNumberLabel.textColor = .gray
                 hiddenNumberLabel.text = "\(hiddenNum) hidden left"

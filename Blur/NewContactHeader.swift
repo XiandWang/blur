@@ -34,7 +34,7 @@ class NewContactHeader : UITableViewCell {
     var newFriendsNum : String? {
         didSet {
             if let num = newFriendsNum {
-                let badgeImage = BadgeHelper.createBadge(string: num, fontSize: 11, backgroundColor: UIColor.red)
+                let badgeImage = BadgeHelper.createBadge(string: num, fontSize: 11, backgroundColor: PRIMARY_COLOR)
                 badgeImageView.frame.size = CGSize(width: badgeImage.size.width, height: badgeImage.size.height)
                 badgeImageView.image = badgeImage
             }

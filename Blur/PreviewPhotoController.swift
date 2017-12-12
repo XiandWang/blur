@@ -15,7 +15,7 @@ class PreviewPhotoController: UIViewController {
     
     var user: User?
     var editedImage: UIImage?
-    var uneditedImage: UIImage?
+    var originalImage: UIImage?
     
     lazy var previewImageView: UIImageView = {
         let iv = UIImageView(image: self.editedImage)
@@ -35,7 +35,7 @@ class PreviewPhotoController: UIViewController {
         lb.numberOfLines = 0
         lb.lineBreakMode = NSLineBreakMode.byWordWrapping
         //lb.textAlignment = .center
-        lb.text = "Do you allow the recipient to view the unedited image?"
+        lb.text = "Do you allow the recipient to view the original image?"
         lb.font = UIFont.systemFont(ofSize: 16)
         lb.textColor = .gray
         return lb
@@ -98,27 +98,27 @@ class PreviewPhotoController: UIViewController {
     func sendPhoto() {
         self.navigationItem.setHidesBackButton(true, animated: true)
         self.navigationItem.rightBarButtonItem?.isEnabled = false
-        guard let fromUid = Auth.auth().currentUser?.uid else { return }
-        guard let uneditedImage = uneditedImage, let editedImage = editedImage else {
+        guard let fromId = Auth.auth().currentUser?.uid else { return }
+        guard let originalImage = originalImage, let editedImage = editedImage else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
         
         let meta = StorageMetadata(dictionary: ["contentType": "image/jpeg"])
-        guard let uneditedJpeg = UIImageJPEGRepresentation(uneditedImage, 0.3) else {
+        guard let originalJpeg = UIImageJPEGRepresentation(originalImage, 0.3) else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
-        let uneditedTask = Storage.storage().reference().child("imagesSent").child(fromUid).child(UUID().uuidString).putData(uneditedJpeg, metadata: meta)
+        let originalTask = Storage.storage().reference().child("imagesSent").child(fromId).child(UUID().uuidString).putData(originalJpeg, metadata: meta)
         
         guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.3) else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
-        let editedTask = Storage.storage().reference().child("imagesSent").child(fromUid).child(UUID().uuidString).putData(editedJpeg, metadata: meta)
+        let editedTask = Storage.storage().reference().child("imagesSent").child(fromId).child(UUID().uuidString).putData(editedJpeg, metadata: meta)
         print(editedJpeg.count)
-        print(uneditedJpeg.count)
-        uneditedTask.observe(.failure) { (snap) in
+        print(originalJpeg.count)
+        originalTask.observe(.failure) { (snap) in
             self.showError(self.UPLOADING_IMAGE_ERR)
             return
         }
@@ -128,20 +128,20 @@ class PreviewPhotoController: UIViewController {
             return
         }
         
-        uneditedTask.observe(.success) { (uneditedSnap) in
+        originalTask.observe(.success) { (originalSnap) in
             editedTask.observe(.success, handler: { (editedSnap) in
                 guard let editedImageUrl = editedSnap.metadata?.downloadURL()?.absoluteString else {
                     self.showError(self.UPLOADING_IMAGE_ERR)
                     return
                 }
-                guard let uneditedImageUrl =  uneditedSnap.metadata?.downloadURL()?.absoluteString else {
+                guard let originalImageUrl =  originalSnap.metadata?.downloadURL()?.absoluteString else {
                     self.showError(self.UPLOADING_IMAGE_ERR)
                     return
                 }
-                guard let toUid = self.user?.uid else { return }
-                let values = ["fromId": fromUid, "toId": toUid,
-                              "editedImageUrl": editedImageUrl, "uneditedImageUrl": uneditedImageUrl,
-                              "allowUnedited": self.allowSwitch.isOn, "isAcknowledged": false, "isUneditedViewed": false,
+                guard let toId = self.user?.uid else { return }
+                let values = ["fromId": fromId, "toId": toId,
+                              "editedImageUrl": editedImageUrl, "originalImageUrl": originalImageUrl,
+                              "allowOriginal": self.allowSwitch.isOn, "isAcknowledged": false, "isOriginalViewed": false, "isDeleted": false,
                               "createdTime": Date()] as [String : Any]
                 
                 Firestore.firestore().collection("imageMessages").addDocument(data: values, completion: { (error) in

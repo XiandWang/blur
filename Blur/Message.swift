@@ -12,20 +12,22 @@ struct Message {
     var messageId: String
     var fromId: String
     var editedImageUrl: String
-    var uneditedImageUrl: String
-    var allowUnedited: Bool
-    var isRead: Bool
-    var isUneditedViewed: Bool
+    var originalImageUrl: String
+    var allowOrignal: Bool
+    var isAcknowledged: Bool
+    var isOriginalViewed: Bool
+    var isDeleted: Bool
     var createdTime: Date
     
     init(dict: [String: Any], messageId: String) {
         self.messageId = messageId
         self.fromId = dict["fromId"] as! String
         self.editedImageUrl = dict["editedImageUrl"] as! String
-        self.uneditedImageUrl = dict["uneditedImageUrl"] as! String
-        self.allowUnedited = dict["allowUnedited"] as! Bool
-        self.isRead = dict["isRead"] as! Bool
-        self.isUneditedViewed = dict["isUneditedViewed"] as! Bool
+        self.originalImageUrl = dict["originalImageUrl"] as! String
+        self.allowOrignal = dict["allowOriginal"] as! Bool
+        self.isAcknowledged = dict["isAcknowledged"] as! Bool
+        self.isDeleted = dict["isDeleted"] as! Bool
+        self.isOriginalViewed = dict["isOriginalViewed"] as! Bool
         self.createdTime = dict["createdTime"] as! Date
     }
 }

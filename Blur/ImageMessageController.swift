@@ -22,9 +22,9 @@ class ImageMessageController : UIViewController {
                 editedImageView.kf.indicatorType = .activity
                 editedImageView.kf.setImage(with: editedUrl)
                 
-                let uneditedUrl = URL(string: message.uneditedImageUrl)
-                uneditedImageView.kf.indicatorType = .activity
-                uneditedImageView.kf.setImage(with: uneditedUrl)
+                let originalUrl = URL(string: message.originalImageUrl)
+                originalImageView.kf.indicatorType = .activity
+                originalImageView.kf.setImage(with: originalUrl)
             }
         }
     }
@@ -38,7 +38,7 @@ class ImageMessageController : UIViewController {
         return iv
     }()
     
-    let uneditedImageView : UIImageView = {
+    let originalImageView : UIImageView = {
         let iv = UIImageView()
         iv.kf.indicatorType = .activity
         iv.contentMode = .scaleAspectFit
@@ -79,12 +79,12 @@ class ImageMessageController : UIViewController {
         super.viewDidLoad()
         
         self.view.backgroundColor = .black
-        view.addSubview(uneditedImageView)
+        view.addSubview(originalImageView)
         view.addSubview(editedImageView)
         setupConstraints()
         setupButtonStackViews()
         AnimationHelper.perspectiveTransform(for: view)
-        uneditedImageView.layer.transform = AnimationHelper.yRotation(.pi / 2)
+        originalImageView.layer.transform = AnimationHelper.yRotation(.pi / 2)
     }
     
     fileprivate func setupButtonStackViews() {
@@ -98,7 +98,7 @@ class ImageMessageController : UIViewController {
     
     fileprivate func setupConstraints() {
         editedImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        uneditedImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        originalImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
     }
     
     func handleRotateImage() {
@@ -131,7 +131,7 @@ class ImageMessageController : UIViewController {
                         self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
-                        self.uneditedImageView.layer.transform = AnimationHelper.yRotation(0.0)
+                        self.originalImageView.layer.transform = AnimationHelper.yRotation(0.0)
                     }
             }, completion: nil)
         } else {
@@ -142,7 +142,7 @@ class ImageMessageController : UIViewController {
                 options: .calculationModeCubic,
                 animations: {
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
-                        self.uneditedImageView.layer.transform = AnimationHelper.yRotation(.pi / 2)
+                        self.originalImageView.layer.transform = AnimationHelper.yRotation(.pi / 2)
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                         self.editedImageView.layer.transform = CATransform3DIdentity
@@ -154,9 +154,9 @@ class ImageMessageController : UIViewController {
 
 extension ImageMessageController {
     func handleShowOriginalImage() {
-        if let allowUnedited = message?.allowUnedited, allowUnedited {
+        if let allowOrignal = message?.allowOrignal, allowOrignal {
             print("allowed")
-            self.uneditedImageView.isHidden = false
+            self.originalImageView.isHidden = false
             self.animateRotatingImage(toOriginal: true)
             UIView.animate(withDuration: 2.0, animations: {
                 self.showButton.alpha = 0

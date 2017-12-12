@@ -12,6 +12,8 @@ import Kingfisher
 import TDBadgedCell
 
 class HomeController: UITableViewController {
+    private let cellId = "chatCellId"
+    
     var imageMessages = [String: [Message]]()
     var usersDict = [String: User]()
     var userIdsSorted = [String]()
@@ -20,15 +22,24 @@ class HomeController: UITableViewController {
         
         super.viewDidLoad()
         view.backgroundColor = .white
-                
-        tableView.register(HomeChatCell.self, forCellReuseIdentifier: "chatCellId")
+        
+        tableView.register(HomeChatCell.self, forCellReuseIdentifier: cellId)
         setupNavigationItems()
         getMessages()
+        
+        Timer.scheduledTimer(timeInterval: 20*60, target: self, selector: #selector(puts), userInfo: nil, repeats: false)
+    }
+    
+    func puts() {
+        print("************************debugging")
+        print("sdsdsd", separator: ",", terminator: "zczcxczz")
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        //
+        ImageCache.default.clearMemoryCache()
         // Reload data to refresh timestamps
         tableView.reloadData()
     }
@@ -39,7 +50,7 @@ class HomeController: UITableViewController {
     
     func setupNavigationItems() {
         navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
-        self.navigationItem.title = "Chats"
+        self.navigationItem.title = "Inbox Chats"
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,7 +58,7 @@ class HomeController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier:"chatCellId") as! HomeChatCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! HomeChatCell
         let fromId = userIdsSorted[indexPath.row]
         if let user = self.usersDict[fromId] {
             cell.user = user
@@ -78,7 +89,7 @@ class HomeController: UITableViewController {
     func getMessages() {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
         Firestore.firestore().collection("imageMessages").whereField("toId", isEqualTo: currentUserId)
-            .whereField("isRead", isEqualTo: false)
+            .whereField("isDeleted", isEqualTo: false)
             .addSnapshotListener { (messagesSnap, error) in
                 messagesSnap?.documentChanges.forEach({ (docChange: DocumentChange) in
                     if docChange.type == .added {
@@ -107,6 +118,7 @@ class HomeController: UITableViewController {
     }
     
     fileprivate func addMessage(doc : DocumentSnapshot) {
+        print(doc.data())
         let fromId = doc.data()["fromId"] as! String
         let message = Message(dict: doc.data(), messageId: doc.documentID)
         if let _ = self.imageMessages[fromId] {

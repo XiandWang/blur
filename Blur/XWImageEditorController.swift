@@ -18,13 +18,13 @@ class XWImageEditorController: UIViewController {
     var menuView: UIView!        //底部工具
     
     var currentImage: UIImage
-    var uneditedImage: UIImage
+    var originalImage: UIImage
     
     var currentTool: XWImageToolBase?
     
     init(with image: UIImage, sendTo user: User) {
         currentImage = image.copy() as! UIImage
-        uneditedImage = image.copy() as! UIImage
+        originalImage = image.copy() as! UIImage
         userToSend = user
         super.init(nibName: nil, bundle: nil)
     }
@@ -180,7 +180,7 @@ class XWImageEditorController: UIViewController {
         let previewPhotoController = PreviewPhotoController()
         previewPhotoController.user = self.userToSend
         previewPhotoController.editedImage = self.currentImage
-        previewPhotoController.uneditedImage = self.uneditedImage
+        previewPhotoController.originalImage = self.originalImage
         navigationController?.pushViewController(previewPhotoController, animated: true)
     }
     
