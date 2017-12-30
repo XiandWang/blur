@@ -116,7 +116,7 @@ extension SignUpViewController {
             }
             guard let uid = user?.uid else { return }
             let time = Date().timeIntervalSince1970
-            let childUpdates = ["/\(FRIENDS_NODE)/\(uid)/\(uid)": ["status": FriendStatus.Added.rawValue, "updatedTime": time],
+            let childUpdates = ["/\(FRIENDS_NODE)/\(uid)/\(uid)": ["status": FriendStatus.ADDED.rawValue, "updatedTime": time],
                         
                                 "/\(USERS_NODE)/\(uid)": ["createdTime": time]] as [String : Any]
             Database.database().reference().updateChildValues(childUpdates, withCompletionBlock: { (error, ref) in
@@ -128,7 +128,6 @@ extension SignUpViewController {
                 //AppHUD.success("Thank you")
                 let chooseNameController = ChooseUserNameController()
                 chooseNameController.uid = uid
-                print(uid)
                 self.navigationController?.pushViewController(chooseNameController, animated: true)
             })
         })

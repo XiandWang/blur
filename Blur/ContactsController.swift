@@ -30,7 +30,7 @@ class FriendsController: UITableViewController {
         tableView.register(UserContactCell.self, forCellReuseIdentifier: cellId)
         tableView.sectionIndexColor = PRIMARY_COLOR
         observeFriends()
-        observeFriendsRequest()
+        observeFriendRequests()
     }
     
     func setupHeaderView() {
@@ -126,12 +126,11 @@ extension FriendsController {
         }, withCancel: nil)
     }
     
-    fileprivate func observeFriendsRequest() {
+    fileprivate func observeFriendRequests() {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        print("debug******", currentUid)
         
-        self.ref.child(RECEIVER_FRIEND_REQUESTS_NODE).child(currentUid).queryOrdered(byChild: "status").queryEqual(toValue: FriendStatus.Pending.rawValue).observe(.value) { (snap : DataSnapshot) in
-            print(snap)
+        self.ref.child(RECEIVER_FRIEND_REQUESTS_NODE)
+            .child(currentUid).queryOrdered(byChild: "status").queryEqual(toValue: FriendStatus.PENDING.rawValue).observe(.value) { (snap : DataSnapshot) in
             self.newRequestUids = []
             for c in snap.children {
                 guard let child = c as? DataSnapshot else { return }

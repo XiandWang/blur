@@ -40,22 +40,16 @@ class MessagesPageViewController: UIPageViewController {
             let controllers = [imageMessageController]
             
             self.setViewControllers(controllers, direction: .forward, animated: false, completion: nil)
-        } else {
-           // print("nilnilnil")
         }
     }
     
     func configureImageMessageController(index: Int) -> ImageMessageController? {
-        print(index)
         let imageMessageController = ImageMessageController()
         if let message = messages?[index] {
             imageMessageController.message = message
             imageMessageController.fromUser = fromUser
             imageMessageController.photoIndex = index
-           // imageMessageController.navigationItem.title = "sds"
             return imageMessageController
-        } else {
-            //print("message is nil")
         }
         return nil
     }

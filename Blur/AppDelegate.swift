@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = MainTabBarController()
         
         window?.tintColor = .black
-
+    
         return true
     }
 

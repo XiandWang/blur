@@ -24,7 +24,7 @@ class AppHUD {
         hud.bezelView.style = .solidColor
         hud.contentColor = .white
         hud.label.text = message
-        hud.hide(animated: true, afterDelay: 1)
+        hud.hide(animated: true, afterDelay: 3)
     }
     
     static func error(_ message: String?) {
@@ -32,7 +32,6 @@ class AppHUD {
             return
         }
         let hud = MBProgressHUD.showAdded(to: view, animated: true)
-        
         hud.isUserInteractionEnabled = false
         hud.mode = .text
         hud.label.text = message
@@ -48,6 +47,7 @@ class AppHUD {
             return
         }
         hud = MBProgressHUD.showAdded(to: view, animated: true)
+    
         hud?.alpha = 0.9
         hud?.bezelView.style = .solidColor
         hud?.bezelView.color = .black

@@ -123,7 +123,6 @@ extension LoginController {
             if let err = err {
                 AppHUD.progressHidden()
                 AppHUD.error("Login failed. Please check your email and password.")
-                print("Failed to login", err.localizedDescription)
                 return
             }
             AppHUD.progressHidden()

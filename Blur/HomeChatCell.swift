@@ -33,17 +33,25 @@ class HomeChatCell: UITableViewCell {
             }).count, unreadNum > 0 {
                 let badgeImage = BadgeHelper.createBadge(string: "\(unreadNum)", fontSize: 11, backgroundColor: .red)
                 badgeImageView.image = badgeImage
+            } else {
+                badgeImageView.image = nil
             }
             
-            if let message = messages?.last {
+            if let message = messages?.first {
                 timestampLabel.text = message.createdTime.timeAgoDisplay()
+            } else {
+                timestampLabel.text = nil
             }
-            
-            if let hiddenNum = self.messages?.filter({ (message) -> Bool in
-                return !message.isOriginalViewed
-            }).count, hiddenNum > 0 {
-                hiddenNumberLabel.textColor = .gray
-                hiddenNumberLabel.text = "\(hiddenNum) hidden left"
+            if let totalCount = messages?.count, totalCount > 0 {
+                if let hiddenNum = self.messages?.filter({ (message) -> Bool in
+                    return !message.isOriginalViewed
+                }).count, hiddenNum > 0 {
+                    hiddenNumberLabel.textColor = .gray
+                    hiddenNumberLabel.text = "\(hiddenNum) hidden left, \(totalCount) total"
+                } else {
+                    hiddenNumberLabel.textColor = .gray
+                    hiddenNumberLabel.text = "no hidden left, \(totalCount) total"
+                }
             }
         }
     }
@@ -72,7 +80,7 @@ class HomeChatCell: UITableViewCell {
     
     let usernameLabel : UILabel = {
         let lb = UILabel()
-        lb.font = UIFont.boldSystemFont(ofSize: 16)
+        lb.font = UIFont.boldSystemFont(ofSize: 18)
         lb.numberOfLines = 1
         lb.text = ""
         return lb

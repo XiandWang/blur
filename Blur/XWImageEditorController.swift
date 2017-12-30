@@ -176,7 +176,6 @@ class XWImageEditorController: UIViewController {
     }
     
     func imageEditFinishBtn() {
-        //print("done")
         let previewPhotoController = PreviewPhotoController()
         previewPhotoController.user = self.userToSend
         previewPhotoController.editedImage = self.currentImage
@@ -234,12 +233,10 @@ class XWImageEditorController: UIViewController {
     
     func setupToolWithToolInfo(toolInfo: XWImageToolInfo?) {
         if self.currentTool != nil {
-            print("current tool not nil")
             return
         }
         
         guard let toolInfo = toolInfo else { return }
-        print(toolInfo.toolName)
         if toolInfo.toolName == "cut" {
             let cutTool = XWCutTool(editor: self, toolInfo: toolInfo)
             self.configureCurrentTool(curtool: cutTool)

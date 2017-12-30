@@ -22,17 +22,10 @@ class HomeController: UITableViewController {
         
         super.viewDidLoad()
         view.backgroundColor = .white
-        
+        tableView.separatorColor = UIColor.lightGray
         tableView.register(HomeChatCell.self, forCellReuseIdentifier: cellId)
         setupNavigationItems()
-        getMessages()
-        
-        Timer.scheduledTimer(timeInterval: 20*60, target: self, selector: #selector(puts), userInfo: nil, repeats: false)
-    }
-    
-    func puts() {
-        print("************************debugging")
-        print("sdsdsd", separator: ",", terminator: "zczcxczz")
+        listenForMessages()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -82,17 +75,21 @@ class HomeController: UITableViewController {
             let messagesPageViewController = MessagesPageViewController(messages: messages, fromUser: user)
             messagesPageViewController.hidesBottomBarWhenPushed = true
             self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            //navigationController?.isNavigationBarHidden = true
             navigationController?.pushViewController(messagesPageViewController, animated: true)
         }
     }
     
-    func getMessages() {
+    func listenForMessages() {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
         Firestore.firestore().collection("imageMessages").whereField("toId", isEqualTo: currentUserId)
             .whereField("isDeleted", isEqualTo: false)
             .addSnapshotListener { (messagesSnap, error) in
                 messagesSnap?.documentChanges.forEach({ (docChange: DocumentChange) in
                     if docChange.type == .added {
+                        print("added not modified...")
+                        print(docChange.document.documentID)
+
                         let fromId = docChange.document.data()["fromId"] as! String
                         self.addMessage(doc: docChange.document)
                         self.sortUserIdsByMessageCreatedTime()
@@ -103,6 +100,11 @@ class HomeController: UITableViewController {
                                 self.tableView?.reloadData()
                             }
                         }
+                    } else if docChange.type == DocumentChangeType.removed {
+                        self.removeMessage(doc: docChange.document)
+                    } else if docChange.type == DocumentChangeType.modified {
+                        print("modified....")
+                        self.modifyMessage(doc: docChange.document)
                     }
                 })
             }
@@ -110,7 +112,7 @@ class HomeController: UITableViewController {
     
     fileprivate func sortUserIdsByMessageCreatedTime() {
         self.userIdsSorted = Array(self.imageMessages.keys).sorted(by: { (userId1, userId2) -> Bool in
-            if let msg1 = self.imageMessages[userId1]?.last, let msg2 = self.imageMessages[userId2]?.last {
+            if let msg1 = self.imageMessages[userId1]?.first, let msg2 = self.imageMessages[userId2]?.first {
                 return msg1.createdTime > msg2.createdTime
             }
             return userId1 < userId2
@@ -118,17 +120,49 @@ class HomeController: UITableViewController {
     }
     
     fileprivate func addMessage(doc : DocumentSnapshot) {
-        print(doc.data())
         let fromId = doc.data()["fromId"] as! String
         let message = Message(dict: doc.data(), messageId: doc.documentID)
         if let _ = self.imageMessages[fromId] {
             self.imageMessages[fromId]?.append(message)
             // sort by date
             self.imageMessages[fromId] = self.imageMessages[fromId]?.sorted(by: { (msg1, msg2) -> Bool in
-                return msg1.createdTime < msg2.createdTime
+                return msg1.createdTime > msg2.createdTime
             })
         } else {
             self.imageMessages[fromId] = [message]
+        }
+    }
+    
+    fileprivate func removeMessage(doc: DocumentSnapshot) {
+        guard let fromId = doc.data()["fromId"] as? String else { return }
+        let messageIdToRemove = doc.documentID
+        guard let messages = self.imageMessages[fromId] else { return }
+        guard let index = messages.index(where: { (message) -> Bool in
+            return message.messageId == messageIdToRemove
+        }) else { return }
+        self.imageMessages[fromId]?.remove(at: index)
+        if let count = self.imageMessages[fromId]?.count, count == 0 {
+            self.imageMessages.removeValue(forKey: fromId)
+        }
+        //print("********************removing done")
+        //print(self.imageMessages)
+        sortUserIdsByMessageCreatedTime()
+        DispatchQueue.main.async {
+            self.tableView?.reloadData()
+        }
+    }
+    
+    fileprivate func modifyMessage(doc: DocumentSnapshot) {
+        guard let fromId = doc.data()["fromId"] as? String else { return }
+        let messageIdToModify = doc.documentID
+        guard let messages = self.imageMessages[fromId] else { return }
+        guard let index = messages.index(where: { (message) -> Bool in
+            return message.messageId == messageIdToModify
+        }) else { return }
+        self.imageMessages[fromId]?[index] = Message(dict: doc.data(), messageId: messageIdToModify)
+        self.sortUserIdsByMessageCreatedTime()
+        DispatchQueue.main.async {
+            self.tableView?.reloadData()
         }
     }
     

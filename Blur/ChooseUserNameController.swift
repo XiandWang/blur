@@ -67,10 +67,11 @@ class ChooseUserNameController: UIViewController {
         
         AppHUD.progress(nil)
         
-        print("updating...", name)
         guard let uid = uid else { return }
-        let childUpdates = ["/\(USERS_NODE)/\(uid)": ["username": name, "createdTime": Date().timeIntervalSince1970],
-                            "/usernames/\(name)": uid] as [String : Any]
+        let childUpdates = [
+                            "/\(USERS_NODE)/\(uid)": ["username": name, "createdTime": Date().timeIntervalSince1970],
+                            "/usernames/\(name)": uid
+                            ] as [String : Any]
         Database.database().reference().updateChildValues(childUpdates) { (err, ref) in
             if let err = err {
                 AppHUD.progressHidden()

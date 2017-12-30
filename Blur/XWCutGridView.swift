@@ -115,7 +115,6 @@ class XWCutGridView: UIView {
         }
         switch tag {
         case TOP_LEFT_CIRCLE_TAG:
-            print("tltltl")
             maxX = max(rct.origin.x + rct.size.width - 0.1 * W, 0.1 * W)
             maxY = max(rct.origin.y + rct.size.height - 0.1 * H, 0.1 * H)
             

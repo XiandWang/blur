@@ -74,14 +74,14 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let sendAction = UIAlertAction(title: "Send Friend Request", style: .default) { (action) in
             guard let currentUid = Auth.auth().currentUser?.uid else { return }
-            let receiverValues = [currentUid : ["status": FriendStatus.Pending.rawValue, "createdTime": Date().timeIntervalSince1970]]
+            let receiverValues = [currentUid : ["status": FriendStatus.PENDING.rawValue, "createdTime": Date().timeIntervalSince1970]]
             self.ref.child(RECEIVER_FRIEND_REQUESTS_NODE).child(user.uid).updateChildValues(receiverValues, withCompletionBlock: { (err : Error?, _) in
                 if let err = err {
                     AppHUD.error(err.localizedDescription)
                     return
                 }
                 AppHUD.success("Request Sent")
-                let senderValues = [user.uid: ["status" : FriendStatus.Pending.rawValue, "createdTime": Date().timeIntervalSince1970]]
+                let senderValues = [user.uid: ["status" : FriendStatus.PENDING.rawValue, "createdTime": Date().timeIntervalSince1970]]
                 self.ref.child(SENDER_FRIEND_REQUESTS_NODE).child(currentUid).updateChildValues(senderValues)
                 return
             })

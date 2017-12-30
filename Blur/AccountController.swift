@@ -61,8 +61,6 @@ class AccountController: UIViewController, UIImagePickerControllerDelegate, UINa
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        print("************************debugging")
-        print(info)
         let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage
         let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage
         if let image = editedImage {
@@ -85,7 +83,6 @@ class AccountController: UIViewController, UIImagePickerControllerDelegate, UINa
                 AppHUD.error(error.localizedDescription + "\nPlease try again.")
                 return
             }
-            print("Success uploading")
             
             guard let profileImgUrl = metaData?.downloadURL()?.absoluteString else { return }
             Database.database().reference().child(USERS_NODE).child(uid).updateChildValues(["profileImgUrl": profileImgUrl], withCompletionBlock: { (error, ref) in
@@ -93,8 +90,6 @@ class AccountController: UIViewController, UIImagePickerControllerDelegate, UINa
                     AppHUD.error(error.localizedDescription + "\nPlease try again.")
                     return
                 }
-                print("Success putting db")
-
             })
         })
     }
@@ -148,7 +143,6 @@ class AccountController: UIViewController, UIImagePickerControllerDelegate, UINa
     }
     
     fileprivate func fetchUser() {
-        print("fetching users")
         guard let uid = Auth.auth().currentUser?.uid else {
             AppHUD.error("Cannot retrieve the current user")
             return

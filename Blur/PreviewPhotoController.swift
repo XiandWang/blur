@@ -139,12 +139,13 @@ class PreviewPhotoController: UIViewController {
                     return
                 }
                 guard let toId = self.user?.uid else { return }
-                let values = ["fromId": fromId, "toId": toId,
+                let data = ["fromId": fromId, "toId": toId,
                               "editedImageUrl": editedImageUrl, "originalImageUrl": originalImageUrl,
-                              "allowOriginal": self.allowSwitch.isOn, "isAcknowledged": false, "isOriginalViewed": false, "isDeleted": false,
+                              "allowOriginal": self.allowSwitch.isOn, "isAcknowledged": false,
+                              "isOriginalViewed": false, "isDeleted": false,
                               "createdTime": Date()] as [String : Any]
                 
-                Firestore.firestore().collection("imageMessages").addDocument(data: values, completion: { (error) in
+                Firestore.firestore().collection("imageMessages").addDocument(data: data, completion: { (error) in
                     if let error = error {
                         self.showError(error.localizedDescription)
                         return

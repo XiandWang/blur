@@ -14,12 +14,11 @@ class NewFriendsRequestController: UITableViewController {
     var newRequestUids = [String]()
     var newUsers = [User]()
     
+    let dbRef = Database.database().reference()
+    
     init(newRequestUids : [String]) {
         super.init(nibName: nil, bundle: nil)
         self.newRequestUids = newRequestUids
-        self.newRequestUids.forEach { (str) in
-            print(str)
-        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -33,12 +32,12 @@ class NewFriendsRequestController: UITableViewController {
         //tableView.separatorStyle = .none
         tableView.allowsSelection = false
         
-        getUsers()
+        getNewFriends()
     }
     
-    func getUsers() {
+    fileprivate func getNewFriends() {
         for uid in newRequestUids {
-            Database.database().reference().child(USERS_NODE).child(uid).observeSingleEvent(of: .value, with: { (snap: DataSnapshot) in
+            dbRef.child(USERS_NODE).child(uid).observeSingleEvent(of: .value, with: { (snap: DataSnapshot) in
                 guard let dict = snap.value as? [String: Any] else { return }
                 let user = User(dictionary: dict, uid: snap.key)
                 self.newUsers.append(user)
@@ -58,20 +57,19 @@ class NewFriendsRequestController: UITableViewController {
     }
     
     func handleAcceptRequest(sender: UIButton) {
-        print(sender.tag)
         let user = newUsers[sender.tag]
-        addFriends(for: user, fromRow: sender.tag)
+        addFriend(for: user, fromRow: sender.tag)
     }
     
-    func addFriends(for user: User, fromRow row: Int) {
+    func addFriend(for user: User, fromRow row: Int) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         let time = Date().timeIntervalSince1970
-        let friendValue = ["status": FriendStatus.Added.rawValue, "updatedTime": time] as [String : Any]
+        let friendValue = ["status": FriendStatus.ADDED.rawValue, "updatedTime": time] as [String : Any]
         let childUpdates = ["/\(FRIENDS_NODE)/\(user.uid)/\(currentUid)": friendValue,
                             "/\(FRIENDS_NODE)/\(currentUid)/\(user.uid)": friendValue,
-                            "/\(RECEIVER_FRIEND_REQUESTS_NODE)/\(currentUid)/\(user.uid)": ["status": FriendStatus.Added.rawValue, "updatedTime": time],
-                            "/\(SENDER_FRIEND_REQUESTS_NODE)/\(user.uid)/\(currentUid)": ["status": FriendStatus.Added.rawValue, "updatedTime": time],] as [String : Any]
-        Database.database().reference().updateChildValues(childUpdates) { (err, ref) in
+                            "/\(RECEIVER_FRIEND_REQUESTS_NODE)/\(currentUid)/\(user.uid)": ["status": FriendStatus.ADDED.rawValue, "updatedTime": time],
+                            "/\(SENDER_FRIEND_REQUESTS_NODE)/\(user.uid)/\(currentUid)": ["status": FriendStatus.ADDED.rawValue, "updatedTime": time],] as [String : Any]
+        dbRef.updateChildValues(childUpdates) { (err, ref) in
             if let err =  err {
                 AppHUD.error(err.localizedDescription)
                 return
