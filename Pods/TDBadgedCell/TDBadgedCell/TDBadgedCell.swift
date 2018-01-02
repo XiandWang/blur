@@ -5,6 +5,7 @@
 //  Created by Tim Davies on 07/09/2016.
 //  Copyright © 2016 Tim Davies. All rights reserved.
 //
+
 import UIKit
 
 /// TDBadgedCell is a table view cell class that adds a badge, similar to the badges in Apple's own apps
@@ -40,7 +41,7 @@ open class TDBadgedCell: UITableViewCell {
     public var badgeOffset = CGPoint(x:10, y:0)
     
     /// The Image view that the badge will be rendered into
-    public let badgeView = UIImageView()
+    internal let badgeView = UIImageView()
     
     override open func layoutSubviews() {
         super.layoutSubviews()
@@ -55,9 +56,14 @@ open class TDBadgedCell: UITableViewCell {
         badgeView.frame.origin.y = floor((frame.height / 2) - (badgeView.frame.height / 2))
         
         // Now lets update the width of the cells text labels to take the badge into account
-        textLabel?.frame.size.width -= badgeView.frame.width + (offsetX * 2)
-        if((detailTextLabel) != nil) {
-            detailTextLabel?.frame.size.width -= badgeView.frame.width + (offsetX * 2)
+        let labelWidth = self.contentView.frame.width - (badgeView.frame.width + (offsetX * 2));
+        
+        if textLabel != nil {
+            textLabel!.frame.size.width = labelWidth - textLabel!.frame.origin.x
+        }
+        
+        if detailTextLabel != nil {
+            detailTextLabel!.frame.size.width = labelWidth - detailTextLabel!.frame.origin.x
         }
     }
     
@@ -75,7 +81,7 @@ open class TDBadgedCell: UITableViewCell {
     /// Generate the badge image
     internal func drawBadge() {
         // Calculate the size of our string
-        let textSize : CGSize = NSString(string: badgeString).size(attributes:[NSFontAttributeName:UIFont.boldSystemFont(ofSize:CGFloat(badgeFontSize))])
+        let textSize : CGSize = NSString(string: badgeString).size(withAttributes:[NSAttributedStringKey.font:UIFont.boldSystemFont(ofSize:CGFloat(badgeFontSize))])
         
         // Create a frame with padding for our badge
         let height = textSize.height + 10
@@ -109,8 +115,8 @@ open class TDBadgedCell: UITableViewCell {
         }
         
         NSString(string: badgeString).draw(in:CGRect(x:8, y:5, width:textSize.width, height:textSize.height), withAttributes: [
-            NSFontAttributeName:UIFont.boldSystemFont(ofSize:CGFloat(badgeFontSize)),
-            NSForegroundColorAttributeName: badgeTextColor ?? UIColor.clear
+            NSAttributedStringKey.font:UIFont.boldSystemFont(ofSize:CGFloat(badgeFontSize)),
+            NSAttributedStringKey.foregroundColor: badgeTextColor ?? UIColor.clear
         ])
         
         let badgeImage = UIGraphicsGetImageFromCurrentImageContext()!

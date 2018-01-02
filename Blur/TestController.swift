@@ -26,7 +26,7 @@ class TestController: UIViewController {
         return bv
     }()
     
-    func handleMove() {
+    @objc func handleMove() {
         UIView.animate(withDuration: 1.0) {
             self.view.bounds.origin.x += 10
             self.view.bounds.origin.y += 10
@@ -40,14 +40,7 @@ class TestController: UIViewController {
     }
     
     override func viewDidLoad() {
-        let m = mosaicImage(image: #imageLiteral(resourceName: "jjj"))
-        
-        //let mView = KKMosaicView(frame: self.view.bounds)
-//        mView.surfaceImage = #imageLiteral(resourceName: "jjj")
-//        
-//        mView.image = m
-//        
-//        view.addSubview(mView)
+        super.viewDidLoad()
 
     }
     

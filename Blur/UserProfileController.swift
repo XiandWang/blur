@@ -70,19 +70,19 @@ class UserProfileController: UIViewController {
         setupViews()
     }
 
-    func handleSendPhoto() {
+    @objc func handleSendPhoto() {
         let picker = UIImagePickerController()
         picker.delegate = self
         
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
-            picker.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+            picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
             picker.sourceType = .camera
             picker.allowsEditing = false
             self.present(picker, animated: true, completion: nil)
         }))
         actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
-            picker.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+            picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
             picker.sourceType = .photoLibrary
             picker.allowsEditing = false
             self.present(picker, animated: true, completion: nil)

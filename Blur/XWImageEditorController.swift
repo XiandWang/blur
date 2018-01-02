@@ -175,7 +175,7 @@ class XWImageEditorController: UIViewController {
         return false
     }
     
-    func imageEditFinishBtn() {
+    @objc func imageEditFinishBtn() {
         let previewPhotoController = PreviewPhotoController()
         previewPhotoController.user = self.userToSend
         previewPhotoController.editedImage = self.currentImage
@@ -183,7 +183,7 @@ class XWImageEditorController: UIViewController {
         navigationController?.pushViewController(previewPhotoController, animated: true)
     }
     
-    func pushedCancelBtn() {
+    @objc func pushedCancelBtn() {
         imageView.image = currentImage
         self.resetImageViewFrame()
         
@@ -200,7 +200,7 @@ class XWImageEditorController: UIViewController {
         }
     }
         
-    func pushedDoneBtn() {
+    @objc func pushedDoneBtn() {
         self.view.isUserInteractionEnabled = false
         
         self.currentTool?.executeWithCompletion(completion: { (image, error) in
@@ -220,7 +220,7 @@ class XWImageEditorController: UIViewController {
     }
     
     
-    func tappedToolMenuItem(sender: UITapGestureRecognizer) {
+    @objc func tappedToolMenuItem(sender: UITapGestureRecognizer) {
         if let view = sender.view as? XWToolBarItem {
             view.alpha = 0.2
             UIView.animate(withDuration: 0.3, animations: {
@@ -263,7 +263,7 @@ class XWImageEditorController: UIViewController {
         }
     }
     
-    func updateNavigationItem()  {
+    @objc func updateNavigationItem()  {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(pushedDoneBtn))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(pushedCancelBtn))
         self.navigationItem.hidesBackButton = true

@@ -24,7 +24,7 @@ class FriendsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Contacts"
-        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddFriends))
         view?.backgroundColor = .white
         tableView.register(UserContactCell.self, forCellReuseIdentifier: cellId)
@@ -149,13 +149,13 @@ extension FriendsController {
 
 // Gestures
 extension FriendsController {
-    func handleFriendsRequests() {
+    @objc func handleFriendsRequests() {
         let newFriendsRequestController = NewFriendsRequestController(newRequestUids : self.newRequestUids)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         self.navigationController?.pushViewController(newFriendsRequestController, animated: true)
     }
     
-    func handleAddFriends() {
+    @objc func handleAddFriends() {
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
         let addFriendController = AddFriendController()
         addFriendController.existingFriendIds = self.users.map({ (user) -> String in

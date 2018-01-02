@@ -10,7 +10,7 @@ import UIKit
 import Kingfisher
 import Firebase
 
-class ImageMessageController : UIViewController {
+class ReceiverImageMessageController : UIViewController {
     private let controlPanelHeight: CGFloat = 88.0
     private let controlPanelAlpha: CGFloat = 1
 
@@ -149,7 +149,7 @@ class ImageMessageController : UIViewController {
         view.addGestureRecognizer(tapRecognizer)
     }
     
-    func toggleControlPanel() {
+    @objc func toggleControlPanel() {
         view.isUserInteractionEnabled = false
         if isShowingControlPanel {
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
@@ -216,7 +216,7 @@ class ImageMessageController : UIViewController {
         originalImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
     }
     
-    func handleRotateImage() {
+    @objc func handleRotateImage() {
         self.originalImageView.isHidden = false
         if isShowingEdited {
             animateRotatingImage(toOriginal: true)
@@ -269,8 +269,8 @@ class ImageMessageController : UIViewController {
     }
 }
 
-extension ImageMessageController {
-    func handleShowOriginalImage() {
+extension ReceiverImageMessageController {
+    @objc func handleShowOriginalImage() {
         guard let allowOriginal = message?.allowOrignal else { return }
         if allowOriginal {
             self.originalImageView.isHidden = false
@@ -306,7 +306,7 @@ extension ImageMessageController {
     
                 if shouldSendNotification {
                    guard let uid = self.fromUser?.uid else { return }
-                   NotificationHelper.createMessageNotification(messageId: messageId, type: NotificationType.REJECT_MESSAGE, forUser: uid, text: additionalText, shouldShowHUD: false, hudSuccessText: nil)
+                   NotificationHelper.createMessageNotification(messageId: messageId, type: NotificationType.rejectMessage, forUser: uid, text: additionalText, shouldShowHUD: false, hudSuccessText: nil)
                 }
                 self.navigationController?.popToRootViewController(animated: true)
         }
@@ -326,7 +326,7 @@ extension ImageMessageController {
         }
     }
     
-    func handleRejectImage() {
+    @objc func handleRejectImage() {
         let fromUserName = self.fromUser?.username ?? ""
         let alert = UIAlertController(title: nil, message: "Do you want to notify \(fromUserName) your rejection?", preferredStyle: .alert)
         let yesAction = UIAlertAction(title: "Yes, notify", style: .default) { (action) in
@@ -352,10 +352,10 @@ extension ImageMessageController {
         present(alert, animated: true, completion: nil)
     }
     
-    func handleRequestAccess() {
+    @objc func handleRequestAccess() {
         guard let messageId = message?.messageId else { return }
         guard let userId = fromUser?.uid else { return }
-        NotificationHelper.createMessageNotification(messageId: messageId, type: .REQUEST_ACCESS, forUser: userId, text: nil, shouldShowHUD: true, hudSuccessText: "Your request to access has been sent")
+        NotificationHelper.createMessageNotification(messageId: messageId, type: .requestAccess, forUser: userId, text: nil, shouldShowHUD: true, hudSuccessText: "Your request to access has been sent")
     }
 }
 

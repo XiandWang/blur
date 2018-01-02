@@ -52,11 +52,11 @@ class AccountController: UIViewController, UIImagePickerControllerDelegate, UINa
         return bt
     }()
     
-    func handleChangeProfileImage() {
+    @objc func handleChangeProfileImage() {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
-        imagePicker.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        imagePicker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         present(imagePicker, animated: true, completion: nil)
     }
     
@@ -97,29 +97,11 @@ class AccountController: UIViewController, UIImagePickerControllerDelegate, UINa
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Account"
-        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         view?.backgroundColor = .white
         fetchUser()
-        setupViews()
+        //setupViews()
         setupLogoutButton()
-    }
-    
-    fileprivate func setupViews() {
-        view.addSubview(userProfileImageView)
-        userProfileImageView.translatesAutoresizingMaskIntoConstraints = false
-        userProfileImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50).isActive = true
-        userProfileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        userProfileImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        userProfileImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        
-        view.addSubview(userNameLabel)
-        userNameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        userNameLabel.anchor(top: userProfileImageView.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
-        view.addSubview(changeImageButton)
-        changeImageButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        changeImageButton.anchor(top: userNameLabel.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
     }
     
     fileprivate func setupLogoutButton() {
@@ -127,7 +109,7 @@ class AccountController: UIViewController, UIImagePickerControllerDelegate, UINa
         navigationItem.rightBarButtonItem?.tintColor = .white
     }
     
-    func handleLogout() {
+    @objc func handleLogout() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
             do {

@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import Blur
 
 class BlurTests: XCTestCase {
     
@@ -34,3 +33,4 @@ class BlurTests: XCTestCase {
     }
     
 }
+

@@ -56,7 +56,7 @@ class ChooseUserNameController: UIViewController {
         setupViews()
     }
     
-    func handleUpdateUsername() {
+    @objc func handleUpdateUsername() {
         guard let name = usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), name.count < 15 && name.count > 2 else {
             AppHUD.error("username should have more than 2 characters and less than 15 characters.")
             return
@@ -85,7 +85,7 @@ class ChooseUserNameController: UIViewController {
         }
     }
     
-    func handleTextInputChange() {
+    @objc func handleTextInputChange() {
         let usernameCount = usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
         if usernameCount > 2 && usernameCount < 15 {
             submitButton.backgroundColor = PRIMARY_COLOR

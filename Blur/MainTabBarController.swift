@@ -25,9 +25,10 @@ class MainTabBarController: UITabBarController {
     }
     
      func setupViewControllers() {
-        let userProfileNavController = UINavigationController(rootViewController: AccountController())
-        userProfileNavController.tabBarItem.image = #imageLiteral(resourceName: "profile_unselected")
-        userProfileNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "profile_selected")
+        let myAccountController = MyAccountController(collectionViewLayout: UICollectionViewFlowLayout())
+        let myAccountNavController = UINavigationController(rootViewController: myAccountController)
+        myAccountNavController.tabBarItem.image = #imageLiteral(resourceName: "profile_unselected")
+        myAccountNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "profile_selected")
         tabBar.tintColor = .black
         tabBar.isTranslucent = false
         
@@ -40,6 +41,6 @@ class MainTabBarController: UITabBarController {
         homeNavController.tabBarItem.image = #imageLiteral(resourceName: "home_unselected")
         homeNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "home_selected")
 
-        viewControllers = [homeNavController, friendsNavController, userProfileNavController]
+        viewControllers = [homeNavController, friendsNavController, myAccountNavController]
     }
 }

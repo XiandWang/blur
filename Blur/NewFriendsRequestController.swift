@@ -56,7 +56,7 @@ class NewFriendsRequestController: UITableViewController {
         return cell
     }
     
-    func handleAcceptRequest(sender: UIButton) {
+    @objc func handleAcceptRequest(sender: UIButton) {
         let user = newUsers[sender.tag]
         addFriend(for: user, fromRow: sender.tag)
     }

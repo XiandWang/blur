@@ -60,9 +60,9 @@ class SignUpViewController: UIViewController {
     
     let bottomLoginButton: UIButton = {
         let bt = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Already have an account? ", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName: UIColor.lightGray])
+        let attributedTitle = NSMutableAttributedString(string: "Already have an account? ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
         
-        attributedTitle.append(NSAttributedString(string: "Login!", attributes: [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 14), NSForegroundColorAttributeName: PRIMARY_COLOR
+        attributedTitle.append(NSAttributedString(string: "Login!", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: PRIMARY_COLOR
             ]))
         
         bt.setAttributedTitle(attributedTitle, for: .normal)
@@ -101,7 +101,7 @@ class SignUpViewController: UIViewController {
 
 // MARK: - Actions
 extension SignUpViewController {
-    func handleSignUp() {
+    @objc func handleSignUp() {
         guard let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
             let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
             email != ""  && password != "" else { return }
@@ -133,7 +133,7 @@ extension SignUpViewController {
         })
     }
     
-    func handleShowLogin() {
+    @objc func handleShowLogin() {
         _ = navigationController?.popViewController(animated: true)
     }
     
@@ -144,7 +144,7 @@ extension SignUpViewController {
         self.signUpButton.isEnabled = true
     }
     
-    func handleTextInputChange() {
+    @objc func handleTextInputChange() {
         let isEmailValid = emailTextField.text?.count ?? 0 > 0
         let isPasswordValid = passwordTextField.text?.count ?? 0 > 0
         if isEmailValid && isPasswordValid {

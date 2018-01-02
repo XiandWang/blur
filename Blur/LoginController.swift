@@ -23,9 +23,9 @@ class LoginController: UIViewController {
     
     let dontHaveAccountButton: UIButton = {
         let bt = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName: UIColor.lightGray])
+        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
         
-        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 14), NSForegroundColorAttributeName: PRIMARY_COLOR]))
+        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: PRIMARY_COLOR]))
         
         bt.setAttributedTitle(attributedTitle, for: .normal)
         return bt
@@ -116,11 +116,11 @@ class LoginController: UIViewController {
 
 // mark actions
 extension LoginController {
-    func handleLogin() {
+    @objc func handleLogin() {
         guard let email = emailTextField.text, let password = passWordTextField.text else { return }
         AppHUD.progress(nil)
         Auth.auth().signIn(withEmail: email, password: password, completion: { (user, err) in
-            if let err = err {
+            if let _ = err {
                 AppHUD.progressHidden()
                 AppHUD.error("Login failed. Please check your email and password.")
                 return
@@ -134,12 +134,12 @@ extension LoginController {
         })
     }
 
-    func handleShowSignUp() {
+    @objc func handleShowSignUp() {
         let signupController = SignUpViewController()
         navigationController?.pushViewController(signupController, animated: true)
     }
     
-    func handleTextInputChange() {
+    @objc func handleTextInputChange() {
         let isEmailValid = emailTextField.text?.count ?? 0 > 0
         let isPasswdValid = passWordTextField.text?.count ?? 0 > 0
         if isEmailValid && isPasswdValid {

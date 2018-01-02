@@ -43,8 +43,8 @@ class MessagesPageViewController: UIPageViewController {
         }
     }
     
-    func configureImageMessageController(index: Int) -> ImageMessageController? {
-        let imageMessageController = ImageMessageController()
+    func configureImageMessageController(index: Int) -> ReceiverImageMessageController? {
+        let imageMessageController = ReceiverImageMessageController()
         if let message = messages?[index] {
             imageMessageController.message = message
             imageMessageController.fromUser = fromUser
@@ -57,7 +57,7 @@ class MessagesPageViewController: UIPageViewController {
 
 extension MessagesPageViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if let viewController = viewController as? ImageMessageController,
+        if let viewController = viewController as? ReceiverImageMessageController,
             let index = viewController.photoIndex,
             index > 0 {
             return configureImageMessageController(index: index - 1)
@@ -67,7 +67,7 @@ extension MessagesPageViewController: UIPageViewControllerDataSource {
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if let viewController = viewController as? ImageMessageController,
+        if let viewController = viewController as? ReceiverImageMessageController,
             let index = viewController.photoIndex,
             let count = messages?.count,
             (index + 1) < count {

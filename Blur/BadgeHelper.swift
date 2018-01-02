@@ -10,7 +10,7 @@ import UIKit
 
 class BadgeHelper {
    class func createBadge(string badgeString: String, fontSize badgeFontSize: Float, backgroundColor color: UIColor) -> UIImage {
-            let textSize : CGSize = NSString(string: badgeString).size(attributes:[NSFontAttributeName:UIFont.boldSystemFont(ofSize:CGFloat(badgeFontSize))])
+            let textSize : CGSize = NSString(string: badgeString).size(withAttributes:[NSAttributedStringKey.font:UIFont.boldSystemFont(ofSize:CGFloat(badgeFontSize))])
             
             // Create a frame with padding for our badge
             let height = textSize.height + 10
@@ -39,8 +39,8 @@ class BadgeHelper {
             ctx.setBlendMode(CGBlendMode.clear)
             
             NSString(string: badgeString).draw(in:CGRect(x:8, y:5, width:textSize.width, height:textSize.height), withAttributes: [
-                NSFontAttributeName:UIFont.boldSystemFont(ofSize:CGFloat(badgeFontSize)),
-                NSForegroundColorAttributeName: UIColor.clear
+                NSAttributedStringKey.font:UIFont.boldSystemFont(ofSize:CGFloat(badgeFontSize)),
+                NSAttributedStringKey.foregroundColor: UIColor.clear
                 ])
             
             let badgeImage = UIGraphicsGetImageFromCurrentImageContext()!

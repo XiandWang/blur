@@ -42,7 +42,7 @@ class HomeController: UITableViewController {
     }
     
     func setupNavigationItems() {
-        navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationItem.title = "Inbox Chats"
     }
     

@@ -14,8 +14,8 @@ target 'Blur' do
   pod 'Firebase/Firestore'
 
 
-  pod 'FontAwesome.swift', '~> 1.2.0’
+  pod 'FontAwesome.swift'  
   pod 'MBProgressHUD'
   pod 'Kingfisher'
-  pod 'TDBadgedCell', '~> 4.2'
+  pod 'TDBadgedCell', '~> 5.2'
 end

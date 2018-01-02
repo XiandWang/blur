@@ -13,7 +13,7 @@
 		EE1FF2E01F14303A00340F65 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2DF1F14303A00340F65 /* MainTabBarController.swift */; };
 		EE1FF2E21F14322F00340F65 /* AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2E11F14322F00340F65 /* AccountController.swift */; };
 		EE1FF2E41F144BEB00340F65 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2E31F144BEB00340F65 /* LoginController.swift */; };
-		EE1FF2E61F14633800340F65 /* constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2E51F14633800340F65 /* constants.swift */; };
+		EE1FF2E61F14633800340F65 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FF2E51F14633800340F65 /* Constants.swift */; };
 		EE26D7541F8F59F50059AA61 /* HomeChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE26D7531F8F59F50059AA61 /* HomeChatCell.swift */; };
 		EE33B3E81FD2430C000816D0 /* ChooseUserNameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE33B3E71FD2430C000816D0 /* ChooseUserNameController.swift */; };
 		EE3C2D8E1F91B5DD00DE609F /* AddFriendController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3C2D8D1F91B5DD00DE609F /* AddFriendController.swift */; };
@@ -22,7 +22,9 @@
 		EE641EDC1FA99D1D000B1105 /* BadgeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDB1FA99D1D000B1105 /* BadgeHelper.swift */; };
 		EE641EDE1FA9A392000B1105 /* NewContactHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDD1FA9A392000B1105 /* NewContactHeader.swift */; };
 		EE641EE01FA9A888000B1105 /* NewRequestUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDF1FA9A888000B1105 /* NewRequestUserCell.swift */; };
-		EE6837CE1FAD66FA002E561E /* ImageMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6837CD1FAD66FA002E561E /* ImageMessageController.swift */; };
+		EE6837CE1FAD66FA002E561E /* ReceiverImageMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6837CD1FAD66FA002E561E /* ReceiverImageMessageController.swift */; };
+		EE6CB8361FF731940018453E /* MyAccountHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6CB8351FF731940018453E /* MyAccountHeader.swift */; };
+		EE6CB8381FF7B59A0018453E /* MyAccountImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6CB8371FF7B59A0018453E /* MyAccountImageCell.swift */; };
 		EE73E9FC1F8B0D1D00BED900 /* UserContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE73E9FB1F8B0D1D00BED900 /* UserContactCell.swift */; };
 		EE73E9FE1F8B320E00BED900 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE73E9FD1F8B320E00BED900 /* Message.swift */; };
 		EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */; };
@@ -48,6 +50,7 @@
 		EE9E0FB71FBE89930034E44C /* UIView+Frame.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9E0FA91FBE898E0034E44C /* UIView+Frame.swift */; };
 		EE9E0FB81FBE89930034E44C /* XWCutTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9E0FAA1FBE89920034E44C /* XWCutTool.swift */; };
 		EE9FE4AA1F611FDD00CF0A71 /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9FE4A91F611FDD00CF0A71 /* ContactsController.swift */; };
+		EEA41A8F1FF71BB300BADA61 /* MyAccountConroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA41A8E1FF71BB300BADA61 /* MyAccountConroller.swift */; };
 		EED8F8C31F67A21200DDD81E /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED8F8C21F67A21200DDD81E /* HomeController.swift */; };
 		EEDA4F741F8098410088286A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDA4F731F8098410088286A /* User.swift */; };
 		EEDA502F1F8219B20088286A /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDA502E1F8219B20088286A /* UserProfileController.swift */; };
@@ -83,7 +86,7 @@
 		EE1FF2DF1F14303A00340F65 /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		EE1FF2E11F14322F00340F65 /* AccountController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountController.swift; sourceTree = "<group>"; };
 		EE1FF2E31F144BEB00340F65 /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
-		EE1FF2E51F14633800340F65 /* constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = constants.swift; sourceTree = "<group>"; };
+		EE1FF2E51F14633800340F65 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		EE26D7531F8F59F50059AA61 /* HomeChatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeChatCell.swift; sourceTree = "<group>"; };
 		EE33B3E71FD2430C000816D0 /* ChooseUserNameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseUserNameController.swift; sourceTree = "<group>"; };
 		EE3C2D8D1F91B5DD00DE609F /* AddFriendController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFriendController.swift; sourceTree = "<group>"; };
@@ -92,7 +95,9 @@
 		EE641EDB1FA99D1D000B1105 /* BadgeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeHelper.swift; sourceTree = "<group>"; };
 		EE641EDD1FA9A392000B1105 /* NewContactHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewContactHeader.swift; sourceTree = "<group>"; };
 		EE641EDF1FA9A888000B1105 /* NewRequestUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestUserCell.swift; sourceTree = "<group>"; };
-		EE6837CD1FAD66FA002E561E /* ImageMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageController.swift; sourceTree = "<group>"; };
+		EE6837CD1FAD66FA002E561E /* ReceiverImageMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverImageMessageController.swift; sourceTree = "<group>"; };
+		EE6CB8351FF731940018453E /* MyAccountHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountHeader.swift; sourceTree = "<group>"; };
+		EE6CB8371FF7B59A0018453E /* MyAccountImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountImageCell.swift; sourceTree = "<group>"; };
 		EE73E9FB1F8B0D1D00BED900 /* UserContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserContactCell.swift; sourceTree = "<group>"; };
 		EE73E9FD1F8B320E00BED900 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		EE78EEF41F0D52C0008662C0 /* Blur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blur.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -124,6 +129,7 @@
 		EE9E0FA91FBE898E0034E44C /* UIView+Frame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Frame.swift"; sourceTree = "<group>"; };
 		EE9E0FAA1FBE89920034E44C /* XWCutTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XWCutTool.swift; sourceTree = "<group>"; };
 		EE9FE4A91F611FDD00CF0A71 /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsController.swift; sourceTree = "<group>"; };
+		EEA41A8E1FF71BB300BADA61 /* MyAccountConroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountConroller.swift; sourceTree = "<group>"; };
 		EED8F8C21F67A21200DDD81E /* HomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		EEDA4DFB1F7DDE9B0088286A /* Blur-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Blur-Bridging-Header.h"; sourceTree = "<group>"; };
 		EEDA4F731F8098410088286A /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -188,6 +194,8 @@
 				EE641EDD1FA9A392000B1105 /* NewContactHeader.swift */,
 				EE641EDF1FA9A888000B1105 /* NewRequestUserCell.swift */,
 				EE26D7531F8F59F50059AA61 /* HomeChatCell.swift */,
+				EE6CB8351FF731940018453E /* MyAccountHeader.swift */,
+				EE6CB8371FF7B59A0018453E /* MyAccountImageCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -234,7 +242,7 @@
 				EEDA4E181F7F68870088286A /* Controller */,
 				EE9E0FB91FBEAF800034E44C /* ImageEdit */,
 				EE78EEFB1F0D52C0008662C0 /* Main.storyboard */,
-				EE1FF2E51F14633800340F65 /* constants.swift */,
+				EE1FF2E51F14633800340F65 /* Constants.swift */,
 				EE78EEFE1F0D52C0008662C0 /* Assets.xcassets */,
 				EE78EF001F0D52C0008662C0 /* LaunchScreen.storyboard */,
 				EE78EF031F0D52C0008662C0 /* Info.plist */,
@@ -294,9 +302,10 @@
 				EE3C2D8D1F91B5DD00DE609F /* AddFriendController.swift */,
 				EE1FF2E11F14322F00340F65 /* AccountController.swift */,
 				EEDA502E1F8219B20088286A /* UserProfileController.swift */,
+				EEA41A8E1FF71BB300BADA61 /* MyAccountConroller.swift */,
 				EE1FF2DF1F14303A00340F65 /* MainTabBarController.swift */,
 				EE8FC5281FAEE0B00097936E /* MessagesPageViewController.swift */,
-				EE6837CD1FAD66FA002E561E /* ImageMessageController.swift */,
+				EE6837CD1FAD66FA002E561E /* ReceiverImageMessageController.swift */,
 				EEDA50301F8362090088286A /* PreviewPhotoController.swift */,
 			);
 			name = Controller;
@@ -385,22 +394,24 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = "xiandong wang";
 				TargetAttributes = {
 					EE78EEF31F0D52C0008662C0 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = S5TTSBD3PN;
-						LastSwiftMigration = 0830;
+						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
 					};
 					EE78EF071F0D52C0008662C0 = {
 						CreatedOnToolsVersion = 8.3.3;
+						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
 						TestTargetID = EE78EEF31F0D52C0008662C0;
 					};
 					EE78EF121F0D52C1008662C0 = {
 						CreatedOnToolsVersion = 8.3.3;
+						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
 						TestTargetID = EE78EEF31F0D52C0008662C0;
 					};
@@ -507,6 +518,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE6CB8361FF731940018453E /* MyAccountHeader.swift in Sources */,
+				EE6CB8381FF7B59A0018453E /* MyAccountImageCell.swift in Sources */,
 				EE1AB0A01F107CE1009C011E /* Extension.swift in Sources */,
 				EE1AB0A41F11A530009C011E /* AppHUD.swift in Sources */,
 				EE33B3E81FD2430C000816D0 /* ChooseUserNameController.swift in Sources */,
@@ -525,10 +538,11 @@
 				EE73E9FE1F8B320E00BED900 /* Message.swift in Sources */,
 				EE9E0FB51FBE89930034E44C /* XWMosaicTool.swift in Sources */,
 				EE9E0FB31FBE89930034E44C /* XWImageEditorController.swift in Sources */,
-				EE6837CE1FAD66FA002E561E /* ImageMessageController.swift in Sources */,
+				EE6837CE1FAD66FA002E561E /* ReceiverImageMessageController.swift in Sources */,
 				EEDA50311F8362090088286A /* PreviewPhotoController.swift in Sources */,
 				EE4F33D31F73BB2300BFC6AF /* TestController.swift in Sources */,
 				EE9E0FAF1FBE89930034E44C /* XWImageToolInfo.swift in Sources */,
+				EEA41A8F1FF71BB300BADA61 /* MyAccountConroller.swift in Sources */,
 				EEDA4F741F8098410088286A /* User.swift in Sources */,
 				EE78EEFA1F0D52C0008662C0 /* SignUpViewController.swift in Sources */,
 				EE73E9FC1F8B0D1D00BED900 /* UserContactCell.swift in Sources */,
@@ -546,7 +560,7 @@
 				EE9E0FB21FBE89930034E44C /* XWImageEditorTheme.swift in Sources */,
 				EE1FF2E41F144BEB00340F65 /* LoginController.swift in Sources */,
 				EE8FC5291FAEE0B00097936E /* MessagesPageViewController.swift in Sources */,
-				EE1FF2E61F14633800340F65 /* constants.swift in Sources */,
+				EE1FF2E61F14633800340F65 /* Constants.swift in Sources */,
 				EE9E0FB11FBE89930034E44C /* XWCutGridLayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -612,7 +626,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -620,7 +636,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -649,6 +669,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -663,7 +684,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -671,7 +694,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -692,6 +719,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -709,9 +737,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.hidingChat.HidingChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Blur/Blur-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				SWIFT_WHOLE_MODULE_OPTIMIZATION = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -727,8 +755,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.hidingChat.HidingChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Blur/Blur-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
-				SWIFT_WHOLE_MODULE_OPTIMIZATION = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -741,7 +770,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.BlurTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blur.app/Blur";
 			};
 			name = Debug;
@@ -755,7 +785,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.BlurTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Blur.app/Blur";
 			};
 			name = Release;
@@ -768,7 +799,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.BlurUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = Blur;
 			};
 			name = Debug;
@@ -781,7 +813,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.blur.BlurUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 				TEST_TARGET_NAME = Blur;
 			};
 			name = Release;

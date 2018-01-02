@@ -36,7 +36,7 @@ class XWCutGridView: UIView {
         
         superView.addSubview(self)
         
-        gridLayer = XWCutGridLayer(layer: self.superview?.layer)
+        gridLayer = XWCutGridLayer(layer: self.superview?.layer as Any)
         gridLayer.frame = self.bounds
         self.layer.addSublayer(gridLayer)
         

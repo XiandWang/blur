@@ -95,7 +95,7 @@ class PreviewPhotoController: UIViewController {
         allowSwitch.centerYAnchor.constraint(equalTo: allowSwitch.centerYAnchor).isActive = true
     }
     
-    func sendPhoto() {
+    @objc func sendPhoto() {
         self.navigationItem.setHidesBackButton(true, animated: true)
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         guard let fromId = Auth.auth().currentUser?.uid else { return }
