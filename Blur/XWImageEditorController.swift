@@ -20,6 +20,21 @@ class XWImageEditorController: UIViewController {
     var currentImage: UIImage
     var originalImage: UIImage
     
+    let resetImageButton: UIButton = {
+        let bt = UIButton(type: .custom)
+        let size = CGSize(width: 44, height: 44)
+        bt.setImage(UIImage.fontAwesomeIcon(name: .refresh, textColor: .black, size: size), for: .normal)
+        bt.backgroundColor = .white
+        bt.layer.cornerRadius = 25
+        bt.layer.masksToBounds = true
+        bt.layer.borderColor = YELLOW_COLOR.cgColor
+        bt.layer.borderWidth = 1.0
+        bt.alpha = 1.0
+        bt.addTarget(self, action: #selector(handleResetImage), for: .touchUpInside)
+        
+        return bt
+    }()
+    
     var currentTool: XWImageToolBase?
     
     init(with image: UIImage, sendTo user: User) {
@@ -43,9 +58,11 @@ class XWImageEditorController: UIViewController {
         self.initImageScrollView()
         self.initToolSettings()
         self.initNavigationBar()
+        //self.setupButtons()
+        
         
         if self.imageView == nil {
-            self.imageView  = UIImageView()
+            self.imageView = UIImageView()
             self.scrollView.addSubview(self.imageView)
             self.refreshImageView()
         }
@@ -58,10 +75,22 @@ class XWImageEditorController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        super.viewWillDisappear(animated)
         
         NotificationCenter.default.removeObserver(self)
     }
+    
+    @objc func handleResetImage() {
+        currentImage = originalImage
+        
+        refreshImageView()
+    }
+    
+    func setupButtons() {
+        self.view.addSubview(resetImageButton)
+        resetImageButton.anchor(top: nil, left: nil, bottom: self.menuView.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 5, paddingRight: 5, width: 50, height: 50)
+    }
+    
     
     func initMenuView() {
         if menuView == nil {
@@ -122,7 +151,19 @@ class XWImageEditorController: UIViewController {
     }
     
     func initNavigationBar() {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(imageEditFinishBtn))
+        let next = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(imageEditFinishBtn))
+        let reset = UIBarButtonItem.narrowButtonItem(image: UIImage.fontAwesomeIcon(name: .repeat, textColor: .black, size: CGSize.init(width: 30, height: 44)), target: self, action: #selector(handleResetImage))
+//        let next = UIBarButtonItem(image: UIImage.fontAwesomeIcon(name: .arrowRight, textColor: .black, size: CGSize.init(width: 30, height: 44)), style: .plain, target: self, action: #selector(imageEditFinishBtn))
+//        let reset = UIBarButtonItem(image: UIImage.fontAwesomeIcon(name: .refresh, textColor: .black, size: CGSize.init(width: 30, height: 44)), style: .plain, target: self, action: #selector(handleResetImage))
+        
+        let dl = UIBarButtonItem(image: UIImage.fontAwesomeIcon(name: .download, textColor: .black, size: CGSize.init(width: 30, height: 44)), style: .plain, target: self, action: #selector(handleResetImage))
+        //next.imageInsets = UIEdgeInsets(top: 0, left: -32 , bottom: 0, right: 0)
+        //dl.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        //reset.imageInsets = UIEdgeInsets(top: 0, left: -32 , bottom: 0, right: 0)
+        
+        self.navigationItem.rightBarButtonItems = [next, UIBarButtonItem.fixNavigationSpacer(), reset, UIBarButtonItem.fixNavigationSpacer()]
+        
     }
 
     
@@ -141,8 +182,8 @@ class XWImageEditorController: UIViewController {
     
     func fixZoomScaleWithAnimated(animated: Bool) {
         let minZoomScale = scrollView.minimumZoomScale
-        scrollView.maximumZoomScale = 0.95 * minZoomScale
-        scrollView.minimumZoomScale = 0.95 * minZoomScale
+        scrollView.maximumZoomScale = 0.92 * minZoomScale
+        scrollView.minimumZoomScale = 0.92 * minZoomScale
         
         scrollView.setZoomScale(scrollView.minimumZoomScale, animated: animated)
     }
@@ -264,6 +305,7 @@ class XWImageEditorController: UIViewController {
     }
     
     @objc func updateNavigationItem()  {
+        self.navigationItem.rightBarButtonItems = []
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(pushedDoneBtn))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(pushedCancelBtn))
         self.navigationItem.hidesBackButton = true

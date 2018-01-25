@@ -11,7 +11,7 @@ import Foundation
 struct User {
     let uid: String
     let username: String
-    let profileImgUrl: String?
+    var profileImgUrl: String?
     
     init(dictionary: [String: Any], uid: String) {
         self.uid = uid

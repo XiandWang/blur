@@ -19,6 +19,7 @@ class ChooseUserNameController: UIViewController {
         tf.clearButtonMode = .whileEditing
         tf.autocorrectionType = .no
         tf.autocapitalizationType = .none
+        tf.keyboardType = .alphabet
         tf.returnKeyType = .done
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle =  UITextBorderStyle.roundedRect
@@ -32,6 +33,16 @@ class ChooseUserNameController: UIViewController {
         lb.text = "Choose Username"
         lb.font = UIFont.boldSystemFont(ofSize: 20)
         lb.textAlignment = .center
+        lb.translatesAutoresizingMaskIntoConstraints = false
+        return lb
+    }()
+    
+    let usernameDescriptionLabel: UILabel = {
+        let lb = UILabel()
+        lb.text = "Username is your unique identifier in Hidingchat"
+        lb.font = UIFont.systemFont(ofSize: 14)
+        lb.textAlignment = .center
+        lb.textColor = TEXT_GRAY
         lb.translatesAutoresizingMaskIntoConstraints = false
         return lb
     }()
@@ -58,24 +69,23 @@ class ChooseUserNameController: UIViewController {
     
     @objc func handleUpdateUsername() {
         guard let name = usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), name.count < 15 && name.count > 2 else {
-            AppHUD.error("username should have more than 2 characters and less than 15 characters.")
+            AppHUD.error("username should have more than 2 characters and less than 15 characters.", isDarkTheme: true)
             return
         }
         if name.containsWhitespace {
-            AppHUD.error("username should not have white spaces")
+            AppHUD.error("username should not have white spaces", isDarkTheme: true)
+            return
         }
         
-        AppHUD.progress(nil)
+        AppHUD.progress(nil, isDarkTheme: true)
         
         guard let uid = uid else { return }
-        let childUpdates = [
-                            "/\(USERS_NODE)/\(uid)": ["username": name, "createdTime": Date().timeIntervalSince1970],
-                            "/usernames/\(name)": uid
-                            ] as [String : Any]
+        let childUpdates = ["/\(USERS_NODE)/\(uid)/username": name,
+                            "/usernames/\(name)": uid] as [String : Any]
         Database.database().reference().updateChildValues(childUpdates) { (err, ref) in
             if let err = err {
                 AppHUD.progressHidden()
-                AppHUD.error(err.localizedDescription)
+                AppHUD.error(err.localizedDescription, isDarkTheme: true)
                 return
             }
             AppHUD.progressHidden()
@@ -88,7 +98,7 @@ class ChooseUserNameController: UIViewController {
     @objc func handleTextInputChange() {
         let usernameCount = usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
         if usernameCount > 2 && usernameCount < 15 {
-            submitButton.backgroundColor = PRIMARY_COLOR
+            submitButton.backgroundColor = RED_COLOR
             submitButton.isEnabled = true
         } else {
             submitButton.backgroundColor = UIColor.lightGray
@@ -103,7 +113,7 @@ class ChooseUserNameController: UIViewController {
         stackView.spacing = 10
         
         view.addSubview(stackView)
-        stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 150)
+        stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 50, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 150)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

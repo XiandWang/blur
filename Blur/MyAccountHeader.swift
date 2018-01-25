@@ -26,10 +26,13 @@ class MyAccountHeader: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = BACKGROUND_GRAY
-        [userNameLabel, userProfileImageView, editProfileImageButton].forEach { (view) in
+        backgroundColor = .white
+
+        [userNameLabel, userProfileImageView, editProfileImageButton, bannerLabel].forEach { (view) in
             addSubview(view)
         }
+        
+        bannerLabel.layer.addBorder(edge: .bottom, color: YELLOW_COLOR, thickness: 10.0)
        
         userProfileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 12, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 80, height: 80)
         userNameLabel.anchor(top: nil, left: userProfileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 100, height: 0)
@@ -37,14 +40,7 @@ class MyAccountHeader: UICollectionViewCell {
         editProfileImageButton.anchor(top: nil, left: userProfileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         editProfileImageButton.centerYAnchor.constraint(equalTo: userProfileImageView.centerYAnchor, constant: 20).isActive = true
         
-        let topDivider = UIView()
-        topDivider.backgroundColor = .lightGray
-        let bottomDivider = UIView()
-        bottomDivider.backgroundColor = .lightGray
-        addSubview(topDivider)
-        addSubview(bottomDivider)
-        topDivider.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 1)
-        bottomDivider.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 1)
+       bannerLabel.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 56)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -75,5 +71,15 @@ class MyAccountHeader: UICollectionViewCell {
         bt.setTitle("Edit profile image", for: .normal)
         bt.setTitleColor(.purple, for: .normal)
         return bt
+    }()
+    
+    let bannerLabel: UILabel = {
+        let lb = UILabel()
+        lb.text = "Sent by me in 24 hrs"
+        lb.textAlignment = .center
+        lb.textColor = UIColor.rgb(red: 84, green: 109, blue: 126, alpha: 1)
+        lb.backgroundColor = BACKGROUND_GRAY
+        lb.font = UIFont.boldSystemFont(ofSize: 22)
+        return lb
     }()
 }

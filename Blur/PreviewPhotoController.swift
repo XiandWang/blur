@@ -33,7 +33,7 @@ class PreviewPhotoController: UIViewController {
     let questionlabel : UILabel = {
         let lb =  UILabel()
         lb.numberOfLines = 0
-        lb.lineBreakMode = NSLineBreakMode.byWordWrapping
+        lb.lineBreakMode = .byWordWrapping
         //lb.textAlignment = .center
         lb.text = "Do you allow the recipient to view the original image?"
         lb.font = UIFont.systemFont(ofSize: 16)
@@ -51,7 +51,7 @@ class PreviewPhotoController: UIViewController {
     let allowSwitch : UISwitch = {
         let s = UISwitch()
         s.isOn = false
-        s.onTintColor = PRIMARY_COLOR
+        s.onTintColor = RED_COLOR
         
         return s
     }()
@@ -68,6 +68,7 @@ class PreviewPhotoController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = BACKGROUND_GRAY
+        navigationItem.title = "Allow?"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Send", style: .plain, target: self, action: #selector(sendPhoto))
         setupViews()
     }
@@ -98,35 +99,41 @@ class PreviewPhotoController: UIViewController {
     @objc func sendPhoto() {
         self.navigationItem.setHidesBackButton(true, animated: true)
         self.navigationItem.rightBarButtonItem?.isEnabled = false
-        guard let fromId = Auth.auth().currentUser?.uid else { return }
+        guard let senderId = Auth.auth().currentUser?.uid else { return }
         guard let originalImage = originalImage, let editedImage = editedImage else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
         
+        // uploading images to Firebase Storage
         let meta = StorageMetadata(dictionary: ["contentType": "image/jpeg"])
+        
         guard let originalJpeg = UIImageJPEGRepresentation(originalImage, 0.3) else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
-        let originalTask = Storage.storage().reference().child("imagesSent").child(fromId).child(UUID().uuidString).putData(originalJpeg, metadata: meta)
         
-        guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.3) else {
+        let originalTask = Storage.storage().reference().child("imagesSent").child(senderId).child(UUID().uuidString).putData(originalJpeg, metadata: meta)
+        
+        guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.9) else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
-        let editedTask = Storage.storage().reference().child("imagesSent").child(fromId).child(UUID().uuidString).putData(editedJpeg, metadata: meta)
+        let editedTask = Storage.storage().reference().child("imagesSent").child(senderId).child(UUID().uuidString).putData(editedJpeg, metadata: meta)
         print(editedJpeg.count)
         print(originalJpeg.count)
+        
+    
         originalTask.observe(.failure) { (snap) in
             self.showError(self.UPLOADING_IMAGE_ERR)
             return
         }
         
-        editedTask.observe(.failure) { (_) in
+        editedTask.observe(.failure) { (snap) in
             self.showError(self.UPLOADING_IMAGE_ERR)
             return
         }
+        
         
         originalTask.observe(.success) { (originalSnap) in
             editedTask.observe(.success, handler: { (editedSnap) in
@@ -138,19 +145,24 @@ class PreviewPhotoController: UIViewController {
                     self.showError(self.UPLOADING_IMAGE_ERR)
                     return
                 }
-                guard let toId = self.user?.uid else { return }
-                let data = ["fromId": fromId, "toId": toId,
-                              "editedImageUrl": editedImageUrl, "originalImageUrl": originalImageUrl,
-                              "allowOriginal": self.allowSwitch.isOn, "isAcknowledged": false,
-                              "isOriginalViewed": false, "isDeleted": false,
-                              "createdTime": Date()] as [String : Any]
-                
-                Firestore.firestore().collection("imageMessages").addDocument(data: data, completion: { (error) in
+                guard let receiverId = self.user?.uid else { return }
+                let data = [MessageSchema.SENDER_ID: senderId, MessageSchema.RECEIVER_ID: receiverId,
+                            MessageSchema.EDITED_IMAGE_URL: editedImageUrl,
+                            MessageSchema.ORIGINAL_IMAGE_URL: originalImageUrl,
+                            MessageSchema.ALLOW_ORIGINAL: self.allowSwitch.isOn,
+                            MessageSchema.IS_ACKNOWLEDGED: false, MessageSchema.IS_ORIGINAL_VIEWED: false,
+                            MessageSchema.IS_DELETED: false, MessageSchema.CREATED_TIME: Date()] as [String : Any]
+                var ref: DocumentReference? = nil
+                ref = Firestore.firestore().collection("imageMessages").addDocument(data: data, completion: { (error) in
                     if let error = error {
                         self.showError(error.localizedDescription)
                         return
                     }
                     print("success")
+                    guard let ref = ref else { return }
+                    let message = Message(dict: data, messageId: ref.documentID)
+                    let userInfo = ["message": message]
+                    NotificationCenter.default.post(name: NEW_MESSAGE_CREATED, object: nil, userInfo: userInfo)
                     self.navigationController?.popToRootViewController(animated: true)
                 })
             })
@@ -158,7 +170,7 @@ class PreviewPhotoController: UIViewController {
     }
     
     fileprivate func showError(_ message: String) {
-        AppHUD.error(message)
+        AppHUD.error(message, isDarkTheme: true)
         self.navigationItem.setHidesBackButton(false, animated: true)
         navigationItem.rightBarButtonItem?.isEnabled = true
     }

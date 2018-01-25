@@ -45,13 +45,13 @@ class UserProfileController: UIViewController {
     
     let sendPhotoButton: UIButton = {
         let bt = UIButton(type: .system)
-        bt.backgroundColor = PRIMARY_COLOR
+        bt.backgroundColor = YELLOW_COLOR
         
         bt.setTitle("Send a Photo", for: .normal)
-        bt.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        bt.setTitleColor(.white, for: .normal)
+        bt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        bt.setTitleColor(.black, for: .normal)
         
-        bt.layer.cornerRadius = 20
+        bt.layer.cornerRadius = 22
         bt.layer.masksToBounds = true
         bt.addTarget(self, action: #selector(handleSendPhoto), for: .touchUpInside)
         return bt
@@ -68,6 +68,14 @@ class UserProfileController: UIViewController {
         navigationItem.title = "Profile"
         view?.backgroundColor = BACKGROUND_GRAY
         setupViews()
+        
+        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(navback))
+        swipe.direction = .right
+        view.addGestureRecognizer(swipe)
+    }
+    
+    @objc func navback() {
+        self.navigationController?.popToRootViewController(animated: true)
     }
 
     @objc func handleSendPhoto() {
@@ -76,13 +84,13 @@ class UserProfileController: UIViewController {
         
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
-            picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+            picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
             picker.sourceType = .camera
             picker.allowsEditing = false
             self.present(picker, animated: true, completion: nil)
         }))
         actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
-            picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+            picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
             picker.sourceType = .photoLibrary
             picker.allowsEditing = false
             self.present(picker, animated: true, completion: nil)
@@ -91,7 +99,6 @@ class UserProfileController: UIViewController {
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         self.present(actionSheet, animated: true, completion: nil)
-    
     }
     
     fileprivate func setupViews() {
@@ -100,9 +107,6 @@ class UserProfileController: UIViewController {
         userView.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 100)
         userView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20).isActive = true
 
-//        userView.addSubview(userProfileImageView)
-
-//        userProfileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         view.addSubview(userProfileImageView)
         userProfileImageView.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 100)
         userProfileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true

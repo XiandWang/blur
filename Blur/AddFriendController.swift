@@ -20,11 +20,20 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        UIBarButtonItem.appearance(whenContainedInInstancesOf:[UISearchBar.self]).tintColor = UIColor.white
+        UIBarButtonItem.appearance(whenContainedInInstancesOf:[UISearchBar.self]).tintColor = UIColor.black
         navigationItem.title = "Search"
         tableView?.register(UserSearchCell.self, forCellReuseIdentifier: cellId)
         setupSearchController()
         tableView.keyboardDismissMode = .none
+        tableView.separatorStyle = .none
+        
+        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(navback))
+        swipe.direction = .right
+        view.addGestureRecognizer(swipe)
+    }
+
+    @objc func navback() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     func setupSearchController() {
@@ -41,11 +50,13 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
         definesPresentationContext = true
         
         searchBar.isTranslucent = true
-        searchBar.layer.borderColor = PRIMARY_COLOR.cgColor
-        searchBar.barTintColor = PRIMARY_COLOR
+        searchBar.barTintColor = YELLOW_COLOR
+        searchBar.layer.borderColor = YELLOW_COLOR.cgColor
         tableView.tableHeaderView = searchBar
         //searchBar.becomeFirstResponder()
         //navigationItem.titleView = searchController.searchBar
+        
+        
     }
     
     
@@ -74,15 +85,18 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let sendAction = UIAlertAction(title: "Send Friend Request", style: .default) { (action) in
             guard let currentUid = Auth.auth().currentUser?.uid else { return }
-            let receiverValues = [currentUid : ["status": FriendStatus.PENDING.rawValue, "createdTime": Date().timeIntervalSince1970]]
+            AppHUD.progress(nil, isDarkTheme: true)
+            let receiverValues = [currentUid : ["status": FriendStatus.pending.rawValue, "createdTime":                 Date().timeIntervalSince1970]]
             self.ref.child(RECEIVER_FRIEND_REQUESTS_NODE).child(user.uid).updateChildValues(receiverValues, withCompletionBlock: { (err : Error?, _) in
+                AppHUD.progressHidden()
                 if let err = err {
-                    AppHUD.error(err.localizedDescription)
+                    AppHUD.error(err.localizedDescription, isDarkTheme: true)
                     return
                 }
-                AppHUD.success("Request Sent")
-                let senderValues = [user.uid: ["status" : FriendStatus.PENDING.rawValue, "createdTime": Date().timeIntervalSince1970]]
+                AppHUD.success("Request Sent", isDarkTheme: true)
+                let senderValues = [user.uid: ["status" : FriendStatus.pending.rawValue, "createdTime": Date().timeIntervalSince1970]]
                 self.ref.child(SENDER_FRIEND_REQUESTS_NODE).child(currentUid).updateChildValues(senderValues)
+                self.navigationController?.popToRootViewController(animated: true)
                 return
             })
         }
@@ -99,7 +113,7 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
                 tableView.backgroundView = nil
                 return users.count
             } else {
-                TableViewHelper.emptyMessage(message: "No results found", viewController: self)
+                TableViewHelper.emptyMessage(message: "No users found", viewController: self)
                 return 0
             }
         } else {
@@ -123,7 +137,7 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
 extension AddFriendController : UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let term = searchController.searchBar.text?.trimmingCharacters(in: .whitespaces), term != "" {
-            AppHUD.progress(nil)
+            AppHUD.progress(nil, isDarkTheme: true)
             Database.database().reference().child(USERS_NODE).queryOrdered(byChild: "username").queryEqual(toValue: term).observeSingleEvent(of: .value, with: { (snap) in
                 self.hasSearched = true
                 AppHUD.progressHidden()

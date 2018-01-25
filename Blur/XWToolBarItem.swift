@@ -13,7 +13,7 @@ class XWToolBarItem: UIView {
     var selected: Bool = false
     
     lazy var iconView: UIImageView = {
-        let iv = UIImageView(frame: CGRect(x: 35, y: 5, width: 35, height: 35))
+        let iv = UIImageView(frame: CGRect(x: 35, y: 10, width: 35, height: 35))
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 5
         iv.contentMode = .scaleAspectFill
@@ -23,9 +23,9 @@ class XWToolBarItem: UIView {
     lazy var titleLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: 0, y: self.iconView.bottom, width: self.frame.size.width, height: 15))
         label.backgroundColor = .clear
-        label.font = UIFont.systemFont(ofSize: 13)
+        label.font = UIFont.boldSystemFont(ofSize: 15)
         label.textAlignment = .center
-        label.textColor = .yellow
+        label.textColor = YELLOW_COLOR
         return label
     }()
     
@@ -41,7 +41,7 @@ class XWToolBarItem: UIView {
         addGestureRecognizer(gesture)
         self.toolInfo = toolInfo
         titleLabel.text = toolInfo.title
-        //iconView.image = toolInfo
+        iconView.image = toolInfo.iconImage
     }
     
     required init?(coder aDecoder: NSCoder) {

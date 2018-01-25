@@ -33,16 +33,24 @@ class NewFriendsRequestController: UITableViewController {
         tableView.allowsSelection = false
         
         getNewFriends()
+        
+        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(navBack))
+        swipe.direction = .right
+        view.addGestureRecognizer(swipe)
+    }
+    
+    @objc func navBack() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     fileprivate func getNewFriends() {
         for uid in newRequestUids {
-            dbRef.child(USERS_NODE).child(uid).observeSingleEvent(of: .value, with: { (snap: DataSnapshot) in
-                guard let dict = snap.value as? [String: Any] else { return }
-                let user = User(dictionary: dict, uid: snap.key)
-                self.newUsers.append(user)
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+            Database.getUser(uid: uid, completion: { (user, error) in
+                if let user = user {
+                    self.newUsers.append(user)
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                 }
             })
         }
@@ -63,18 +71,20 @@ class NewFriendsRequestController: UITableViewController {
     
     func addFriend(for user: User, fromRow row: Int) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        AppHUD.progress(nil, isDarkTheme: true)
         let time = Date().timeIntervalSince1970
-        let friendValue = ["status": FriendStatus.ADDED.rawValue, "updatedTime": time] as [String : Any]
+        let friendValue = ["status": FriendStatus.added.rawValue, "updatedTime": time] as [String : Any]
         let childUpdates = ["/\(FRIENDS_NODE)/\(user.uid)/\(currentUid)": friendValue,
                             "/\(FRIENDS_NODE)/\(currentUid)/\(user.uid)": friendValue,
-                            "/\(RECEIVER_FRIEND_REQUESTS_NODE)/\(currentUid)/\(user.uid)": ["status": FriendStatus.ADDED.rawValue, "updatedTime": time],
-                            "/\(SENDER_FRIEND_REQUESTS_NODE)/\(user.uid)/\(currentUid)": ["status": FriendStatus.ADDED.rawValue, "updatedTime": time],] as [String : Any]
+                            "/\(RECEIVER_FRIEND_REQUESTS_NODE)/\(currentUid)/\(user.uid)": ["status": FriendStatus.added.rawValue, "updatedTime": time],
+                            "/\(SENDER_FRIEND_REQUESTS_NODE)/\(user.uid)/\(currentUid)": ["status": FriendStatus.added.rawValue, "updatedTime": time],] as [String : Any]
         dbRef.updateChildValues(childUpdates) { (err, ref) in
+            AppHUD.progressHidden()
             if let err =  err {
-                AppHUD.error(err.localizedDescription)
+                AppHUD.error(err.localizedDescription,  isDarkTheme: true)
                 return
             }
-            AppHUD.success("Friend Added")
+            AppHUD.success("Friend Added", isDarkTheme: true)
             self.newUsers.remove(at: row)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -83,10 +93,38 @@ class NewFriendsRequestController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return newUsers.count
+        if newUsers.count == 0 {
+            TableViewHelper.emptyMessage(message: "You have no new requests.", viewController: self)
+            return 0
+        } else {
+            tableView.backgroundView = nil
+            tableView.backgroundColor = .white
+            return newUsers.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 66
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        let user = newUsers[indexPath.row]
+        let time = Date().timeIntervalSince1970
+        let deleteUpdates = ["/\(RECEIVER_FRIEND_REQUESTS_NODE)/\(currentUid)/\(user.uid)":
+                                    ["status": FriendStatus.deleted.rawValue, "updatedTime": time],
+                             "/\(SENDER_FRIEND_REQUESTS_NODE)/\(user.uid)/\(currentUid)":
+                                    ["status": FriendStatus.deleted.rawValue, "updatedTime": time]
+                            ] as [String: Any]
+        dbRef.updateChildValues(deleteUpdates) { (error, _) in
+            if let error = error {
+                AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                return
+            }
+            self.newUsers.remove(at: indexPath.row)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
 }

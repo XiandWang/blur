@@ -8,9 +8,10 @@
 
 import UIKit
 import Firebase
+import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
@@ -18,15 +19,68 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
-        UINavigationBar.appearance().barTintColor = PRIMARY_COLOR
-        UINavigationBar.appearance().tintColor = .white
+        UINavigationBar.appearance().barTintColor = UIColor.rgb(red: 255, green: 218, blue: 68, alpha: 1)
+        UINavigationBar.appearance().tintColor = .black
         
         window = UIWindow()
         window?.rootViewController = MainTabBarController()
-        
         window?.tintColor = .black
     
+        registerNotifications(app: application)
+        
         return true
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("registered with fcm", fcmToken) 
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(.alert)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print(response.notification)
+        
+        let userInfo = response.notification.request.content.userInfo
+        
+        if let type = userInfo["type"] as? String {
+            print("type", type, "&&&&&&&&&&&&&&&&&&&")
+            guard let tabBarController = window?.rootViewController as? MainTabBarController else { return }
+            if type == "newFriendRequest" {
+                
+                tabBarController.selectedIndex = 1
+            } else if type == "newImageMessage" {
+                tabBarController.selectedIndex = 0
+            } else if type == "newMessageNotification" {
+                tabBarController.selectedIndex = 2
+            }
+        }
+    }
+    
+    
+    fileprivate func registerNotifications(app: UIApplication) {
+        print("attempt to register")
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        
+        let options: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: options) { (granted, error) in
+            if let error = error {
+                print(error as Any)
+            }
+            
+            if granted {
+                print(")))))))))))))))) granted")
+            } else {
+                print("denied")
+            }
+        }
+        app.registerForRemoteNotifications()
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print("device token", deviceToken)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

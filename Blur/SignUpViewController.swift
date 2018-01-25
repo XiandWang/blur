@@ -47,7 +47,7 @@ class SignUpViewController: UIViewController {
     let signUpButton : UIButton = {
         let bt = UIButton(type: .system)
         bt.setTitle("Sign up", for: .normal)
-        bt.setTitleColor(.white, for: .normal)
+        bt.setTitleColor(.black, for: .normal)
         bt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         bt.backgroundColor = .lightGray
         bt.layer.cornerRadius = 25
@@ -62,7 +62,7 @@ class SignUpViewController: UIViewController {
         let bt = UIButton(type: .system)
         let attributedTitle = NSMutableAttributedString(string: "Already have an account? ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
         
-        attributedTitle.append(NSAttributedString(string: "Login!", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: PRIMARY_COLOR
+        attributedTitle.append(NSAttributedString(string: "Login!", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: RED_COLOR
             ]))
         
         bt.setAttributedTitle(attributedTitle, for: .normal)
@@ -89,13 +89,13 @@ class SignUpViewController: UIViewController {
     }
     
     fileprivate func setupInputFields() {
-        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, signUpButton])
+        let stackView = UIStackView(arrangedSubviews: [signUpLabel, emailTextField, passwordTextField, signUpButton])
         
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 10
         view.addSubview(stackView)
-        stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 170)
+        stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 220)
     }
 }
 
@@ -108,24 +108,28 @@ extension SignUpViewController {
         
         signUpButton.setTitle("Signing up...", for: .normal)
         signUpButton.isEnabled = false
-        AppHUD.progress(nil)
+        AppHUD.progress(nil,  isDarkTheme: true)
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
             if let error = error {
                 self.processSignUpError(error: error)
                 return
             }
             guard let uid = user?.uid else { return }
+            guard let fcmToken = Messaging.messaging().fcmToken else {
+                AppHUD.error("fcm Token error", isDarkTheme: true)
+                return
+            }
             let time = Date().timeIntervalSince1970
-            let childUpdates = ["/\(FRIENDS_NODE)/\(uid)/\(uid)": ["status": FriendStatus.ADDED.rawValue, "updatedTime": time],
+            let childUpdates = ["/\(FRIENDS_NODE)/\(uid)/\(uid)": ["status": FriendStatus.added.rawValue, "updatedTime": time],
                         
-                                "/\(USERS_NODE)/\(uid)": ["createdTime": time]] as [String : Any]
+                                "/\(USERS_NODE)/\(uid)": ["createdTime": time, "fcmToken": fcmToken]] as [String : Any]
             Database.database().reference().updateChildValues(childUpdates, withCompletionBlock: { (error, ref) in
                 if let error = error  {
                     self.processSignUpError(error: error)
                     return
                 }
                 AppHUD.progressHidden()
-                //AppHUD.success("Thank you")
+                AppHUD.success("Thank you", isDarkTheme: false)
                 let chooseNameController = ChooseUserNameController()
                 chooseNameController.uid = uid
                 self.navigationController?.pushViewController(chooseNameController, animated: true)
@@ -139,7 +143,7 @@ extension SignUpViewController {
     
     fileprivate func processSignUpError(error: Error) {
         AppHUD.progressHidden()
-        AppHUD.error(error.localizedDescription)
+        AppHUD.error(error.localizedDescription,  isDarkTheme: true)
         self.signUpButton.setTitle("Sign up", for: .normal)
         self.signUpButton.isEnabled = true
     }
@@ -149,7 +153,7 @@ extension SignUpViewController {
         let isPasswordValid = passwordTextField.text?.count ?? 0 > 0
         if isEmailValid && isPasswordValid {
             signUpButton.isEnabled = true
-            signUpButton.backgroundColor = PRIMARY_COLOR
+            signUpButton.backgroundColor = YELLOW_COLOR
         } else {
             signUpButton.isEnabled = false
             signUpButton.backgroundColor = UIColor.lightGray

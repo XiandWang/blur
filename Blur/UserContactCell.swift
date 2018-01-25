@@ -27,7 +27,7 @@ class UserContactCell : UITableViewCell {
     
     let usernameLabel : UILabel = {
         let lb = UILabel()
-        lb.font = UIFont.systemFont(ofSize: 16)
+        lb.font = UIFont.boldSystemFont(ofSize: 16)
         lb.numberOfLines = 1
         lb.text = ""
         return lb
@@ -42,17 +42,12 @@ class UserContactCell : UITableViewCell {
         return iv
     }()
     
-    let sendButton : UIButton = {
-        let bt = UIButton()
-        bt.setImage(UIImage.fontAwesomeIcon(name: .sendO, textColor: PRIMARY_COLOR_LIGHT, size: CGSize(width: 24, height: 24)), for: .normal)
-        return bt
-    }()
+    
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(usernameLabel)
         contentView.addSubview(userImageView)
-        contentView.addSubview(sendButton)
         setupConstraints()
     }
     

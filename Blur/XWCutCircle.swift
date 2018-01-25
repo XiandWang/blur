@@ -28,7 +28,7 @@ class XWCutCircle: UIView {
         let y = bounds.size.height/2 - bounds.size.height/6
         let width = bounds.size.width/3
         let height = bounds.size.height/3
-        context.setFillColor(UIColor.red.cgColor)
+        context.setFillColor(RED_COLOR.cgColor)
         context.fillEllipse(in: CGRect(x: x, y: y, width: width, height: height))
     }
 }

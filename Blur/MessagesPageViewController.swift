@@ -12,20 +12,20 @@ class MessagesPageViewController: UIPageViewController {
     
     var messages: [Message]?
     
-    var fromUser: User? {
+    var senderUser: User? {
         didSet {
-            if let fromUser = fromUser {
-                self.navigationController?.navigationItem.title = fromUser.username
+            if let senderUser = senderUser {
+                self.navigationController?.navigationItem.title = senderUser.username
             }
         }
     }
     
     var currentIndex: Int?
     
-    init(messages: [Message], fromUser: User) {
+    init(messages: [Message], senderUser: User) {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         self.messages = messages
-        self.fromUser = fromUser
+        self.senderUser = senderUser
     }
     
     required init?(coder: NSCoder) {
@@ -34,7 +34,7 @@ class MessagesPageViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = fromUser!.username
+        self.navigationItem.title = senderUser?.username ?? ""
         self.dataSource = self
         if let imageMessageController = configureImageMessageController(index: currentIndex ?? 0) {
             let controllers = [imageMessageController]
@@ -43,11 +43,19 @@ class MessagesPageViewController: UIPageViewController {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        self.navigationController?.navigationBar.barTintColor = YELLOW_COLOR
+        self.navigationController?.navigationBar.isTranslucent = false
+    }
+    
     func configureImageMessageController(index: Int) -> ReceiverImageMessageController? {
         let imageMessageController = ReceiverImageMessageController()
         if let message = messages?[index] {
             imageMessageController.message = message
-            imageMessageController.fromUser = fromUser
+            imageMessageController.senderUser = senderUser
             imageMessageController.photoIndex = index
             return imageMessageController
         }

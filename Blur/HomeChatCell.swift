@@ -31,7 +31,7 @@ class HomeChatCell: UITableViewCell {
             if let unreadNum = self.messages?.filter({ (message) -> Bool in
                 return !message.isAcknowledged
             }).count, unreadNum > 0 {
-                let badgeImage = BadgeHelper.createBadge(string: "\(unreadNum)", fontSize: 11, backgroundColor: .red)
+                let badgeImage = BadgeHelper.createBadge(string: "\(unreadNum)", fontSize: 11, backgroundColor: RED_COLOR)
                 badgeImageView.image = badgeImage
             } else {
                 badgeImageView.image = nil
@@ -44,7 +44,7 @@ class HomeChatCell: UITableViewCell {
             }
             if let totalCount = messages?.count, totalCount > 0 {
                 if let hiddenNum = self.messages?.filter({ (message) -> Bool in
-                    return !message.isOriginalViewed
+                    return !message.allowOriginal
                 }).count, hiddenNum > 0 {
                     hiddenNumberLabel.textColor = .gray
                     hiddenNumberLabel.text = "\(hiddenNum) hidden left, \(totalCount) total"
@@ -52,6 +52,8 @@ class HomeChatCell: UITableViewCell {
                     hiddenNumberLabel.textColor = .gray
                     hiddenNumberLabel.text = "no hidden left, \(totalCount) total"
                 }
+            } else {
+                hiddenNumberLabel.text = nil
             }
         }
     }
