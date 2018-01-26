@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         FirebaseApp.configure()
         UINavigationBar.appearance().barTintColor = UIColor.rgb(red: 255, green: 218, blue: 68, alpha: 1)
         UINavigationBar.appearance().tintColor = .black
-        
+
         window = UIWindow()
         window?.rootViewController = MainTabBarController()
         window?.tintColor = .black

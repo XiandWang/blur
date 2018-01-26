@@ -67,7 +67,7 @@ class LoginController: UIViewController {
 
         bt.setTitle("Login", for: .normal)
         bt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        bt.setTitleColor(.black, for: .normal)
+        bt.setTitleColor(.white, for: .normal)
         
         bt.isEnabled = false
         bt.layer.cornerRadius = 25
@@ -158,9 +158,11 @@ extension LoginController {
         let isPasswdValid = passWordTextField.text?.count ?? 0 > 0
         if isEmailValid && isPasswdValid {
             loginButton.backgroundColor = YELLOW_COLOR
+            loginButton.setTitleColor(.black, for: .normal)
             loginButton.isEnabled = true
         } else {
             loginButton.backgroundColor = UIColor.lightGray
+            loginButton.setTitleColor(.white, for: .normal)
             loginButton.isEnabled = false
         }
     }

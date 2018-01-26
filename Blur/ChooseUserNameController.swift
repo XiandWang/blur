@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class ChooseUserNameController: UIViewController {
+class ChooseUserNameController: UIViewController, UITextFieldDelegate {
     
     var uid: String?
     
@@ -22,9 +22,10 @@ class ChooseUserNameController: UIViewController {
         tf.keyboardType = .alphabet
         tf.returnKeyType = .done
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        tf.borderStyle =  UITextBorderStyle.roundedRect
+        tf.borderStyle = UITextBorderStyle.roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        
         return tf
     }()
     
@@ -64,6 +65,7 @@ class ChooseUserNameController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        usernameTextField.delegate = self
         setupViews()
     }
     
@@ -85,7 +87,7 @@ class ChooseUserNameController: UIViewController {
         Database.database().reference().updateChildValues(childUpdates) { (err, ref) in
             if let err = err {
                 AppHUD.progressHidden()
-                AppHUD.error(err.localizedDescription, isDarkTheme: true)
+                AppHUD.error(err.localizedDescription + "\nThe username is already taken", isDarkTheme: true)
                 return
             }
             AppHUD.progressHidden()
@@ -98,10 +100,12 @@ class ChooseUserNameController: UIViewController {
     @objc func handleTextInputChange() {
         let usernameCount = usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
         if usernameCount > 2 && usernameCount < 15 {
-            submitButton.backgroundColor = RED_COLOR
+            submitButton.backgroundColor = YELLOW_COLOR
+            submitButton.setTitleColor(.black, for: .normal)
             submitButton.isEnabled = true
         } else {
             submitButton.backgroundColor = UIColor.lightGray
+            submitButton.setTitleColor(.white, for: .normal)
             submitButton.isEnabled = false
         }
     }
@@ -119,4 +123,13 @@ class ChooseUserNameController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("return is entered")
+        handleUpdateUsername()
+        return true
+    }
 }
+
+
+

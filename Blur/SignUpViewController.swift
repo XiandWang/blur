@@ -47,7 +47,7 @@ class SignUpViewController: UIViewController {
     let signUpButton : UIButton = {
         let bt = UIButton(type: .system)
         bt.setTitle("Sign up", for: .normal)
-        bt.setTitleColor(.black, for: .normal)
+        bt.setTitleColor(.white, for: .normal)
         bt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         bt.backgroundColor = .lightGray
         bt.layer.cornerRadius = 25
@@ -154,9 +154,11 @@ extension SignUpViewController {
         if isEmailValid && isPasswordValid {
             signUpButton.isEnabled = true
             signUpButton.backgroundColor = YELLOW_COLOR
+            signUpButton.setTitleColor(.black, for: .normal)
         } else {
             signUpButton.isEnabled = false
             signUpButton.backgroundColor = UIColor.lightGray
+            signUpButton.setTitleColor(.white, for: .normal)
         }
     }
 

@@ -11,14 +11,13 @@ import Firebase
 
 class NewFriendsRequestController: UITableViewController {
     private let cellId = "newFriendsRequestCellId"
-    var newRequestUids = [String]()
-    var newUsers = [User]()
+    var newRequestUsers = [User]()
     
     let dbRef = Database.database().reference()
     
-    init(newRequestUids : [String]) {
+    init(newRequestUsers : [User]) {
         super.init(nibName: nil, bundle: nil)
-        self.newRequestUids = newRequestUids
+        self.newRequestUsers = newRequestUsers
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -32,8 +31,6 @@ class NewFriendsRequestController: UITableViewController {
         //tableView.separatorStyle = .none
         tableView.allowsSelection = false
         
-        getNewFriends()
-        
         let swipe = UISwipeGestureRecognizer(target: self, action: #selector(navBack))
         swipe.direction = .right
         view.addGestureRecognizer(swipe)
@@ -43,29 +40,16 @@ class NewFriendsRequestController: UITableViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    fileprivate func getNewFriends() {
-        for uid in newRequestUids {
-            Database.getUser(uid: uid, completion: { (user, error) in
-                if let user = user {
-                    self.newUsers.append(user)
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                }
-            })
-        }
-    }
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! NewRequestUserCell
-        cell.user = newUsers[indexPath.row]
+        cell.user = newRequestUsers[indexPath.row]
         cell.acceptButton.tag = indexPath.row
         cell.acceptButton.addTarget(self, action: #selector(handleAcceptRequest), for: .touchUpInside)
         return cell
     }
     
     @objc func handleAcceptRequest(sender: UIButton) {
-        let user = newUsers[sender.tag]
+        let user = newRequestUsers[sender.tag]
         addFriend(for: user, fromRow: sender.tag)
     }
     
@@ -85,7 +69,7 @@ class NewFriendsRequestController: UITableViewController {
                 return
             }
             AppHUD.success("Friend Added", isDarkTheme: true)
-            self.newUsers.remove(at: row)
+            self.newRequestUsers.remove(at: row)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -93,13 +77,13 @@ class NewFriendsRequestController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if newUsers.count == 0 {
+        if newRequestUsers.count == 0 {
             TableViewHelper.emptyMessage(message: "You have no new requests.", viewController: self)
             return 0
         } else {
             tableView.backgroundView = nil
             tableView.backgroundColor = .white
-            return newUsers.count
+            return newRequestUsers.count
         }
     }
     
@@ -109,7 +93,7 @@ class NewFriendsRequestController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        let user = newUsers[indexPath.row]
+        let user = newRequestUsers[indexPath.row]
         let time = Date().timeIntervalSince1970
         let deleteUpdates = ["/\(RECEIVER_FRIEND_REQUESTS_NODE)/\(currentUid)/\(user.uid)":
                                     ["status": FriendStatus.deleted.rawValue, "updatedTime": time],
@@ -121,7 +105,7 @@ class NewFriendsRequestController: UITableViewController {
                 AppHUD.error(error.localizedDescription, isDarkTheme: true)
                 return
             }
-            self.newUsers.remove(at: indexPath.row)
+            self.newRequestUsers.remove(at: indexPath.row)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }

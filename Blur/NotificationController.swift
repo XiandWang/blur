@@ -68,11 +68,6 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         AppHUD.progressHidden()
     }
     
-//    fileprivate func observeNotifications() {
-//        guard let curUserId = Auth.auth().currentUser?.uid else { return }
-//        Database.database().reference().child("notifications").child(curUserId).observe
-//    }
-    
     fileprivate func listenForNotifications() {
         guard let curUserId = Auth.auth().currentUser?.uid else { return }
         Firestore.firestore().collection("notifications")

@@ -127,7 +127,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.view.backgroundColor = .clear
-       
+
         navigationItem.backBarButtonItem?.tintColor = YELLOW_COLOR
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: YELLOW_COLOR]
     }

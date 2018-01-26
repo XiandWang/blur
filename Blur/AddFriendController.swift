@@ -53,7 +53,7 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
         searchBar.barTintColor = YELLOW_COLOR
         searchBar.layer.borderColor = YELLOW_COLOR.cgColor
         tableView.tableHeaderView = searchBar
-        //searchBar.becomeFirstResponder()
+        searchBar.becomeFirstResponder()
         //navigationItem.titleView = searchController.searchBar
         
         

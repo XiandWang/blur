@@ -48,13 +48,18 @@ class NotificationCell: UICollectionViewCell {
     
     fileprivate func getMessage() {
         guard let notification = notification else { return }
+        print(notification.notificationId, "notificationId")
+        print(notification.messageId, "messageId")
         Firestore.firestore().collection(IMAGE_MESSAGES_NODE).document(notification.messageId).getDocument { (snap, error) in
             if let error = error {
                 AppHUD.error(error.localizedDescription,  isDarkTheme: true)
                 return
             }
-            if let snap = snap {
-                self.message = Message(dict: snap.data(), messageId: snap.documentID)
+            
+            if let snap = snap, let snapData = snap.data(){
+                print(snap.data())
+                print(snap.documentID)
+                self.message = Message(dict: snapData, messageId: snap.documentID)
             }
         }
     }

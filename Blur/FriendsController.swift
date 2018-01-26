@@ -15,7 +15,7 @@ class FriendsController: UITableViewController {
     private let cellId = "userFriendCellId"
     let ref = Database.database().reference()
     
-    var newRequestUids = [String]()
+    var newRequestUids = [User]()
     var users : [User] = []
     var titleUserDict = [String: [User]]()
     var userTitles : [String] = []
@@ -25,12 +25,16 @@ class FriendsController: UITableViewController {
         super.viewDidLoad()
         navigationItem.title = "Friends"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddFriends))
+        
         view?.backgroundColor = .white
         tableView.register(UserContactCell.self, forCellReuseIdentifier: cellId)
         tableView.sectionIndexColor = .black
         observeFriends()
         observeFriendRequests()
+        
+        let userPlus = UIImage.fontAwesomeIcon(name: .userPlus, textColor: .black, size: CGSize(width: 30, height: 44))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: userPlus, style: .plain, target: self, action: #selector(handleAddFriends))
+        navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
     }
     
     func setupHeaderView() {
@@ -142,8 +146,14 @@ extension FriendsController {
             self.newRequestUids = []
             for c in snap.children {
                 guard let child = c as? DataSnapshot else { return }
-                self.newRequestUids.append(child.key)
+//                self.newRequestUids.append(child.key)
+                Database.getUser(uid: child.key, completion: { (user, error) in
+                    if let user = user {
+                        self.newRequestUids.append(user)
+                    }
+                })
             }
+            
             DispatchQueue.main.async {
                 self.setupHeaderView()
                 let cell = self.tableView.tableHeaderView as? NewContactHeader
@@ -158,7 +168,7 @@ extension FriendsController {
 // Gestures
 extension FriendsController {
     @objc func handleFriendsRequests() {
-        let newFriendsRequestController = NewFriendsRequestController(newRequestUids : self.newRequestUids)
+        let newFriendsRequestController = NewFriendsRequestController(newRequestUsers: self.newRequestUids)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         self.navigationController?.pushViewController(newFriendsRequestController, animated: true)
     }

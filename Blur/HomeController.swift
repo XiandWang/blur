@@ -154,10 +154,10 @@ class HomeController: UITableViewController {
     }
     
     fileprivate func addMessage(doc : DocumentSnapshot) {
-        
-        let senderId = doc.data()[MessageSchema.SENDER_ID] as! String
-        let message = Message(dict: doc.data(), messageId: doc.documentID)
-        let urls = [doc.data()[MessageSchema.EDITED_IMAGE_URL] as! String, doc.data()[MessageSchema.ORIGINAL_IMAGE_URL] as! String].map { URL(string: $0 )! }
+        guard let docData = doc.data() else { return }
+        let senderId = docData[MessageSchema.SENDER_ID] as! String
+        let message = Message(dict: docData, messageId: doc.documentID)
+        let urls = [docData[MessageSchema.EDITED_IMAGE_URL] as! String, docData[MessageSchema.ORIGINAL_IMAGE_URL] as! String].map { URL(string: $0 )! }
         let prefetcher = ImagePrefetcher(urls: urls)
         prefetcher.start()
         if let _ = self.imageMessages[senderId] {
@@ -173,7 +173,8 @@ class HomeController: UITableViewController {
     
     fileprivate func removeMessage(doc: DocumentSnapshot) {
         print("************************debugging", "removing")
-        guard let senderId = doc.data()[MessageSchema.SENDER_ID] as? String else { return }
+        guard let docData = doc.data() else { return }
+        guard let senderId = docData[MessageSchema.SENDER_ID] as? String else { return }
         let messageIdToRemove = doc.documentID
         guard let messages = self.imageMessages[senderId] else { return }
         guard let index = messages.index(where: { (message) -> Bool in
@@ -193,13 +194,14 @@ class HomeController: UITableViewController {
     }
     
     fileprivate func modifyMessage(doc: DocumentSnapshot) {
-        guard let senderId = doc.data()[MessageSchema.SENDER_ID] as? String else { return }
+        guard let docData = doc.data() else { return }
+        guard let senderId = docData[MessageSchema.SENDER_ID] as? String else { return }
         let messageIdToModify = doc.documentID
         guard let messages = self.imageMessages[senderId] else { return }
         guard let index = messages.index(where: { (message) -> Bool in
             return message.messageId == messageIdToModify
         }) else { return }
-        self.imageMessages[senderId]?[index] = Message(dict: doc.data(), messageId: messageIdToModify)
+        self.imageMessages[senderId]?[index] = Message(dict: docData, messageId: messageIdToModify)
         self.sortUserIdsByMessageCreatedTime()
         //DispatchQueue.main.async {
             self.tableView?.reloadData()

@@ -11,9 +11,13 @@ import UIKit
 class NewContactHeader : UITableViewCell {
     let newFriendImageView : UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        let size = CGSize(width: 44, height: 44)
-        iv.image = UIImage.fontAwesomeIcon(name: .userCircle, textColor: GREEN_COLOR, size: size)
+        iv.contentMode = .center
+        let size = CGSize(width: 40, height: 44)
+        iv.image = UIImage.fontAwesomeIcon(name: .user, textColor: .white, size: size)
+        
+        iv.backgroundColor = UIColor.rgb(red: 3, green: 169, blue: 244, alpha: 1)
+        iv.layer.cornerRadius = 25
+        iv.clipsToBounds = true
         return iv
     }()
     
