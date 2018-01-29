@@ -8,6 +8,7 @@
 
 import FontAwesome_swift
 import Firebase
+import FaveButton
 
 class TestController: UIViewController {
     
@@ -20,80 +21,49 @@ class TestController: UIViewController {
         return iv
     }()
     
+     let faveButton = FaveButton(
+        frame: CGRect(x:200, y:200, width: 50, height: 50),
+        faveIconNormal: UIImage.fontAwesomeIcon(name: .heart, textColor: UIColor.red, size: CGSize(width: 44, height: 44))
+    )
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        faveButton.layer.cornerRadius = 25
+        faveButton.layer.masksToBounds = true
+        faveButton.backgroundColor = .white
+        faveButton.dotSecondColor = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
+        faveButton.dotFirstColor = UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 1)
+        faveButton.normalColor = TEXT_GRAY
+        faveButton.selectedColor = .red
+        faveButton.addTarget(self, action: #selector(p), for: .touchUpInside)
+        faveButton.delegate = self
+        view.addSubview(faveButton)
         
-        originalScrollView = UIScrollView(frame: view.bounds)
-        originalScrollView.backgroundColor = .white
-        originalScrollView.contentSize = originalImageView.bounds.size
-        originalScrollView.autoresizingMask = [UIViewAutoresizing.flexibleWidth, UIViewAutoresizing.flexibleHeight]
-
-        originalScrollView.addSubview(originalImageView)
-        view.addSubview(originalScrollView)
-        originalScrollView.delegate = self
-        originalScrollView.clipsToBounds = false
-        
-        refreshImageView()
+        faveButton.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 50, paddingLeft: 50, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.refreshImageView()
+    @objc func p() {
+        print(self.faveButton.dotFirstColor)
+        print(self.faveButton.dotSecondColor)
+        print("fang pi")
+        if self.faveButton.isSelected {
+            //self.faveButton.isEnabled = false
+        }
     }
     
-    func resetImageViewFrame() {
-        var size: CGSize = originalImageView.frame.size
-        if let imageSize = originalImageView.image?.size  {
-            size = imageSize
+    func faveButtonDotColors(_ faveButton: FaveButton) -> [DotColors]?{
+        if faveButton == self.faveButton {
+            let PINK = UIColor.rgb(red: 194, green: 24, blue: 91, alpha: 1)
+            let LIGHT_PINK = UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 1)
+            let blue = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
+            let LIGHT_BLUE = UIColor.rgb(red: 144, green: 202, blue: 249, alpha: 1)
+            return [DotColors(first: PINK, second: LIGHT_PINK), DotColors(first: blue, second: LIGHT_BLUE)]
         }
-        if size.width > 0 && size.height > 0 {
-            let ratio: CGFloat = min(originalScrollView.frame.size.width / size.width, originalScrollView.frame.size.height / size.height)
-            let W = ratio * size.width * originalScrollView.zoomScale
-            let H = ratio * size.height * originalScrollView.zoomScale
-            originalImageView.frame = CGRect(x: max(0, (originalScrollView.width - W) / 2), y: max(0, (originalScrollView.height - H) / 2), width: W, height: H)
-        }
+        return nil
     }
-
-    func resetZoomScaleWithAnimated(animated:Bool) {
-        var wR = originalScrollView.frame.size.width / originalImageView.frame.size.width
-        var hR = originalScrollView.frame.size.height / originalImageView.frame.size.height
-        
-        let scale: CGFloat = 1
-        if let img = originalImageView.image {
-            wR = max(wR, img.size.width / (scale * originalScrollView.frame.size.width))
-            hR = max(hR, img.size.height / (scale * originalScrollView.frame.size.height))
-        }
-        
-        originalScrollView.contentSize = originalImageView.frame.size
-        originalScrollView.minimumZoomScale = 1
-        originalScrollView.maximumZoomScale = max(max(wR, hR), 1)
-        
-        originalScrollView.setZoomScale(originalScrollView.minimumZoomScale, animated: animated)
-    }
-    
-    func refreshImageView() {
-        
-        
-        self.resetImageViewFrame()
-        self.resetZoomScaleWithAnimated(animated: false)
-    }
+   
 }
 
-extension TestController: UIScrollViewDelegate {
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return self.originalImageView
-    }
-    
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        let Ws = scrollView.frame.size.width - scrollView.contentInset.left - scrollView.contentInset.right
-        let Hs = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom
-        let W = originalImageView.frame.size.width
-        let H = originalImageView.frame.size.height
-        
-        var rct = originalImageView.frame
-        rct.origin.x = max((Ws - W) / 2, 0)
-        rct.origin.y = max((Hs - H) / 2, 0)
-        originalImageView.frame = rct
-    }
-}

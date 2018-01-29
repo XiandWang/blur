@@ -153,14 +153,6 @@ class XWImageEditorController: UIViewController {
     func initNavigationBar() {
         let next = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(imageEditFinishBtn))
         let reset = UIBarButtonItem.narrowButtonItem(image: UIImage.fontAwesomeIcon(name: .repeat, textColor: .black, size: CGSize.init(width: 30, height: 44)), target: self, action: #selector(handleResetImage))
-//        let next = UIBarButtonItem(image: UIImage.fontAwesomeIcon(name: .arrowRight, textColor: .black, size: CGSize.init(width: 30, height: 44)), style: .plain, target: self, action: #selector(imageEditFinishBtn))
-//        let reset = UIBarButtonItem(image: UIImage.fontAwesomeIcon(name: .refresh, textColor: .black, size: CGSize.init(width: 30, height: 44)), style: .plain, target: self, action: #selector(handleResetImage))
-        
-        let dl = UIBarButtonItem(image: UIImage.fontAwesomeIcon(name: .download, textColor: .black, size: CGSize.init(width: 30, height: 44)), style: .plain, target: self, action: #selector(handleResetImage))
-        //next.imageInsets = UIEdgeInsets(top: 0, left: -32 , bottom: 0, right: 0)
-        //dl.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        
-        //reset.imageInsets = UIEdgeInsets(top: 0, left: -32 , bottom: 0, right: 0)
         
         self.navigationItem.rightBarButtonItems = [next, UIBarButtonItem.fixNavigationSpacer(), reset, UIBarButtonItem.fixNavigationSpacer()]
         

@@ -131,9 +131,9 @@ extension FriendsController {
                 
                 self.userTitles = self.titleUserDict.keys.sorted()
                 self.isIntialLoading = false
-                DispatchQueue.main.async {
+                //DispatchQueue.main.async {
                     self.tableView.reloadData()
-                }
+                //}
             }, withCancel: nil)
         }, withCancel: nil)
     }

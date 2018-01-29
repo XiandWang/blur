@@ -174,6 +174,7 @@ extension LoginController : UITextFieldDelegate {
             passWordTextField.becomeFirstResponder()
         } else if textField == passWordTextField {
             textField.resignFirstResponder()
+            handleLogin()
         }
         return true
     }

@@ -50,10 +50,7 @@ struct AnimationHelper {
 }
 
 struct NotificationHelper {
-    static func createMessageNotification(messageId: String, receiverUserId: String, type: NotificationType, senderUser sender: User, text: String?, shouldShowHUD: Bool, hudSuccessText: String?) {
-        if shouldShowHUD {
-            AppHUD.progress(nil,  isDarkTheme: false)
-        }
+    static func createMessageNotification(messageId: String, receiverUserId: String, type: NotificationType, senderUser sender: User, text: String?, completion: @escaping (Error?) -> ()) {
         let userData = ["userId": sender.uid, "username": sender.username, "profileImgUrl": sender.profileImgUrl]
         var data = ["type": type.rawValue, "user": userData, "messageId": messageId, "isRead": false, "createdTime": Date()] as [String : Any]
         if let text = text {
@@ -62,12 +59,11 @@ struct NotificationHelper {
         Firestore.firestore()
             .collection("notifications")
             .document(receiverUserId).collection("messageNotifications").addDocument(data: data) { (error) in
-                if shouldShowHUD {
-                    AppHUD.progressHidden()
-                    AppHUD.success(hudSuccessText ?? "Success", isDarkTheme: false)
-                }
                 if let error = error {
-                    print(error)
+                    completion(error)
+                    return
+                } else {
+                    completion(nil)
                     return
                 }
         }

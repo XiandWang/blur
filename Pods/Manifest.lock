@@ -5,6 +5,7 @@ PODS:
   - BoringSSL/Implementation (9.2):
     - BoringSSL/Interface (= 9.2)
   - BoringSSL/Interface (9.2)
+  - FaveButton (2.0.3)
   - Firebase/Auth (4.8.1):
     - Firebase/Core
     - FirebaseAuth (= 4.4.2)
@@ -101,6 +102,7 @@ PODS:
   - TDBadgedCell (5.2.1)
 
 DEPENDENCIES:
+  - FaveButton (~> 2.0.3)
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
@@ -114,6 +116,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   BoringSSL: f3d6b8ce199b9c450a8cfc14895d07a2627fc232
+  FaveButton: cfcbc5e73da159c4f916613da5687357b5bb4783
   Firebase: 2721056b8885eef90233b03f37be64358d35d262
   FirebaseAnalytics: 617afa8c26b57a0c3f11361b248bc9e17bfd8dfd
   FirebaseAuth: bd2738c5c1e92b108ba5f7f7335908097a4e50bb
@@ -137,6 +140,6 @@ SPEC CHECKSUMS:
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
   TDBadgedCell: c166ffcb0d1f2fce244df8ae5bac23056803217b
 
-PODFILE CHECKSUM: ca6f91ee414ca6154184d5c64ec8950cdcec361a
+PODFILE CHECKSUM: c5a6c7b39ddbbfdce2be5fbed7c46b48424d83a2
 
 COCOAPODS: 1.2.0

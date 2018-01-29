@@ -43,14 +43,6 @@ class MessagesPageViewController: UIPageViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-        self.navigationController?.navigationBar.barTintColor = YELLOW_COLOR
-        self.navigationController?.navigationBar.isTranslucent = false
-    }
-    
     func configureImageMessageController(index: Int) -> ReceiverImageMessageController? {
         let imageMessageController = ReceiverImageMessageController()
         if let message = messages?[index] {
@@ -60,6 +52,15 @@ class MessagesPageViewController: UIPageViewController {
             return imageMessageController
         }
         return nil
+    }
+    
+    
+    override func willMove(toParentViewController parent: UIViewController?) {
+        if parent == nil {
+            self.navigationController?.navigationBar.alpha = 1
+            self.navigationController?.navigationBar.isTranslucent = false
+            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        }
     }
 }
 

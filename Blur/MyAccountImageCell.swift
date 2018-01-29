@@ -15,6 +15,8 @@ class MyAccountImageCell: UICollectionViewCell {
             if let message = message {
                 messageImageView.kf.indicatorType = .activity
                 messageImageView.kf.setImage(with: URL(string: message.editedImageUrl))
+            } else {
+                messageImageView.kf.setImage(with: nil)
             }
         }
     }

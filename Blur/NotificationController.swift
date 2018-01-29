@@ -85,9 +85,9 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
                         let notification = MessageNotification(dict: doc.data(), notificationId: doc.documentID)
                         self.notifications.insert(notification, at: 0)
                         print(notification)
-                        DispatchQueue.main.async {
+                        //DispatchQueue.main.async {
                             self.collectionView?.reloadData()
-                        }
+                        //}
                     }
                 }
         }

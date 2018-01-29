@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Message {
+class Message {
     var messageId: String
     var senderId: String
     var receiverId: String

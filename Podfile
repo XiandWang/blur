@@ -18,4 +18,5 @@ target 'Blur' do
   pod 'MBProgressHUD'
   pod 'Kingfisher'
   pod 'TDBadgedCell', '~> 5.2'
+  pod 'FaveButton', '~> 2.0.3'
 end

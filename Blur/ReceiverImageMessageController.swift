@@ -57,87 +57,87 @@ class ReceiverImageMessageController : UIViewController{
         return sv
     }()
     
-    let showButton: UIButton = {
-        let bt = UIButton(type: .custom)
-        let size = CGSize(width: 44, height: 44)
-        bt.setImage(UIImage.fontAwesomeIcon(name: .thumbsOUp, textColor: .white, size: size), for: .normal)
-        bt.backgroundColor = GREEN_COLOR
-        bt.layer.cornerRadius = 25
-        bt.layer.masksToBounds = true
-        bt.alpha = 1.0
-        bt.addTarget(self, action: #selector(handleShowOriginalImage), for: .touchUpInside)
-        
-        return bt
-    }()
-    
-    let showLabel: UILabel = {
-        let lb = UILabel()
-        lb.text = "Show"
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
-        lb.textColor = GREEN_COLOR
-        lb.textAlignment = .center
-        lb.alpha = 1.0
-
-        return lb
-    }()
-    
-    let rejectButton: UIButton = {
-        let bt = UIButton(type: .custom)
-        let size = CGSize(width: 44, height: 44)
-        bt.setImage(UIImage.fontAwesomeIcon(name: .thumbsODown, textColor: .white, size: size), for: .normal)
-        bt.backgroundColor = RED_COLOR
-        bt.layer.cornerRadius = 25
-        bt.layer.masksToBounds = true
-        bt.alpha = 1.0
-        bt.addTarget(self, action: #selector(handleRejectImage), for: .touchUpInside)
-        return bt
-    }()
-    
-    let rejectLabel: UILabel = {
-        let lb = UILabel()
-        lb.text = "Reject"
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
-        lb.textColor = RED_COLOR
-        lb.textAlignment = .center
-        lb.alpha = 1.0
-
-        return lb
-    }()
-    
-    let requestButton: UIButton = {
-        let bt = UIButton(type: .custom)
-        let size = CGSize(width: 44, height: 44)
-        bt.setImage(UIImage.fontAwesomeIcon(name: .userO, textColor: .white, size: size), for: .normal)
-        bt.backgroundColor = .purple
-        bt.layer.cornerRadius = 25
-        bt.layer.masksToBounds = true
-        bt.alpha = 1.0
-        bt.addTarget(self, action: #selector(handleRequestAccess), for: .touchUpInside)
-        return bt
-    }()
-    
-    let requestLabel: UILabel = {
-        let lb = UILabel()
-        lb.text = "Request"
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
-        lb.textColor = .purple
-        lb.numberOfLines = 0
-        lb.textAlignment = .center
-        lb.alpha = 1.0
-
-        return lb
-    }()
-    
-    let toggleImageButton: UIButton = {
-        let bt = UIButton(type: .custom)
-        let size = CGSize(width: 44, height: 44)
-        bt.setImage(UIImage.fontAwesomeIcon(name: .eye, textColor: .white, size: size), for: .normal)
-        bt.backgroundColor = .purple
-        bt.layer.cornerRadius = 25
-        bt.layer.masksToBounds = true
-        bt.addTarget(self, action: #selector(handleRotateImage), for: .touchUpInside)
-        return bt
-    }()
+//    let showButton: UIButton = {
+//        let bt = UIButton(type: .custom)
+//        let size = CGSize(width: 44, height: 44)
+//        bt.setImage(UIImage.fontAwesomeIcon(name: .thumbsOUp, textColor: .white, size: size), for: .normal)
+//        bt.backgroundColor = GREEN_COLOR
+//        bt.layer.cornerRadius = 25
+//        bt.layer.masksToBounds = true
+//        bt.alpha = 1.0
+//        bt.addTarget(self, action: #selector(handleShowOriginalImage), for: .touchUpInside)
+//
+//        return bt
+//    }()
+//
+//    let showLabel: UILabel = {
+//        let lb = UILabel()
+//        lb.text = "Show"
+//        lb.font = UIFont.boldSystemFont(ofSize: 14)
+//        lb.textColor = GREEN_COLOR
+//        lb.textAlignment = .center
+//        lb.alpha = 1.0
+//
+//        return lb
+//    }()
+//
+//    let rejectButton: UIButton = {
+//        let bt = UIButton(type: .custom)
+//        let size = CGSize(width: 44, height: 44)
+//        bt.setImage(UIImage.fontAwesomeIcon(name: .thumbsODown, textColor: .white, size: size), for: .normal)
+//        bt.backgroundColor = RED_COLOR
+//        bt.layer.cornerRadius = 25
+//        bt.layer.masksToBounds = true
+//        bt.alpha = 1.0
+//        bt.addTarget(self, action: #selector(handleRejectImage), for: .touchUpInside)
+//        return bt
+//    }()
+//
+//    let rejectLabel: UILabel = {
+//        let lb = UILabel()
+//        lb.text = "Reject"
+//        lb.font = UIFont.boldSystemFont(ofSize: 14)
+//        lb.textColor = RED_COLOR
+//        lb.textAlignment = .center
+//        lb.alpha = 1.0
+//
+//        return lb
+//    }()
+//
+//    let requestButton: UIButton = {
+//        let bt = UIButton(type: .custom)
+//        let size = CGSize(width: 44, height: 44)
+//        bt.setImage(UIImage.fontAwesomeIcon(name: .userO, textColor: .white, size: size), for: .normal)
+//        bt.backgroundColor = .purple
+//        bt.layer.cornerRadius = 25
+//        bt.layer.masksToBounds = true
+//        bt.alpha = 1.0
+//        bt.addTarget(self, action: #selector(handleRequestAccess), for: .touchUpInside)
+//        return bt
+//    }()
+//
+//    let requestLabel: UILabel = {
+//        let lb = UILabel()
+//        lb.text = "Request"
+//        lb.font = UIFont.boldSystemFont(ofSize: 14)
+//        lb.textColor = .purple
+//        lb.numberOfLines = 0
+//        lb.textAlignment = .center
+//        lb.alpha = 1.0
+//
+//        return lb
+//    }()
+//
+//    let toggleImageButton: UIButton = {
+//        let bt = UIButton(type: .custom)
+//        let size = CGSize(width: 44, height: 44)
+//        bt.setImage(UIImage.fontAwesomeIcon(name: .eye, textColor: .white, size: size), for: .normal)
+//        bt.backgroundColor = .purple
+//        bt.layer.cornerRadius = 25
+//        bt.layer.masksToBounds = true
+//        bt.addTarget(self, action: #selector(handleRotateImage), for: .touchUpInside)
+//        return bt
+//    }()
     
     lazy var controlPanel: UIView = {
         let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight, width: UIScreen.main.bounds.width, height: self.controlPanelHeight)
@@ -150,40 +150,60 @@ class ReceiverImageMessageController : UIViewController{
         return panel
     }()
     
-    let backButton: UIButton = {
-        let bt = UIButton()
-        let backImg = UIImage.fontAwesomeIcon(name: .arrowCircleLeft, textColor: .white, size: CGSize(width: 30, height: 30))
-        bt.setImage(backImg, for: .normal)
-        bt.addTarget(self, action: #selector(handleNavBack), for: .touchUpInside)
-        bt.backgroundColor = .black
-        bt.alpha = 0.7
-        bt.layer.cornerRadius = 18
-        bt.layer.masksToBounds = true
-      
-        return bt
-    }()
-    
-    let clockButton: UIButton = {
-        let bt = UIButton()
-        let clockImg = UIImage.fontAwesomeIcon(name: .clockO, textColor: YELLOW_COLOR, size: CGSize(width: 30, height: 30))
-        bt.setImage(clockImg, for: .normal)
-        bt.addTarget(self, action: #selector(handleShowTime), for: .touchUpInside)
-        bt.backgroundColor = .clear
-        bt.layer.cornerRadius = 18
-        bt.layer.masksToBounds = true
-        bt.alpha = 0.7
+    let showOriginalControl: ControlItemView = {
+        let size = CGSize(width: 44, height: 44)
+        let green = UIColor.rgb(red: 56, green: 142, blue: 60, alpha: 1)
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .thumbsUp, textColor: green, size: size), backgroundColor: UIColor.rgb(red: 165, green: 214, blue: 167, alpha: 0.9), textColor: green, itemText: "Yes, show")
+        let control = ControlItemView(target: self, action: #selector(handleShowOriginalImage))
+        control.itemInfo = info
+        control.alpha = 0
         
-        return bt
+        return control
     }()
     
-    @objc func handleShowTime() {
-        print("time")
-    }
+    let rejectControl: ControlItemView = {
+        let size = CGSize(width: 44, height: 44)
+        let red = UIColor.rgb(red: 211, green: 47, blue: 47, alpha: 1)
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .thumbsDown, textColor: red, size: size), backgroundColor: UIColor.rgb(red: 239, green: 154, blue: 154, alpha: 0.9), textColor: red, itemText: "No, reject")
+        let control = ControlItemView(target: self, action: #selector(handleRejectImage))
+        control.itemInfo = info
+        control.alpha = 0
+        
+        return control
+    }()
     
-    @objc func handleNavBack(){
-        self.navigationController?.isNavigationBarHidden = false
-        self.navigationController?.popViewController(animated: true)
-    }
+    let requestControl: ControlItemView = {
+        let size = CGSize(width: 44, height: 44)
+        let purple = UIColor.rgb(red: 81, green: 45, blue: 168, alpha: 1)
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .user, textColor: purple, size: size), backgroundColor:  UIColor.rgb(red: 179, green: 157, blue: 219, alpha: 0.9), textColor: purple, itemText: "Request Access")
+        let control = ControlItemView(target: self, action: #selector(handleRequestAccess))
+        control.itemInfo = info
+        control.alpha = 0
+        
+        return control
+    }()
+    
+    let viewImageControl: ControlItemView = {
+        let size = CGSize(width: 44, height: 44)
+        let blue = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .eye, textColor: blue, size: size), backgroundColor: UIColor.rgb(red: 144, green: 202, blue: 249, alpha: 0.9), textColor: blue, itemText: "View")
+        let viewControl = ControlItemView(target: self, action: #selector(handleRotateImage))
+        viewControl.itemInfo = info
+        viewControl.alpha = 0
+        
+        return viewControl
+    }()
+    
+    let likeControl: ControlItemView = {
+        let size = CGSize(width: 38, height: 38)
+        let pink = UIColor.rgb(red: 194, green: 24, blue: 91, alpha: 1)
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .heart, textColor: pink, size: size), backgroundColor: UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 0.9), textColor: pink, itemText: "Like")
+        let viewControl = ControlItemView(target: self, action: #selector(handleRotateImage))
+        viewControl.itemInfo = info
+        viewControl.alpha = 0
+        
+        return viewControl
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -207,14 +227,6 @@ class ReceiverImageMessageController : UIViewController{
         navigationController?.popViewController(animated: true)
     }
     
-    func setupTopControls() {
-        view.addSubview(backButton)
-        backButton.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 36, height: 36)
-        
-        view.addSubview(clockButton)
-        clockButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 30, height: 30)
-    }
-    
     fileprivate func setupScrollView() {
         originalScrollView = UIScrollView(frame: view.bounds)
         originalScrollView.backgroundColor = .black
@@ -235,6 +247,297 @@ class ReceiverImageMessageController : UIViewController{
         originalScrollView.layer.transform = AnimationHelper.yRotation(.pi / 2)
         
         refreshOriginalImageView()
+    }
+    
+    @objc func toggleControlPanel() {
+        view.isUserInteractionEnabled = false
+        if isShowingControlPanel {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
+                self.hideControlViews()
+            }) { (bool) in
+                self.view.isUserInteractionEnabled = true
+                if bool {
+                    self.isShowingControlPanel = false
+                }
+            }
+        } else {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
+                self.showControlViews()
+            }, completion: { (bool) in
+                self.view.isUserInteractionEnabled = true
+                if bool {
+                    self.isShowingControlPanel = true
+                }
+            })
+        }
+    }
+    
+    fileprivate func setupControlPanel(message: Message) {
+        view.addSubview(controlPanel)
+    
+        if !message.isAcknowledged {
+            print("not ack, show yes and no")
+            addButtonsToControlPanel(leftControl: showOriginalControl, rightControl: rejectControl)
+        } else {
+            if message.allowOriginal {
+                print("allowed, show like and view")
+                addButtonsToControlPanel(leftControl: likeControl, rightControl: viewImageControl)
+            } else {
+                print("not allowed, show request and view")
+                addButtonsToControlPanel(leftControl: requestControl, rightControl: rejectControl)
+            }
+        }
+    }
+    
+    fileprivate func addButtonsToControlPanel(leftControl: ControlItemView, rightControl: ControlItemView) {
+        for view in self.controlPanel.subviews {
+            view.removeFromSuperview()
+        }
+        controlPanel.addSubview(leftControl)
+        controlPanel.addSubview(rightControl)
+        leftControl.anchor(top: controlPanel.topAnchor, left: controlPanel.leftAnchor, bottom: nil, right: nil, paddingTop: 4, paddingLeft: 32, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+        rightControl.anchor(top: controlPanel.topAnchor, left: nil, bottom: nil, right: controlPanel.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: 0, paddingRight: 32, width: 50, height: 50)
+        
+        UIView.animate(withDuration: 0.5) {
+            leftControl.alpha = 1
+            rightControl.alpha = 1
+        }
+    }
+    
+    fileprivate func setupImageView() {
+        view.addSubview(editedImageView)
+        editedImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+    }
+    
+    @objc func handleRotateImage() {
+        self.originalImageView.isHidden = false
+        animateRotatingImage(toOriginal: isShowingEdited)
+    }
+    
+    fileprivate func hideControlViews() {
+        for v in controlPanel.subviews {
+            v.alpha = 0
+        }
+        self.navigationController?.navigationBar.alpha = 0
+    }
+    
+    fileprivate func showControlViews() {
+        for v in controlPanel.subviews {
+            v.alpha = 1
+        }
+        self.navigationController?.navigationBar.alpha = 1
+    }
+    
+    fileprivate func rotateToOriginalFirstTime() {
+        isShowingEdited = false
+        self.likeControl.frame = self.showOriginalControl.frame
+        self.viewImageControl.frame = self.rejectControl.frame
+        UIView.animateKeyframes(
+            withDuration: 2.0, delay: 0, options: .calculationModeCubic,
+            animations: {
+                UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/9) {
+                    self.hideControlViews()
+                }
+                UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
+                    self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
+                }
+                UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
+                    self.originalScrollView.layer.transform = AnimationHelper.yRotation(0.0)
+                    self.refreshOriginalImageView()
+                }
+                UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
+                    for view in self.controlPanel.subviews {
+                        view.removeFromSuperview()
+                    }
+                    self.controlPanel.addSubview(self.likeControl)
+                    self.controlPanel.addSubview(self.viewImageControl)
+                    self.likeControl.alpha = 1
+                    self.viewImageControl.alpha = 1
+                    //self.addButtonsToControlPanel(leftControl: self.likeControl, rightControl: self.viewImageControl)
+                }
+        }, completion: nil)
+    }
+    
+    fileprivate func animateRotatingImage(toOriginal: Bool) {
+        if toOriginal {
+            isShowingEdited = false
+            UIView.animateKeyframes(
+                withDuration: 2.0, delay: 0, options: .calculationModeCubic,
+                animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/9) {
+                        self.hideControlViews()
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
+                        self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
+                        self.originalScrollView.layer.transform = AnimationHelper.yRotation(0.0)
+                        self.refreshOriginalImageView()
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
+                        self.showControlViews()
+                    }
+            }, completion: nil)
+        } else {
+            isShowingEdited = true
+            UIView.animateKeyframes(
+                withDuration: 2.0, delay: 0, options: .calculationModeCubic,
+                animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/9) {
+                        self.hideControlViews()
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
+                        self.originalScrollView.layer.transform = AnimationHelper.yRotation(.pi / 2)
+                        
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
+                        self.editedImageView.layer.transform = CATransform3DIdentity
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
+                        self.showControlViews()
+                    }
+            }, completion: nil)
+        }
+    }
+}
+
+extension ReceiverImageMessageController {
+    @objc func handleShowOriginalImage() {
+        guard let allowOriginal = message?.allowOriginal else { return }
+        if allowOriginal {
+            self.originalImageView.isHidden = false
+            self.acceptImageMessage(isOriginalViewed: true)
+            self.rotateToOriginalFirstTime()
+        } else {
+            self.acceptImageMessage(isOriginalViewed: false)
+            self.controlPanel.addSubview(requestControl)
+            requestControl.alpha = 1
+            requestControl.frame = showOriginalControl.frame
+            UIView.transition(from: showOriginalControl, to: requestControl, duration: 0.5, options: .transitionFlipFromTop, completion: nil)
+            
+        }
+    }
+    
+    func rejectImageMessage(shouldSendNotification: Bool, additionalText: String?) {
+        guard let messageId = message?.messageId  else { return }
+        self.view.isUserInteractionEnabled = false
+        message?.isAcknowledged = true
+        fireStoreRef.collection("imageMessages")
+            .document(messageId).updateData([MessageSchema.IS_DELETED: true, MessageSchema.IS_ACKNOWLEDGED: true, MessageSchema.ACKNOWLEDGE_TYPE: "Reject"]) { (error) in
+                self.view.isUserInteractionEnabled = true
+                if let error = error {
+                    AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                    return
+                }
+    
+                if shouldSendNotification {
+                    guard let notificationUser = self.senderUser else { return }
+                    CurrentUser.getUser(completion: { (curUser, error) in
+                        if let curUser = curUser {
+                            NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: notificationUser.uid, type: .rejectMessage, senderUser: curUser, text: additionalText, completion: { (error) in
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                }
+                            })
+                        }
+                    })
+                    
+                }
+                self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
+    
+    func acceptImageMessage(isOriginalViewed: Bool) {
+        guard let messageId = message?.messageId  else { return }
+        message?.isAcknowledged = true
+        print("************************debugging", "accept")
+        let data = [MessageSchema.IS_ACKNOWLEDGED: true,
+                    MessageSchema.ACKNOWLEDGE_TYPE: "Accept",
+                    MessageSchema.IS_ORIGINAL_VIEWED: isOriginalViewed] as [String : Any]
+        fireStoreRef.collection("imageMessages")
+            .document(messageId).updateData(data) { (error) in
+                if let error = error {
+                    AppHUD.error(error.localizedDescription,  isDarkTheme: false)
+                    return
+                }
+                print("************************debugging", "accept", "success")
+        }
+    }
+    
+    @objc func handleRejectImage() {
+        let senderName = self.senderUser?.username ?? ""
+        let alert = UIAlertController(title: nil, message: "Do you want to notify \(senderName) your rejection?", preferredStyle: .alert)
+        let yesAction = UIAlertAction(title: "Yes, notify", style: .default) { (action) in
+            if let text = alert.textFields?.first?.text?.trimmingCharacters(in: .whitespaces), text.count != 0 {
+                self.rejectImageMessage(shouldSendNotification: true, additionalText: text)
+            } else {
+                self.rejectImageMessage(shouldSendNotification: true, additionalText: nil)
+            }
+        }
+        
+        let noAction = UIAlertAction(title: "No, reject silently", style: .default) { (action) in
+            self.rejectImageMessage(shouldSendNotification: false, additionalText: nil)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel rejection", style: .default, handler: nil)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "rejection message (optional)"
+        }
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @objc func handleRequestAccess() {
+        guard let messageId = message?.messageId else { return }
+        guard let notificationUser = self.senderUser else { return }
+        //self.requestControl.itemButton.isEnabled = false
+        AppHUD.progress(nil, isDarkTheme: false)
+        Firestore.firestore().collection("hasSentRequest").document(messageId).getDocument { (snap, error) in
+            if let error = error {
+                AppHUD.error(error.localizedDescription, isDarkTheme: false)
+                return
+            }
+            if let _ = snap?.data() {
+                AppHUD.error("Request already sent", isDarkTheme: false)
+                return
+            } else {
+                CurrentUser.getUser { (curUser, error) in
+                    if let curUser = curUser {
+                        NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: notificationUser.uid, type: .requestAccess, senderUser: curUser, text: nil, completion: { (error) in
+                            if let error = error {
+                                AppHUD.error(error.localizedDescription, isDarkTheme: false)
+                                return
+                            } else {
+                                AppHUD.success("Request sent", isDarkTheme: false)
+                                Firestore.firestore().collection("hasSentRequest").document(messageId).setData(["date": Date()])
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
+}
+
+//MARK: scroll view funcs
+extension ReceiverImageMessageController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return originalImageView
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        let Ws = scrollView.frame.size.width - scrollView.contentInset.left - scrollView.contentInset.right
+        let Hs = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom
+        let W = originalImageView.frame.size.width
+        let H = originalImageView.frame.size.height
+        
+        var rct = originalImageView.frame
+        rct.origin.x = max((Ws - W) / 2, 0)
+        rct.origin.y = max((Hs - H) / 2, 0)
+        originalImageView.frame = rct
     }
     
     fileprivate func resetOriginalImageViewFrame() {
@@ -270,236 +573,5 @@ class ReceiverImageMessageController : UIViewController{
     func refreshOriginalImageView() {
         self.resetOriginalImageViewFrame()
         self.resetOriginalZoomScale(animated: false)
-    }
-    
-    @objc func toggleControlPanel() {
-        view.isUserInteractionEnabled = false
-        if isShowingControlPanel {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
-                self.controlPanel.center.y += self.controlPanelHeight
-                self.controlPanel.alpha = 0
-                for view in [self.backButton, self.clockButton] {
-                    view.alpha = 0
-                }
-            }) { (bool) in
-                self.view.isUserInteractionEnabled = true
-                if bool {
-                    self.isShowingControlPanel = false
-                }
-            }
-        } else {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
-                self.controlPanel.center.y -= self.controlPanelHeight
-                self.controlPanel.alpha = self.controlPanelAlpha
-                for view in [self.backButton, self.clockButton] {
-                    view.alpha = self.controlPanelAlpha
-                }
-            }, completion: { (bool) in
-                self.view.isUserInteractionEnabled = true
-                if bool {
-                    self.isShowingControlPanel = true
-                }
-            })
-        }
-    }
-    
-    fileprivate func setupControlPanel(message: Message) {
-        view.addSubview(controlPanel)
-
-        if !message.isAcknowledged {
-            addButtonsToControlPanel(leftButton: showButton)
-        } else {
-            if message.allowOriginal {
-                addToggleImageButton()
-            } else {
-                addButtonsToControlPanel(leftButton: requestButton)
-            }
-        }
-    }
-    
-    fileprivate func addToggleImageButton() {
-        self.controlPanel.addSubview(self.toggleImageButton)
-        self.toggleImageButton.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 16, paddingRight: 0, width: 50, height: 50)
-        self.toggleImageButton.centerXAnchor.constraint(equalTo: self.controlPanel.centerXAnchor).isActive = true
-        self.toggleImageButton.centerYAnchor.constraint(equalTo: self.controlPanel.centerYAnchor).isActive = true
-    }
-    
-    fileprivate func addButtonsToControlPanel(leftButton: UIButton) {
-        controlPanel.addSubview(leftButton)
-        controlPanel.addSubview(rejectButton)
-        leftButton.anchor(top: controlPanel.topAnchor, left: controlPanel.leftAnchor, bottom: nil, right: nil, paddingTop: 4, paddingLeft: 32, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
-        rejectButton.anchor(top: controlPanel.topAnchor, left: nil, bottom: nil, right: controlPanel.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: 0, paddingRight: 32, width: 50, height: 50)
-        
-        var leftLabel = showLabel
-        if leftButton == requestButton {
-            leftLabel = requestLabel
-        }
-        controlPanel.addSubview(leftLabel)
-        controlPanel.addSubview(rejectLabel)
-        leftLabel.anchor(top: leftButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 80, height: 0)
-        rejectLabel.anchor(top: rejectButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 80, height: 0)
-        leftLabel.centerXAnchor.constraint(equalTo: leftButton.centerXAnchor).isActive = true
-        rejectLabel.centerXAnchor.constraint(equalTo: rejectButton.centerXAnchor).isActive = true
-    }
-    
-    fileprivate func setupImageView() {
-        view.addSubview(editedImageView)
-        editedImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-    }
-    
-    @objc func handleRotateImage() {
-        self.originalImageView.isHidden = false
-        animateRotatingImage(toOriginal: isShowingEdited)
-    }
-    
-    fileprivate func animateRotatingImage(toOriginal: Bool) {
-        if toOriginal {
-            isShowingEdited = false
-            UIView.animateKeyframes(
-                withDuration: 2.0, delay: 0, options: .calculationModeCubic,
-                animations: {
-                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
-                        self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
-                        self.controlPanel.center.y += self.controlPanelHeight
-                    }
-                    UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
-                        self.originalScrollView.layer.transform = AnimationHelper.yRotation(0.0)
-                        self.controlPanel.center.y -= self.controlPanelHeight
-                        self.refreshOriginalImageView()
-                    }
-            }, completion: nil)
-        } else {
-            isShowingEdited = true
-            UIView.animateKeyframes(
-                withDuration: 2.0, delay: 0, options: .calculationModeCubic,
-                animations: {
-                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
-                        self.originalScrollView.layer.transform = AnimationHelper.yRotation(.pi / 2)
-                        self.controlPanel.center.y += self.controlPanelHeight
-                    }
-                    UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
-                        self.editedImageView.layer.transform = CATransform3DIdentity
-                        self.controlPanel.center.y -= self.controlPanelHeight
-
-                    }
-            }, completion: nil)
-        }
-    }
-}
-
-extension ReceiverImageMessageController {
-    @objc func handleShowOriginalImage() {
-        guard let allowOriginal = message?.allowOriginal else { return }
-        if allowOriginal {
-            self.originalImageView.isHidden = false
-            self.animateRotatingImage(toOriginal: true)
-            self.acceptImageMessage(isOriginalViewed: true)
-            UIView.animate(withDuration: 1.0, animations: {
-                for view in self.controlPanel.subviews {
-                    view.alpha = 0
-                }
-            }, completion: { (_) in
-                for view in self.controlPanel.subviews {
-                    view.removeFromSuperview()
-                }
-                self.addToggleImageButton()
-            })
-        } else {
-            self.acceptImageMessage(isOriginalViewed: false)
-            requestButton.frame = showButton.frame
-            requestLabel.frame = showLabel.frame
-            UIView.transition(from: showButton, to: requestButton, duration: 0.5, options: .transitionFlipFromTop, completion: nil)
-            UIView.transition(from: showLabel, to: requestLabel, duration: 0.5, options: .transitionFlipFromTop, completion: nil)
-        }
-    }
-    
-    func rejectImageMessage(shouldSendNotification: Bool, additionalText: String?) {
-        guard let messageId = message?.messageId  else { return }
-        fireStoreRef.collection("imageMessages")
-            .document(messageId).updateData([MessageSchema.IS_DELETED: true, MessageSchema.IS_ACKNOWLEDGED: true, MessageSchema.ACKNOWLEDGE_TYPE: "Reject"]) { (error) in
-                if let error = error {
-                    AppHUD.error(error.localizedDescription, isDarkTheme: true)
-                    return
-                }
-    
-                if shouldSendNotification {
-                    guard let notificationUser = self.senderUser else { return }
-                    CurrentUser.getUser(completion: { (curUser, error) in
-                        if let curUser = curUser {
-                            NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: notificationUser.uid, type: .rejectMessage, senderUser: curUser, text: additionalText, shouldShowHUD: false, hudSuccessText: nil)
-                        }
-                    })
-                    
-                }
-                self.navigationController?.popToRootViewController(animated: true)
-        }
-    }
-    
-    func acceptImageMessage(isOriginalViewed: Bool) {
-        guard let messageId = message?.messageId  else { return }
-        let data = [MessageSchema.IS_ACKNOWLEDGED: true,
-                    MessageSchema.ACKNOWLEDGE_TYPE: "Accept",
-                    MessageSchema.IS_ORIGINAL_VIEWED: isOriginalViewed] as [String : Any]
-        fireStoreRef.collection("imageMessages")
-            .document(messageId).updateData(data) { (error) in
-                if let error = error {
-                    AppHUD.error(error.localizedDescription,  isDarkTheme: false)
-                    return
-                }
-        }
-    }
-    
-    @objc func handleRejectImage() {
-        let senderName = self.senderUser?.username ?? ""
-        let alert = UIAlertController(title: nil, message: "Do you want to notify \(senderName) your rejection?", preferredStyle: .alert)
-        let yesAction = UIAlertAction(title: "Yes, notify", style: .default) { (action) in
-            if let text = alert.textFields?.first?.text?.trimmingCharacters(in: .whitespaces), text.count != 0 {
-                self.rejectImageMessage(shouldSendNotification: true, additionalText: text)
-            } else {
-                self.rejectImageMessage(shouldSendNotification: true, additionalText: nil)
-            }
-        }
-        
-        let noAction = UIAlertAction(title: "No, reject silently", style: .default) { (action) in
-            self.rejectImageMessage(shouldSendNotification: false, additionalText: nil)
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel rejection", style: .default, handler: nil)
-        
-        alert.addTextField { (textField) in
-            textField.placeholder = "rejection message (optional)"
-        }
-        alert.addAction(yesAction)
-        alert.addAction(noAction)
-        alert.addAction(cancelAction)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    @objc func handleRequestAccess() {
-        guard let messageId = message?.messageId else { return }
-        guard let notificationUser = self.senderUser else { return }
-        CurrentUser.getUser { (curUser, error) in
-            if let curUser = curUser {
-                NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: notificationUser.uid, type: .requestAccess, senderUser: curUser, text: nil, shouldShowHUD: true, hudSuccessText: "Request to access sent")
-            }
-        }
-    }
-}
-
-extension ReceiverImageMessageController: UIScrollViewDelegate {
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return originalImageView
-    }
-    
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        let Ws = scrollView.frame.size.width - scrollView.contentInset.left - scrollView.contentInset.right
-        let Hs = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom
-        let W = originalImageView.frame.size.width
-        let H = originalImageView.frame.size.height
-        
-        var rct = originalImageView.frame
-        rct.origin.x = max((Ws - W) / 2, 0)
-        rct.origin.y = max((Hs - H) / 2, 0)
-        originalImageView.frame = rct
     }
 }

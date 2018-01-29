@@ -47,10 +47,10 @@ class HomeChatCell: UITableViewCell {
                     return !message.allowOriginal
                 }).count, hiddenNum > 0 {
                     hiddenNumberLabel.textColor = .gray
-                    hiddenNumberLabel.text = "\(hiddenNum) hidden left, \(totalCount) total"
+                    hiddenNumberLabel.text = "\(hiddenNum) hiding, \(totalCount) total"
                 } else {
                     hiddenNumberLabel.textColor = .gray
-                    hiddenNumberLabel.text = "no hidden left, \(totalCount) total"
+                    hiddenNumberLabel.text = "no hiding left, \(totalCount) total"
                 }
             } else {
                 hiddenNumberLabel.text = nil
@@ -116,8 +116,6 @@ class HomeChatCell: UITableViewCell {
         usernameLabel.anchor(top: contentView.topAnchor, left: userAvatarView.rightAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         timestampLabel.anchor(top: contentView.topAnchor, left: nil, bottom: nil, right: contentView.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
         hiddenNumberLabel.anchor(top: usernameLabel.bottomAnchor, left: userAvatarView.rightAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
         badgeImageView.anchor(top: timestampLabel.bottomAnchor, left: nil, bottom: nil, right: contentView.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
-        
     }
 }

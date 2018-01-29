@@ -67,6 +67,8 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = .white
         usernameTextField.delegate = self
         setupViews()
+        
+        usernameTextField.becomeFirstResponder()
     }
     
     @objc func handleUpdateUsername() {

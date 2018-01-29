@@ -16,20 +16,24 @@ class NotificationCell: UICollectionViewCell {
         didSet {
             if let message = message {
                 messageEditedImageView.kf.setImage(with: URL(string: message.editedImageUrl))
+            } else {
+                 messageEditedImageView.kf.setImage(with: nil)
             }
         }
     }
-    var user: User? {
-        didSet {
-            if let user = user, let profileImgUrl = user.profileImgUrl {
-                userProfileImageView.kf.setImage(with: URL(string: profileImgUrl))
-            }
-        }
-    }
+//    var user: User? {
+//        didSet {
+//            if let user = user, let profileImgUrl = user.profileImgUrl {
+//                userProfileImageView.kf.setImage(with: URL(string: profileImgUrl))
+//            } else {
+//                userProfileImageView.kf.setImage(with: nil)
+//            }
+//        }
+//    }
     
     var notification: MessageNotification? {
         didSet {
-            if let notification = notification{
+            if let notification = notification {
                 getMessage()
                 if let profileImgUrl = notification.user.profileImgUrl {
                     userProfileImageView.kf.setImage(with: URL(string: profileImgUrl))
@@ -42,6 +46,8 @@ class NotificationCell: UICollectionViewCell {
                 } else {
                     backgroundColor = .white
                 }
+            } else {
+                userProfileImageView.kf.setImage(with: nil)
             }
         }
     }
@@ -56,9 +62,7 @@ class NotificationCell: UICollectionViewCell {
                 return
             }
             
-            if let snap = snap, let snapData = snap.data(){
-                print(snap.data())
-                print(snap.documentID)
+            if let snap = snap, let snapData = snap.data() {
                 self.message = Message(dict: snapData, messageId: snap.documentID)
             }
         }

@@ -11,9 +11,6 @@ import Firebase
 import Kingfisher
 
 class SenderImageMessageController: UIViewController, UINavigationControllerDelegate {
-    private let controlPanelHeight: CGFloat = 80.0
-    private let controlPanelAlpha: CGFloat = 1.0
-    
     let fireStoreRef = Firestore.firestore()
     private var isShowingEdited = true
     private var isShowingControlPanel = true
@@ -37,7 +34,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                 originalImageView.kf.indicatorType = .activity
                 originalImageView.kf.setImage(with: originalUrl)
               
-                setupControlPanel()
+                setupControls()
                 
                 let receiverId = message.receiverId
                 getUserData(uid: receiverId)
@@ -62,67 +59,28 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         return sv
     }()
     
-    let rotateImageButton: UIButton = {
-        let bt = UIButton(type: .custom)
-        let size = CGSize(width: 44, height: 44)
-        let blue = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
-        bt.setImage(UIImage.fontAwesomeIcon(name: .eye, textColor: blue, size: size), for: .normal)
-        bt.backgroundColor = UIColor.rgb(red: 144, green: 202, blue: 249, alpha: 0.9)
-        bt.layer.cornerRadius = 25
-        bt.layer.masksToBounds = true
-        bt.alpha = 0
-        bt.addTarget(self, action: #selector(handleRotateImage), for: .touchUpInside)
-        
-        return bt
-    }()
-    
-    let rotateImageLabel: UILabel = {
-        let lb = UILabel()
-        lb.text = "Rotate"
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
-        lb.textColor =  UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
-        lb.textAlignment = .center
-        lb.alpha = 0
-        return lb
-    }()
-    
-    let allowAccessButton: UIButton = {
-        let bt = UIButton(type: .custom)
+    lazy var allowAccessControl: ControlItemView = {
         let size = CGSize(width: 44, height: 44)
         let green = UIColor.rgb(red: 56, green: 142, blue: 60, alpha: 1)
-        bt.setImage(UIImage.fontAwesomeIcon(name: .unlockAlt, textColor: green, size: size), for: .normal)
-        bt.backgroundColor = UIColor.rgb(red: 165, green: 214, blue: 167, alpha: 0.9)
-        bt.layer.cornerRadius = 25
-        bt.layer.masksToBounds = true
-        bt.alpha = 0
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .unlockAlt, textColor: green, size: size), backgroundColor: UIColor.rgb(red: 165, green: 214, blue: 167, alpha: 0.9), textColor: green, itemText: "Allow access")
+        let allowControl = ControlItemView(target: self, action: #selector(handleAllowAccess))
+        allowControl.itemInfo = info
+        allowControl.alpha = 0
+
+        return allowControl
+    }()
+    
+    lazy var viewImageControl: ControlItemView = {
+        let size = CGSize(width: 44, height: 44)
+        let blue = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .eye, textColor: blue, size: size), backgroundColor: UIColor.rgb(red: 144, green: 202, blue: 249, alpha: 0.9), textColor: blue, itemText: "View")
+        let viewControl = ControlItemView(target: self, action: #selector(handleRotateImage))
+        viewControl.itemInfo = info
+        viewControl.alpha = 0
         
-        bt.addTarget(self, action: #selector(allowAccess), for: .touchUpInside)
-        return bt
+        return viewControl
     }()
     
-    let allowAccessLabel: UILabel = {
-        let lb = UILabel()
-        lb.text = "Allow Access"
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
-        lb.textColor = UIColor.rgb(red: 56, green: 142, blue: 60, alpha: 1)
-        lb.textAlignment = .center
-        lb.alpha = 0
-        return lb
-    }()
-    
-//    lazy var controlPanel: UIView = {
-//        let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight, width: UIScreen.main.bounds.width, height: self.controlPanelHeight)
-//        let panel = UIView(frame: frame)
-//        panel.backgroundColor = UIColor.clear
-//
-////        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
-////        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-////        blurEffectView.frame = panel.bounds
-////        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-////        panel.addSubview(blurEffectView)
-//        //panel.alpha = self.controlPanelAlpha
-//        return panel
-//    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -132,6 +90,20 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         setupImageView()
         AnimationHelper.perspectiveTransform(for: view)
         setupGestures()
+        
+        setupControls()
+    }
+    
+    func setupControls() {
+        view.addSubview(allowAccessControl)
+        allowAccessControl.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 30, paddingBottom: 40, paddingRight: 0, width: 60, height: 60)
+        
+        view.addSubview(viewImageControl)
+        viewImageControl.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 40, paddingRight: 30, width: 60, height: 60)
+        
+        UIView.animate(withDuration: 1, delay: 0.3, options: [.showHideTransitionViews], animations: {
+            self.showControlViews()
+        }, completion: nil)
     }
     
     
@@ -219,41 +191,68 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
     }
     
     @objc func navBack() {
-        self.navigationController?.navigationBar.alpha = 1
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
         self.navigationController?.popViewController(animated: true)
     }
     
-    @objc func allowAccess() {
+    @objc func handleAllowAccess() {
         guard let receiverUser = receiverUser else { return }
         guard let messageId = message?.messageId else { return }
+        if let allow = message?.allowOriginal, allow {
+            AppHUD.success("Already allowed", isDarkTheme: false)
+            return
+        }
         AppHUD.progress(nil, isDarkTheme: false)
-        fireStoreRef.collection("imageMessages").document(messageId).updateData([MessageSchema.ALLOW_ORIGINAL: true]) { (error) in
-            AppHUD.progressHidden()
+        self.allowAccessControl.itemButton.isEnabled = false
+        
+        self.fireStoreRef.collection("hasAllowedAccess").document(messageId).getDocument { (snap, error) in
             if let error = error {
+                AppHUD.progressHidden()
+                AppHUD.error(error.localizedDescription, isDarkTheme: false)
+                return
+            }
+            if let _ = snap?.data() {
+                AppHUD.progressHidden()
+                AppHUD.error("Already allowed", isDarkTheme: false)
+                return
+            } else {
+                self.allowAccess(messageId: messageId, receiverUser: receiverUser)
+            }
+        }
+    }
+    
+    fileprivate func allowAccess(messageId: String, receiverUser: User) {
+        fireStoreRef.collection("imageMessages").document(messageId).updateData([MessageSchema.ALLOW_ORIGINAL: true]) { (error) in
+            if let error = error {
+                AppHUD.progressHidden()
                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
                 return
             }
             CurrentUser.getUser(completion: { (senderUser, error) in
                 if let senderUser = senderUser {
-                    NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: receiverUser.uid, type: .allowAccess, senderUser: senderUser, text: nil, shouldShowHUD: false, hudSuccessText: nil)
+                    NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: receiverUser.uid, type: .allowAccess, senderUser: senderUser, text: nil, completion: { (error) in
+                        if error == nil {
+                            AppHUD.progressHidden()
+                            AppHUD.success("Access allowed", isDarkTheme: false)
+                            self.fireStoreRef.collection("hasAllowedAccess").document(messageId).setData(["date": Date()])
+                        } else {
+                            AppHUD.progressHidden()
+                            AppHUD.error(error?.localizedDescription, isDarkTheme: false)
+                        }
+                    })
                 }
             })
-            
-            AppHUD.success("Access allowed", isDarkTheme: false)
         }
     }
     
     fileprivate func hideControlViews() {
-        for v in [allowAccessButton, allowAccessLabel, rotateImageButton, rotateImageLabel] {
+        for v in [allowAccessControl, viewImageControl] {
             v.alpha = 0
         }
         self.navigationController?.navigationBar.alpha = 0
     }
     
     fileprivate func showControlViews() {
-        for v in [allowAccessButton, allowAccessLabel, rotateImageButton, rotateImageLabel] {
+        for v in [allowAccessControl, viewImageControl] {
             v.alpha = 1
         }
         self.navigationController?.navigationBar.alpha = 1
@@ -272,7 +271,6 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
             }
         } else {
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
-                //self.controlPanel.center.y -= self.controlPanelHeight
                 self.showControlViews()
             }, completion: { (bool) in
                 self.view.isUserInteractionEnabled = true
@@ -288,25 +286,6 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         editedImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
     }
     
-    fileprivate func setupControlPanel() {
-        //view.addSubview(controlPanel)
-        view.addSubview(rotateImageButton)
-        view.addSubview(allowAccessButton)
-        allowAccessButton.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 32, paddingBottom: 50, paddingRight: 0, width: 50, height: 50)
-        rotateImageButton.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 50, paddingRight: 32, width: 50, height: 50)
-        
-        view.addSubview(rotateImageLabel)
-        view.addSubview(allowAccessLabel)
-        rotateImageLabel.anchor(top: rotateImageButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 80, height: 0)
-        allowAccessLabel.anchor(top: allowAccessButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 120, height: 0)
-        allowAccessLabel.centerXAnchor.constraint(equalTo: allowAccessButton.centerXAnchor).isActive = true
-        rotateImageLabel.centerXAnchor.constraint(equalTo: rotateImageButton.centerXAnchor).isActive = true
-        
-        UIView.animate(withDuration: 1, delay: 0.3, options: [.showHideTransitionViews], animations: {
-            self.showControlViews()
-        }, completion: nil)
-    }
-    
     @objc func handleRotateImage() {
         animateRotatingImage(toOriginal: isShowingEdited)
     }
@@ -318,24 +297,16 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                 withDuration: 2.0, delay: 0, options: .calculationModeCubic,
                 animations: {
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/9) {
-                        //self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
-                        //self.controlPanel.center.y += self.controlPanelHeight
                         self.hideControlViews()
                     }
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
                         self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
-                        //self.controlPanel.center.y += self.controlPanelHeight
-                        //self.controlPanel.alpha = 0.0
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                         self.originalScrollView.layer.transform = AnimationHelper.yRotation(0.0)
-                        //self.controlPanel.center.y -= self.controlPanelHeight
-                        //self.controlPanel.alpha = 1.0
                         self.refreshOriginalImageView()
                     }
                     UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
-                        //self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
-                        //self.controlPanel.center.y += self.controlPanelHeight
                         self.showControlViews()
                     }
             }, completion: nil)
@@ -350,16 +321,12 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                     }
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
                         self.originalScrollView.layer.transform = AnimationHelper.yRotation(.pi / 2)
-                        //self.controlPanel.center.y += self.controlPanelHeight
 
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                         self.editedImageView.layer.transform = CATransform3DIdentity
-                        //self.controlPanel.center.y -= self.controlPanelHeight
                     }
                     UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
-                        //self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
-                        //self.controlPanel.center.y += self.controlPanelHeight
                         self.showControlViews()
                     }
             }, completion: nil)

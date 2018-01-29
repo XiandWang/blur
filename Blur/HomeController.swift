@@ -22,6 +22,7 @@ class HomeController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
         view.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.register(HomeChatCell.self, forCellReuseIdentifier: cellId)
@@ -52,6 +53,7 @@ class HomeController: UITableViewController {
                 TableViewHelper.emptyMessage(message: "You have no recent chats", viewController: self)
                 return 0
             } else {
+                view.backgroundColor = .white
                 tableView.backgroundView = nil
                 return count
             }
@@ -60,8 +62,6 @@ class HomeController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! HomeChatCell
-        print(indexPath.row, "******************indexPath")
-        print(self.userIdsSorted.count, "******************count")
         
         let senderId = userIdsSorted[indexPath.row]
         if let user = self.usersDict[senderId] {
@@ -110,8 +110,8 @@ class HomeController: UITableViewController {
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.view.backgroundColor = .clear
         
-        navigationItem.backBarButtonItem?.tintColor = YELLOW_COLOR
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: YELLOW_COLOR]
+        navigationItem.backBarButtonItem?.tintColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
     }
     
     func listenForMessages() {
@@ -195,6 +195,7 @@ class HomeController: UITableViewController {
     
     fileprivate func modifyMessage(doc: DocumentSnapshot) {
         guard let docData = doc.data() else { return }
+        print("************************debugging", "modifying")
         guard let senderId = docData[MessageSchema.SENDER_ID] as? String else { return }
         let messageIdToModify = doc.documentID
         guard let messages = self.imageMessages[senderId] else { return }
@@ -202,6 +203,7 @@ class HomeController: UITableViewController {
             return message.messageId == messageIdToModify
         }) else { return }
         self.imageMessages[senderId]?[index] = Message(dict: docData, messageId: messageIdToModify)
+        print("************************debugging", "modifying done done done", self.imageMessages[senderId]?[index].isAcknowledged)
         self.sortUserIdsByMessageCreatedTime()
         //DispatchQueue.main.async {
             self.tableView?.reloadData()
