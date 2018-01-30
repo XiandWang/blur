@@ -38,9 +38,27 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                 
                 let receiverId = message.receiverId
                 getUserData(uid: receiverId)
+                
+                if message.isLiked {
+                    setupLikeImage()
+                }
             }
         }
     }
+    
+    func setupLikeImage() {
+        view.addSubview(likeImageView)
+        likeImageView.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 44, height: 44)
+        likeImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        likeImageView.centerYAnchor.constraint(equalTo: viewImageControl.centerYAnchor).isActive = true
+    }
+    
+    let likeImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.image = UIImage.fontAwesomeIcon(name: .heart, textColor: UIColor.rgb(red: 194, green: 24, blue: 91, alpha: 1), size: CGSize(width: 44, height: 44))
+        return iv
+    }()
     
     let editedImageView: UIImageView = {
         let iv = UIImageView()
@@ -212,7 +230,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
             }
             if let _ = snap?.data() {
                 AppHUD.progressHidden()
-                AppHUD.error("Already allowed", isDarkTheme: false)
+                AppHUD.success("Already allowed", isDarkTheme: false)
                 return
             } else {
                 self.allowAccess(messageId: messageId, receiverUser: receiverUser)
@@ -321,7 +339,6 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                     }
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
                         self.originalScrollView.layer.transform = AnimationHelper.yRotation(.pi / 2)
-
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                         self.editedImageView.layer.transform = CATransform3DIdentity

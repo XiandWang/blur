@@ -84,7 +84,7 @@ class AppHUD {
         hud = MBProgressHUD.showAdded(to: view, animated: true)
     
         hud?.alpha = 0.9
-        //hud?.bezelView.style = .blur
+        hud?.bezelView.style = .solidColor
         if isDarkTheme {
             hud?.bezelView.color = .black
             hud?.contentColor = .white

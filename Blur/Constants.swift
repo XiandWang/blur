@@ -36,5 +36,6 @@ enum NotificationType: String {
     case rejectMessage
     case requestAccess
     case allowAccess
+    case likeMessage
 }
 

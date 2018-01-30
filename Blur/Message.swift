@@ -20,6 +20,7 @@ class Message {
     var isOriginalViewed: Bool
     var isDeleted: Bool
     var createdTime: Date
+    var isLiked: Bool
     
     init(dict: [String: Any], messageId: String) {
         self.messageId = messageId
@@ -33,6 +34,12 @@ class Message {
         self.isDeleted = dict[MessageSchema.IS_DELETED] as! Bool
         self.isOriginalViewed = dict[MessageSchema.IS_ORIGINAL_VIEWED] as! Bool
         self.createdTime = dict[MessageSchema.CREATED_TIME] as! Date
+        
+        if let isLiked = dict[MessageSchema.IS_LIKED] as? Bool {
+            self.isLiked = isLiked
+        } else {
+            self.isLiked = false
+        }
     }
 }
 
@@ -48,4 +55,6 @@ struct MessageSchema {
     static let IS_ORIGINAL_VIEWED = "isOriginalViewed"
     static let IS_DELETED = "isDeleted"
     static let CREATED_TIME = "createdTime"
+    
+    static let IS_LIKED = "isLiked"
 }

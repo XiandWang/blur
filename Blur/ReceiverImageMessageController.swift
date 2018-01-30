@@ -9,6 +9,7 @@
 import UIKit
 import Kingfisher
 import Firebase
+import FaveButton
 
 class ReceiverImageMessageController : UIViewController{
     private let controlPanelHeight: CGFloat = 80.0
@@ -56,88 +57,6 @@ class ReceiverImageMessageController : UIViewController{
         let sv = UIScrollView()
         return sv
     }()
-    
-//    let showButton: UIButton = {
-//        let bt = UIButton(type: .custom)
-//        let size = CGSize(width: 44, height: 44)
-//        bt.setImage(UIImage.fontAwesomeIcon(name: .thumbsOUp, textColor: .white, size: size), for: .normal)
-//        bt.backgroundColor = GREEN_COLOR
-//        bt.layer.cornerRadius = 25
-//        bt.layer.masksToBounds = true
-//        bt.alpha = 1.0
-//        bt.addTarget(self, action: #selector(handleShowOriginalImage), for: .touchUpInside)
-//
-//        return bt
-//    }()
-//
-//    let showLabel: UILabel = {
-//        let lb = UILabel()
-//        lb.text = "Show"
-//        lb.font = UIFont.boldSystemFont(ofSize: 14)
-//        lb.textColor = GREEN_COLOR
-//        lb.textAlignment = .center
-//        lb.alpha = 1.0
-//
-//        return lb
-//    }()
-//
-//    let rejectButton: UIButton = {
-//        let bt = UIButton(type: .custom)
-//        let size = CGSize(width: 44, height: 44)
-//        bt.setImage(UIImage.fontAwesomeIcon(name: .thumbsODown, textColor: .white, size: size), for: .normal)
-//        bt.backgroundColor = RED_COLOR
-//        bt.layer.cornerRadius = 25
-//        bt.layer.masksToBounds = true
-//        bt.alpha = 1.0
-//        bt.addTarget(self, action: #selector(handleRejectImage), for: .touchUpInside)
-//        return bt
-//    }()
-//
-//    let rejectLabel: UILabel = {
-//        let lb = UILabel()
-//        lb.text = "Reject"
-//        lb.font = UIFont.boldSystemFont(ofSize: 14)
-//        lb.textColor = RED_COLOR
-//        lb.textAlignment = .center
-//        lb.alpha = 1.0
-//
-//        return lb
-//    }()
-//
-//    let requestButton: UIButton = {
-//        let bt = UIButton(type: .custom)
-//        let size = CGSize(width: 44, height: 44)
-//        bt.setImage(UIImage.fontAwesomeIcon(name: .userO, textColor: .white, size: size), for: .normal)
-//        bt.backgroundColor = .purple
-//        bt.layer.cornerRadius = 25
-//        bt.layer.masksToBounds = true
-//        bt.alpha = 1.0
-//        bt.addTarget(self, action: #selector(handleRequestAccess), for: .touchUpInside)
-//        return bt
-//    }()
-//
-//    let requestLabel: UILabel = {
-//        let lb = UILabel()
-//        lb.text = "Request"
-//        lb.font = UIFont.boldSystemFont(ofSize: 14)
-//        lb.textColor = .purple
-//        lb.numberOfLines = 0
-//        lb.textAlignment = .center
-//        lb.alpha = 1.0
-//
-//        return lb
-//    }()
-//
-//    let toggleImageButton: UIButton = {
-//        let bt = UIButton(type: .custom)
-//        let size = CGSize(width: 44, height: 44)
-//        bt.setImage(UIImage.fontAwesomeIcon(name: .eye, textColor: .white, size: size), for: .normal)
-//        bt.backgroundColor = .purple
-//        bt.layer.cornerRadius = 25
-//        bt.layer.masksToBounds = true
-//        bt.addTarget(self, action: #selector(handleRotateImage), for: .touchUpInside)
-//        return bt
-//    }()
     
     lazy var controlPanel: UIView = {
         let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight, width: UIScreen.main.bounds.width, height: self.controlPanelHeight)
@@ -194,16 +113,74 @@ class ReceiverImageMessageController : UIViewController{
         return viewControl
     }()
     
-    let likeControl: ControlItemView = {
+    lazy var likeControl: ControlItemView = {
         let size = CGSize(width: 38, height: 38)
         let pink = UIColor.rgb(red: 194, green: 24, blue: 91, alpha: 1)
         let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .heart, textColor: pink, size: size), backgroundColor: UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 0.9), textColor: pink, itemText: "Like")
-        let viewControl = ControlItemView(target: self, action: #selector(handleRotateImage))
+        let viewControl = ControlItemView(target: self, action: #selector(handleLikeImage))
+        let likeBtn = FaveButton(frame:  CGRect(x: 0, y: 0, width: 50, height: 50), faveIconNormal: UIImage.fontAwesomeIcon(name: .heart, textColor: pink, size: size))
+        likeBtn.dotSecondColor = RED_COLOR
+        likeBtn.dotFirstColor = YELLOW_COLOR
+        //likeBtn.isSelected = true
+        //likeBtn.normalColor = pink
+        likeBtn.selectedColor = pink
+        viewControl.itemButton = likeBtn
+        viewControl.addSubview(viewControl.itemButton)
+        viewControl.itemButton.isSelected  = self.message?.isLiked ?? false
+    
+        viewControl.itemButton.addTarget(self, action: #selector(handleLikeImage), for: .touchUpInside)
+        viewControl.itemButton.layer.cornerRadius = 25
+        viewControl.itemButton.layer.masksToBounds = true
+        
         viewControl.itemInfo = info
         viewControl.alpha = 0
-        
+        viewControl.setupConstraints()
+        if let liked = self.message?.isLiked {
+            viewControl.itemButton.isSelected  = liked
+            if liked {
+                viewControl.isUserInteractionEnabled = false
+            }
+        } else {
+            viewControl.itemButton.isSelected = false
+        }
         return viewControl
     }()
+    
+    @objc func handleLikeImage() {
+        print("************************debugging")
+        guard let messageId = message?.messageId else { return }
+        guard let receiverUid = self.senderUser?.uid else { return }
+        if let liked = message?.isLiked, liked {
+            AppHUD.success("Already liked", isDarkTheme: false)
+            return
+        }
+        AppHUD.progress(nil, isDarkTheme: false)
+        self.likeControl.itemButton.isEnabled = false
+        let batch = fireStoreRef.batch()
+        let likeDoc = fireStoreRef.collection("messageLikes").document(messageId)
+        batch.setData(["type": "nice", "date": Date()], forDocument: likeDoc)
+        
+        let messageDoc = fireStoreRef.collection("imageMessages").document(messageId)
+        batch.updateData([MessageSchema.IS_LIKED: true], forDocument: messageDoc)
+        
+        batch.commit { (error) in
+            if let error = error {
+                AppHUD.progressHidden()
+                AppHUD.error(error.localizedDescription, isDarkTheme: false)
+                return
+            }
+            self.message?.isLiked = true
+            AppHUD.progressHidden()
+            AppHUD.success("Liked", isDarkTheme: false)
+            CurrentUser.getUser(completion: { (curUser, error) in
+                if let curUser = curUser {
+                    NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: receiverUid, type: .likeMessage, senderUser: curUser, text: nil, completion: { (_) in
+                        
+                    })
+                }
+            })
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -493,9 +470,10 @@ extension ReceiverImageMessageController {
     @objc func handleRequestAccess() {
         guard let messageId = message?.messageId else { return }
         guard let notificationUser = self.senderUser else { return }
-        //self.requestControl.itemButton.isEnabled = false
+        self.requestControl.itemButton.isEnabled = false
         AppHUD.progress(nil, isDarkTheme: false)
         Firestore.firestore().collection("hasSentRequest").document(messageId).getDocument { (snap, error) in
+            AppHUD.progressHidden()
             if let error = error {
                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
                 return

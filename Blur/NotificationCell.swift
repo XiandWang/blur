@@ -126,9 +126,11 @@ class NotificationCell: UICollectionViewCell {
         if type == NotificationType.allowAccess.rawValue {
             text = " allows you to access the image "
         } else if type == NotificationType.rejectMessage.rawValue {
-            text = " rejects the image "
+            text = " rejects your image "
         } else if type == NotificationType.requestAccess.rawValue {
-            text = " wants to access the image "
+            text = " wants to access your image "
+        } else if type == NotificationType.likeMessage.rawValue {
+            text = " likes your image "
         }
         attributedText.append(NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16), NSAttributedStringKey.foregroundColor: UIColor.black]))
         attributedText.append(NSAttributedString(string: notification.createdTime.timeAgoDisplay(), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray]))

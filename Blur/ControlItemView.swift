@@ -22,7 +22,7 @@ class ControlItemView: UIView {
         }
     }
     
-    let itemButton: UIButton = {
+    var itemButton: UIButton = {
         let bt = UIButton()
         bt.layer.cornerRadius = 25
         bt.layer.masksToBounds = true

@@ -10,8 +10,9 @@ import UIKit
 import Firebase
 
 class ChooseUserNameController: UIViewController, UITextFieldDelegate {
-    
+    private let legalChars = Array("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_")
     var uid: String?
+    private let legalCharSet = Set(Array("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"))
     
     let usernameTextField: UITextField = {
         let tf = UITextField()
@@ -67,7 +68,7 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = .white
         usernameTextField.delegate = self
         setupViews()
-        
+        print(legalChars.count, legalChars)
         usernameTextField.becomeFirstResponder()
     }
     
@@ -81,11 +82,19 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
             return
         }
         
+        for char in name {
+            if !legalCharSet.contains(char) {
+                AppHUD.error("Invalid charaters found. Please use alphabets, dash and underscore", isDarkTheme: true)
+                return
+            }
+        }
+        
         AppHUD.progress(nil, isDarkTheme: true)
         
         guard let uid = uid else { return }
         let childUpdates = ["/\(USERS_NODE)/\(uid)/username": name,
                             "/usernames/\(name)": uid] as [String : Any]
+        print("************************debugging", childUpdates)
         Database.database().reference().updateChildValues(childUpdates) { (err, ref) in
             if let err = err {
                 AppHUD.progressHidden()
