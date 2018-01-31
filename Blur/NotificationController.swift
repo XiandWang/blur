@@ -19,7 +19,7 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         super.viewDidLoad()
         
         navigationItem.title = "Notifications"
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: PURPLE_COLOR]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
         collectionView?.backgroundColor = .white
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .interactive
@@ -40,7 +40,9 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
             Firestore.firestore().collection("notifications").document(curUserId)
                 .collection("messageNotifications").document(notif.notificationId).updateData(["isRead": true])
         }
-        
+        if let app = UIApplication.shared.delegate as? AppDelegate {
+            app.setBadge(tabBarIndex: 2, num: 0)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -63,6 +65,9 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         self.notifications = []
         collectionView?.reloadData()
         AppHUD.progressHidden()
+        if let app = UIApplication.shared.delegate as? AppDelegate {
+            app.setBadge(tabBarIndex: 2, num: 0)
+        }
     }
     
     fileprivate func listenForNotifications() {
@@ -82,22 +87,16 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
                         let notification = MessageNotification(dict: doc.data(), notificationId: doc.documentID)
                         self.notifications.insert(notification, at: 0)
                         print(notification)
-                        //DispatchQueue.main.async {
-                            self.collectionView?.reloadData()
-                        //}
+                        self.collectionView?.reloadData()
                     }
                 }
+                guard let app = UIApplication.shared.delegate as? AppDelegate else { return }
+                let unreadNum = self.notifications.filter({$0.isRead == false}).count
+                app.setBadge(tabBarIndex: 2, num: unreadNum)
         }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //return notifications.count
-//        if notifications.count == 0 {
-//            let l = UILabel(frame: view.bounds)
-//            l.text = "sdsf"
-//            collectionView.backgroundView = l
-//            return 0
-//        }
         return notifications.count
     }
     
@@ -118,10 +117,7 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         cell.notification = self.notifications[indexPath.row]
         
         return cell
-    }
-    
-    
-    
+    }  
 }
 
 extension UIBarButtonItem {

@@ -45,10 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         let userInfo = response.notification.request.content.userInfo
         
         if let type = userInfo["type"] as? String {
-            print("type", type, "&&&&&&&&&&&&&&&&&&&")
             guard let tabBarController = window?.rootViewController as? MainTabBarController else { return }
             if type == "newFriendRequest" {
-                
                 tabBarController.selectedIndex = 1
             } else if type == "newImageMessage" {
                 tabBarController.selectedIndex = 0
@@ -71,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
             }
             
             if granted {
-                print(")))))))))))))))) granted")
+                print("granted")
             } else {
                 print("denied")
             }
@@ -105,6 +103,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    func setBadge(tabBarIndex:Int, num: Int) {
+        guard let mainTabBarController = window?.rootViewController as? MainTabBarController else { return }
+        guard let tabBarItems = mainTabBarController.tabBar.items else { return }
+        if tabBarIndex >= tabBarItems.count { return }
+        if num > 0 {
+            tabBarItems[tabBarIndex].badgeValue = "\(num)"
+        } else {
+            tabBarItems[tabBarIndex].badgeValue = nil
+        }
+        
+        var appBadge = 0
+        for item in tabBarItems {
+            if let curBadgeStr = item.badgeValue, let curBadgeNum = Int(curBadgeStr), curBadgeNum >= 0 {
+                print("cur badge for \(item)", curBadgeStr)
+                appBadge += curBadgeNum
+            }
+        }
+        UIApplication.shared.applicationIconBadgeNumber = appBadge > 0 ? appBadge : 0
+    }
 
 }
 

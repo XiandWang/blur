@@ -24,8 +24,8 @@ class FriendsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Friends"
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: PURPLE_COLOR]
-        
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+
         view?.backgroundColor = .white
         tableView.register(UserContactCell.self, forCellReuseIdentifier: cellId)
         tableView.sectionIndexColor = .black
@@ -158,11 +158,13 @@ extension FriendsController {
                 let cell = self.tableView.tableHeaderView as? NewContactHeader
                 if snap.childrenCount > 0 {
                     cell?.newFriendsNum = "\(snap.childrenCount)"
-                    guard let tabItemControllers = self.tabBarController?.tabBar.items else { return }
-                    tabItemControllers[1].badgeValue = "\(snap.childrenCount)"
+                    if let app = UIApplication.shared.delegate as? AppDelegate {
+                        app.setBadge(tabBarIndex: 1, num: Int(snap.childrenCount))
+                    }
                 } else {
-                    guard let tabItemControllers = self.tabBarController?.tabBar.items else { return }
-                    tabItemControllers[1].badgeValue = nil
+                    if let app = UIApplication.shared.delegate as? AppDelegate {
+                        app.setBadge(tabBarIndex: 1, num: 0)
+                    }
                 }
             }
         }

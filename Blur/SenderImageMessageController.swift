@@ -251,12 +251,13 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         self.allowAccessControl.itemButton.isEnabled = false
         
         self.fireStoreRef.collection("hasAllowedAccess").document(messageId).getDocument { (snap, error) in
-            AppHUD.progressHidden()
             if let error = error {
+                AppHUD.progressHidden()
                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
                 return
             }
             if let _ = snap?.data() {
+                AppHUD.progressHidden()
                 AppHUD.success("Already allowed", isDarkTheme: false)
                 return
             } else {

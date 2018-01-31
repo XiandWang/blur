@@ -22,7 +22,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         collectionView?.register(MyAccountHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
         collectionView?.register(MyAccountImageCell.self, forCellWithReuseIdentifier: cellId)
         navigationItem.title = "My Account"
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: PURPLE_COLOR]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
         setupLogoutButton()
         getCurrentUser()
         getRecentMessages()

@@ -141,8 +141,23 @@ class HomeController: UITableViewController {
                         self.modifyMessage(doc: docChange.document)
                     }
                 })
+                self.setBadge()
             }
         }
+    
+    func setBadge() {
+        var num = 0
+        for (user, messages) in self.imageMessages {
+            for m in messages {
+                if !m.isAcknowledged {
+                    num += 1
+                }
+            }
+        }
+        guard let app = UIApplication.shared.delegate as? AppDelegate else { return }
+
+        app.setBadge(tabBarIndex: 0, num: num)
+    }
     
     fileprivate func sortUserIdsByMessageCreatedTime() {
         self.userIdsSorted = Array(self.imageMessages.keys).sorted(by: { (userId1, userId2) -> Bool in

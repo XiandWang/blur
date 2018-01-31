@@ -506,12 +506,13 @@ extension ReceiverImageMessageController {
         self.requestControl.itemButton.isEnabled = false
         AppHUD.progress(nil, isDarkTheme: false)
         Firestore.firestore().collection("hasSentRequest").document(messageId).getDocument { (snap, error) in
-            AppHUD.progressHidden()
             if let error = error {
+                AppHUD.progressHidden()
                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
                 return
             }
             if let _ = snap?.data() {
+                AppHUD.progressHidden()
                 AppHUD.error("Request already sent", isDarkTheme: false)
                 return
             } else {
@@ -519,9 +520,11 @@ extension ReceiverImageMessageController {
                     if let curUser = curUser {
                         NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: notificationUser.uid, type: .requestAccess, senderUser: curUser, text: nil, completion: { (error) in
                             if let error = error {
+                                AppHUD.progressHidden()
                                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
                                 return
                             } else {
+                                AppHUD.progressHidden()
                                 AppHUD.success("Request sent", isDarkTheme: false)
                                 Firestore.firestore().collection("hasSentRequest").document(messageId).setData(["date": Date()])
                             }
