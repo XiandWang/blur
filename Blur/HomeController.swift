@@ -22,7 +22,7 @@ class HomeController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: PURPLE_COLOR]
         view.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.register(HomeChatCell.self, forCellReuseIdentifier: cellId)

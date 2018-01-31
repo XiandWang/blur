@@ -22,7 +22,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         collectionView?.register(MyAccountHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
         collectionView?.register(MyAccountImageCell.self, forCellWithReuseIdentifier: cellId)
         navigationItem.title = "My Account"
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: PURPLE_COLOR]
         setupLogoutButton()
         getCurrentUser()
         getRecentMessages()
@@ -113,10 +113,6 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         senderMessageController.message = message
         senderMessageController.hidesBottomBarWhenPushed = true
         configureTransparentNav()
-//        navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: senderMessageController, action: #selector(senderMessageController.navBack))
-//        navigationItem.backBarButtonItem?.tintColor = YELLOW_COLOR
-//        navigationItem.backBarButtonItem?.action = #selector(senderMessageController.navBack)
-        
         
         navigationController?.pushViewController(senderMessageController, animated: true)
     }
@@ -136,7 +132,6 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         CurrentUser.getUser { (user, error) in
             if let user = user {
                 self.user = user
-                print(self.user ?? "lknlklknlnknlknlkn")
                 DispatchQueue.main.async {
                     self.collectionView?.reloadData()
                 }
@@ -182,11 +177,8 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage
         if let image = editedImage {
             uploadProfileImage(image: image)
-            //userProfileImageView.image = image
-            
         } else if let image = originalImage {
             uploadProfileImage(image: image)
-        //userProfileImageView.image = image
         }
         dismiss(animated: true, completion: nil)
     }

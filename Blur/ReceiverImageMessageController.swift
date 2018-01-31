@@ -10,6 +10,7 @@ import UIKit
 import Kingfisher
 import Firebase
 import FaveButton
+import KOAlertController
 
 class ReceiverImageMessageController : UIViewController{
     private let controlPanelHeight: CGFloat = 80.0
@@ -121,8 +122,6 @@ class ReceiverImageMessageController : UIViewController{
         let likeBtn = FaveButton(frame:  CGRect(x: 0, y: 0, width: 50, height: 50), faveIconNormal: UIImage.fontAwesomeIcon(name: .heart, textColor: pink, size: size))
         likeBtn.dotSecondColor = RED_COLOR
         likeBtn.dotFirstColor = YELLOW_COLOR
-        //likeBtn.isSelected = true
-        //likeBtn.normalColor = pink
         likeBtn.selectedColor = pink
         viewControl.itemButton = likeBtn
         viewControl.addSubview(viewControl.itemButton)
@@ -147,35 +146,70 @@ class ReceiverImageMessageController : UIViewController{
     }()
     
     @objc func handleLikeImage() {
-        print("************************debugging")
+        print("************************debugging", "like tapped")
         guard let messageId = message?.messageId else { return }
         guard let receiverUid = self.senderUser?.uid else { return }
         if let liked = message?.isLiked, liked {
             AppHUD.success("Already liked", isDarkTheme: false)
             return
         }
-        AppHUD.progress(nil, isDarkTheme: false)
         self.likeControl.itemButton.isEnabled = false
+        
+        let alert = KOAlertController("How do you like it?", nil, UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 60, height: 60)))
+        
+        let niceButton = KOAlertButtonUtil.getAppButton(title: "")
+        niceButton.title = "😍Nice"
+        let creativeButton = KOAlertButtonUtil.getAppButton(title: "")
+        creativeButton.title = "😍Creative"
+        let underwhelmedButton = KOAlertButtonUtil.getAppButton(title: "")
+        underwhelmedButton.title = "😐Underwhelmed"
+        
+        alert.style = configureAlertStyle()
+        alert.addAction(niceButton) {
+            print("Action:nice")
+            self.likeImage(messageId: messageId, receiverId: receiverUid, likeType: "😍Nice")
+        }
+        alert.addAction(creativeButton) {
+            print("Action:creative")
+            self.likeImage(messageId: messageId, receiverId: receiverUid, likeType: "😍Creative")
+        }
+        alert.addAction(underwhelmedButton) {
+            print("Action:underwhelmed")
+            self.likeImage(messageId: messageId, receiverId: receiverUid, likeType: "😐Underwhelmed")
+        }
+        self.present(alert, animated: true) {}
+    }
+    
+    fileprivate func configureAlertStyle() -> KOAlertStyle {
+        let style                       = KOAlertStyle()
+        style.position = .center
+        style.backgroundColor           = PURPLE_COLOR_LIGHT
+        style.cornerRadius              = 15
+        style.titleColor                = UIColor.white
+        style.titleFont                 = UIFont.systemFont(ofSize: 24)
+        return style
+    }
+    
+    fileprivate func likeImage(messageId: String, receiverId: String, likeType: String) {
         let batch = fireStoreRef.batch()
         let likeDoc = fireStoreRef.collection("messageLikes").document(messageId)
-        batch.setData(["type": "nice", "date": Date()], forDocument: likeDoc)
+        batch.setData(["type": likeType, "createdTime": Date()], forDocument: likeDoc)
         
         let messageDoc = fireStoreRef.collection("imageMessages").document(messageId)
         batch.updateData([MessageSchema.IS_LIKED: true], forDocument: messageDoc)
         
-        batch.commit { (error) in
+        AppHUD.progress(nil, isDarkTheme: false)
+        batch.commit { error in
+            AppHUD.progressHidden()
             if let error = error {
-                AppHUD.progressHidden()
                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
                 return
             }
             self.message?.isLiked = true
-            AppHUD.progressHidden()
             AppHUD.success("Liked", isDarkTheme: false)
             CurrentUser.getUser(completion: { (curUser, error) in
                 if let curUser = curUser {
-                    NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: receiverUid, type: .likeMessage, senderUser: curUser, text: nil, completion: { (_) in
-                        
+                    NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: receiverId, type: .likeMessage, senderUser: curUser, text: nil, completion: { (_) in
                     })
                 }
             })
@@ -330,7 +364,6 @@ class ReceiverImageMessageController : UIViewController{
                     self.controlPanel.addSubview(self.viewImageControl)
                     self.likeControl.alpha = 1
                     self.viewImageControl.alpha = 1
-                    //self.addButtonsToControlPanel(leftControl: self.likeControl, rightControl: self.viewImageControl)
                 }
         }, completion: nil)
     }

@@ -56,24 +56,23 @@ class AppHUD {
         hud.hide(animated: true, afterDelay: 3)
     }
     
-    static func warn(_ message: String?) {
+    static func custom(_ message: String?, img: UIImage) {
         guard let view = UIApplication.shared.keyWindow else {
             return
         }
         let hud = MBProgressHUD.showAdded(to: view, animated: true)
         
         hud.isUserInteractionEnabled = false
-        let img = UIImage.fontAwesomeIcon(name: .exclamationTriangle, textColor: UIColor.rgb(red: 255, green: 193, blue: 7, alpha: 1), size: CGSize(width: 52, height: 44))
         hud.customView = UIImageView(image: img)
         hud.mode = .customView
-        hud.bezelView.color = .black
+        hud.bezelView.color = .white
         hud.bezelView.style = .solidColor
         
-        hud.contentColor = .white
+        hud.contentColor = .black
         hud.label.text = message
         hud.label.numberOfLines = 0
 
-        hud.hide(animated: true, afterDelay: 3)
+        hud.hide(animated: true, afterDelay: 1.5)
     }
 
     

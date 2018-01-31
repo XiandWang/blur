@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'BFAE2D872C1B231D033C8666FEE7A87B'
-               BlueprintName = 'TDBadgedCell'
+               BlueprintIdentifier = '1C28A2F7B31E8F72BE964EB6C34D4452'
+               BlueprintName = 'KOAlertController'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'TDBadgedCell.framework'>
+               BuildableName = 'KOAlertController.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

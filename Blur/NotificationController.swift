@@ -19,13 +19,10 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         super.viewDidLoad()
         
         navigationItem.title = "Notifications"
-        
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: PURPLE_COLOR]
         collectionView?.backgroundColor = .white
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .interactive
-        
-//        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: -50, right: 0)
-//        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: -50, right: 0)
         
         collectionView?.register(NotificationCell.self, forCellWithReuseIdentifier: cellId)
         let trashImg = UIImage.fontAwesomeIcon(name: .trash, textColor: .black, size: CGSize(width: 30, height: 44))

@@ -12,8 +12,17 @@ import Kingfisher
 
 class SenderImageMessageController: UIViewController, UINavigationControllerDelegate {
     let fireStoreRef = Firestore.firestore()
+    var listener: ListenerRegistration?
+    let heartImg = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 44, height: 44))
+    
     private var isShowingEdited = true
     private var isShowingControlPanel = true
+    
+    var likeType: String? {
+        didSet {
+            setupLikeImage()
+        }
+    }
     
     var receiverUser: User? {
         didSet {
@@ -39,25 +48,45 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                 let receiverId = message.receiverId
                 getUserData(uid: receiverId)
                 
-                if message.isLiked {
-                    setupLikeImage()
-                }
+                self.listener = self.fireStoreRef.collection("messageLikes").document(message.messageId)
+                    .addSnapshotListener({ (snap, error) in
+                        if let snapData = snap?.data() {
+                            print(snapData)
+                            if let type = snapData["type"] as? String {
+                                self.likeType = type
+                            }
+                        }
+                })
             }
         }
     }
     
-    func setupLikeImage() {
-        view.addSubview(likeImageView)
-        likeImageView.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 44, height: 44)
-        likeImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        likeImageView.centerYAnchor.constraint(equalTo: viewImageControl.centerYAnchor).isActive = true
+    deinit {
+        self.listener?.remove()
     }
     
-    let likeImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.image = UIImage.fontAwesomeIcon(name: .heart, textColor: UIColor.rgb(red: 194, green: 24, blue: 91, alpha: 1), size: CGSize(width: 44, height: 44))
-        return iv
+    func setupLikeImage() {
+        print("************************debugging")
+        view.addSubview(likeButton)
+        likeButton.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 44, height: 44)
+        likeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        likeButton.centerYAnchor.constraint(equalTo: viewImageControl.centerYAnchor).isActive = true
+    }
+    
+    @objc func handleShowLikeType() {
+        print("like tapped", "😊")
+        guard let likeType = self.likeType else { return }
+        AppHUD.custom(likeType, img: heartImg)
+        return
+    }
+    
+   
+    
+    lazy var likeButton: UIButton = {
+        let bt = UIButton()
+        bt.setImage(heartImg, for: .normal)
+        bt.addTarget(self, action: #selector(handleShowLikeType), for: .touchUpInside)
+        return bt
     }()
     
     let editedImageView: UIImageView = {
@@ -108,7 +137,6 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         setupImageView()
         AnimationHelper.perspectiveTransform(for: view)
         setupGestures()
-        
         setupControls()
     }
     
@@ -223,13 +251,12 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         self.allowAccessControl.itemButton.isEnabled = false
         
         self.fireStoreRef.collection("hasAllowedAccess").document(messageId).getDocument { (snap, error) in
+            AppHUD.progressHidden()
             if let error = error {
-                AppHUD.progressHidden()
                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
                 return
             }
             if let _ = snap?.data() {
-                AppHUD.progressHidden()
                 AppHUD.success("Already allowed", isDarkTheme: false)
                 return
             } else {
@@ -263,14 +290,14 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
     }
     
     fileprivate func hideControlViews() {
-        for v in [allowAccessControl, viewImageControl] {
+        for v in [allowAccessControl, viewImageControl, likeButton] as [UIView] {
             v.alpha = 0
         }
         self.navigationController?.navigationBar.alpha = 0
     }
     
     fileprivate func showControlViews() {
-        for v in [allowAccessControl, viewImageControl] {
+        for v in [allowAccessControl, viewImageControl, likeButton] as [UIView] {
             v.alpha = 1
         }
         self.navigationController?.navigationBar.alpha = 1

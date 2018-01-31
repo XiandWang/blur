@@ -19,4 +19,6 @@ target 'Blur' do
   pod 'Kingfisher'
   pod 'TDBadgedCell', '~> 5.2'
   pod 'FaveButton', '~> 2.0.3'
+  pod 'KOAlertController', '~> 1.0.2'
+
 end

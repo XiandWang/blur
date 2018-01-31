@@ -68,29 +68,29 @@ class MainTabBarController: UITabBarController {
     }
     
      func setupViewControllers() {
-        tabBar.tintColor = .black
+        tabBar.tintColor = PURPLE_COLOR
         tabBar.isTranslucent = false
         let size = CGSize(width: 40, height: 40)
         let myAccountController = MyAccountController(collectionViewLayout: UICollectionViewFlowLayout())
         let myAccountNavController = UINavigationController(rootViewController: myAccountController)
-        myAccountNavController.tabBarItem.image = UIImage.fontAwesomeIcon(name: .userCircle, textColor: .lightGray, size: size)
-        myAccountNavController.tabBarItem.selectedImage = UIImage.fontAwesomeIcon(name: .userCircle, textColor: .black, size: size)
+        myAccountNavController.tabBarItem.image = UIImage.fontAwesomeIcon(name: .userCircle, textColor: .black, size: CGSize(width: 38, height: 38))
+        myAccountNavController.tabBarItem.selectedImage = UIImage.fontAwesomeIcon(name: .userCircle, textColor: .black, size: CGSize(width: 38, height: 38))
         //myAccountNavController.tabBarItem.title = "Me"
         
         
         let friendsNavController = UINavigationController(rootViewController: FriendsController())
-        friendsNavController.tabBarItem.image = UIImage.fontAwesomeIcon(name: .addressBook, textColor: .lightGray, size: size)
-        friendsNavController.tabBarItem.selectedImage = UIImage.fontAwesomeIcon(name: .addressBook, textColor: .black, size: size)
+        friendsNavController.tabBarItem.image = #imageLiteral(resourceName: "user_group_man_woman")
+        friendsNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "user_group_man_woman")
         //friendsNavController.tabBarItem.title = "Friends"
         
         let notificationController = NotificationController(collectionViewLayout: UICollectionViewFlowLayout())
         let notificationNavController = UINavigationController(rootViewController: notificationController)
-        notificationNavController.tabBarItem.image = UIImage.fontAwesomeIcon(name: .bell, textColor: .lightGray, size: CGSize(width: 40, height: 30))
-        notificationNavController.tabBarItem.selectedImage = UIImage.fontAwesomeIcon(name: .bell, textColor: .black, size: CGSize(width: 40, height: 30))
+        notificationNavController.tabBarItem.image = #imageLiteral(resourceName: "bell")
+        notificationNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "bell")
         
         let homeNavController = UINavigationController(rootViewController: HomeController())
-        homeNavController.tabBarItem.image = UIImage.fontAwesomeIcon(name: .camera, textColor: .lightGray, size: size)
-        homeNavController.tabBarItem.selectedImage = UIImage.fontAwesomeIcon(name: .camera, textColor: .black, size: size)
+        homeNavController.tabBarItem.image = #imageLiteral(resourceName: "speech_buble")
+        homeNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "speech_buble")
         //homeNavController.tabBarItem.title = "HidingChats"
 
         viewControllers = [homeNavController, friendsNavController, notificationNavController, myAccountNavController]

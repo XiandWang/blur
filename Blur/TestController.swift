@@ -9,17 +9,10 @@
 import FontAwesome_swift
 import Firebase
 import FaveButton
+import KOAlertController
 
 class TestController: UIViewController {
-    
-    var originalScrollView: UIScrollView = UIScrollView()
-    let originalImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        let img = UIImage.fontAwesomeIcon(name: .exclamationCircle, textColor: YELLOW_COLOR, size: CGSize(width: 1000, height: 1000))
-        iv.image = img
-        return iv
-    }()
+
     
      let faveButton = FaveButton(
         frame: CGRect(x:200, y:200, width: 50, height: 50),
@@ -31,39 +24,78 @@ class TestController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        faveButton.layer.cornerRadius = 25
-        faveButton.layer.masksToBounds = true
-        faveButton.backgroundColor = .white
-        faveButton.dotSecondColor = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
-        faveButton.dotFirstColor = UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 1)
-        faveButton.normalColor = TEXT_GRAY
-        faveButton.selectedColor = .red
-        faveButton.addTarget(self, action: #selector(p), for: .touchUpInside)
-        faveButton.delegate = self
-        view.addSubview(faveButton)
         
-        faveButton.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 50, paddingLeft: 50, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+        
+        view.backgroundColor = .white
     }
     
-    @objc func p() {
-        print(self.faveButton.dotFirstColor)
-        print(self.faveButton.dotSecondColor)
-        print("fang pi")
-        if self.faveButton.isSelected {
-            //self.faveButton.isEnabled = false
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        
+        let alert = KOAlertController("How do you like it?", nil, UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 60, height: 60)))
+        let style                       = KOAlertStyle()
+        style.position = .center
+        style.backgroundColor           = PURPLE_COLOR_LIGHT
+        style.cornerRadius              = 15
+        style.titleColor                = UIColor.white
+        style.titleFont                 = UIFont.systemFont(ofSize: 24)
+
+        let niceButton                   = KOAlertButton(.default, title:"😍Nice")
+        niceButton.backgroundColor       = UIColor.white
+        niceButton.titleColor            = .black
+        niceButton.cornerRadius = 27.5
+        niceButton.font = UIFont.boldSystemFont(ofSize: 17)
+        niceButton.title = "😍Nice"
+
+        let creativeButton                   = KOAlertButton(.default, title:"😂Creative")
+        creativeButton.backgroundColor       = UIColor.white
+        creativeButton.titleColor            = .black
+        creativeButton.cornerRadius = 27.5
+        creativeButton.font = UIFont.boldSystemFont(ofSize: 17)
+        creativeButton.title = "😂Creative"
+
+        let underwhelmButton                   = KOAlertButton(.default, title:"😐Underwhelmed")
+        underwhelmButton.backgroundColor       = UIColor.white
+        underwhelmButton.titleColor            = .black
+        underwhelmButton.cornerRadius = 27.5
+        underwhelmButton.font = UIFont.boldSystemFont(ofSize: 17)
+        underwhelmButton.title = "😐Underwhelmed"
+
+
+        alert.style = style
+        alert.addAction(niceButton) {
+            print("Action:nice")
         }
-    }
-    
-    func faveButtonDotColors(_ faveButton: FaveButton) -> [DotColors]?{
-        if faveButton == self.faveButton {
-            let PINK = UIColor.rgb(red: 194, green: 24, blue: 91, alpha: 1)
-            let LIGHT_PINK = UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 1)
-            let blue = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
-            let LIGHT_BLUE = UIColor.rgb(red: 144, green: 202, blue: 249, alpha: 1)
-            return [DotColors(first: PINK, second: LIGHT_PINK), DotColors(first: blue, second: LIGHT_BLUE)]
+        alert.addAction(creativeButton) {
+            print("Action:creative")
         }
-        return nil
+        alert.addAction(underwhelmButton) {
+            print("Action:underwhelm")
+        }
+        self.present(alert, animated: true) {}
+        
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "speech_buble"))
+        imageView.contentMode = .scaleAspectFit
+        
+        view.addSubview(imageView)
+        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        
     }
    
+}
+
+struct KOAlertButtonUtil {
+    static func getAppButton(title: String)  -> KOAlertButton {
+        let bt = KOAlertButton(.default, title: title)
+        bt.backgroundColor = UIColor.white
+        bt.titleColor = .black
+        bt.cornerRadius = 27.5
+        bt.font = UIFont.boldSystemFont(ofSize: 17)
+        
+        return bt
+    }
 }
 
