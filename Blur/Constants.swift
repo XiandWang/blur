@@ -17,14 +17,15 @@ let TEXT_GRAY = UIColor.rgb(red: 84, green: 109, blue: 126, alpha: 1)
 
 let RED_COLOR = UIColor.rgb(red: 211, green: 47, blue: 47, alpha: 1)
 let RED_COLOR_LIGHT = UIColor.rgb(red: 239, green: 154, blue: 154, alpha: 1)
-let PURPLE_COLOR = UIColor.rgb(red: 81, green: 45, blue: 168, alpha: 1)
-let PURPLE_COLOR_LIGHT = UIColor.rgb(red: 179, green: 157, blue: 219, alpha: 1)
+let DEEP_PURPLE_COLOR = UIColor.rgb(red: 81, green: 45, blue: 168, alpha: 1)
+let DEEP_PURPLE_COLOR_LIGHT = UIColor.rgb(red: 179, green: 157, blue: 219, alpha: 1)
 let BLUE_COLOR = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
 let BLUE_COLOR_LIGHT = UIColor.rgb(red: 144, green: 202, blue: 249, alpha: 1)
 let PINK_COLOR = UIColor.rgb(red: 194, green: 24, blue: 91, alpha: 1)
 let PINK_COLOR_LIGHT = UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 0.9)
 
-
+let PURPLE_COLOR_LIGHT = UIColor.rgb(red: 206, green: 147, blue: 216, alpha: 1)
+let PURPLE_COLOR = UIColor.rgb(red: 123, green: 31, blue: 162, alpha: 1)
 
 let USERS_NODE = "users"
 let PROFILE_IMAGES_NODE = "profileImages"

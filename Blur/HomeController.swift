@@ -22,7 +22,7 @@ class HomeController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: PURPLE_COLOR]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: DEEP_PURPLE_COLOR]
         view.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.register(HomeChatCell.self, forCellReuseIdentifier: cellId)
@@ -40,7 +40,7 @@ class HomeController: UITableViewController {
     
     func setupNavigationItems() {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-        self.navigationItem.title = "Chats"
+        self.navigationItem.title = "Hidingchats"
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -50,7 +50,7 @@ class HomeController: UITableViewController {
         } else {
             let count = imageMessages.keys.count
             if count == 0 {
-                TableViewHelper.emptyMessage(message: "You have no recent chats", viewController: self)
+                TableViewHelper.emptyMessage(message: "No recent chats", viewController: self)
                 return 0
             } else {
                 view.backgroundColor = .white
@@ -92,9 +92,7 @@ class HomeController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let senderId = userIdsSorted[indexPath.row]
-        if let user = self.usersDict[senderId] {
-            print(user.username)
-        }
+        
         if let messages = imageMessages[senderId], let user = self.usersDict[senderId] {
             let messagesPageViewController = MessagesPageViewController(messages: messages, senderUser: user)
             messagesPageViewController.hidesBottomBarWhenPushed = true
@@ -142,12 +140,13 @@ class HomeController: UITableViewController {
                     }
                 })
                 self.setBadge()
+                //self.tableView.reloadData()
             }
         }
     
     func setBadge() {
         var num = 0
-        for (user, messages) in self.imageMessages {
+        for (_, messages) in self.imageMessages {
             for m in messages {
                 if !m.isAcknowledged {
                     num += 1
@@ -203,9 +202,8 @@ class HomeController: UITableViewController {
         sortUserIdsByMessageCreatedTime()
         print("************************debugging", "removingDone")
 
-        //DispatchQueue.main.async {
-            self.tableView?.reloadData()
-        //}
+        self.tableView?.reloadData()
+        
     }
     
     fileprivate func modifyMessage(doc: DocumentSnapshot) {
@@ -221,7 +219,7 @@ class HomeController: UITableViewController {
         print("************************debugging", "modifying done done done", self.imageMessages[senderId]?[index].isAcknowledged)
         self.sortUserIdsByMessageCreatedTime()
         //DispatchQueue.main.async {
-            self.tableView?.reloadData()
+        self.tableView?.reloadData()
         //}
     }
     

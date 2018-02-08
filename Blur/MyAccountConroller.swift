@@ -26,7 +26,8 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         setupLogoutButton()
         getCurrentUser()
         getRecentMessages()
-        
+        UIFont.familyNames.map {UIFont.fontNames(forFamilyName: $0)}
+            .forEach {(n:[String]) in n.forEach {print($0)}}
         NotificationCenter.default.addObserver(self, selector: #selector(addNewMessage), name: NEW_MESSAGE_CREATED, object: nil)
     }
     
@@ -34,7 +35,6 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         let logoutImg = UIImage.fontAwesomeIcon(name: .signOut, textColor: .black, size: CGSize(width: 30, height: 44))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: logoutImg, style: .plain, target: self, action: #selector(handleLogout))
         navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
-        //navigationItem.rightBarButtonItem?.tintColor = .black
     }
     
     @objc func handleLogout() {
@@ -70,6 +70,8 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
             return message.createdTime >= yesterday
         }
         collectionView?.reloadData()
+        
+        
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -92,7 +94,21 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return messages.count
+        let count = messages.count
+        if count == 0 {
+            let label = UILabel()
+            label.font = UIFont.boldSystemFont(ofSize: 20)
+            label.textColor = TEXT_GRAY
+            label.text = "No images sent yet"
+            label.textAlignment = .center
+            collectionView.backgroundView = label
+            label.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor).isActive = true
+            label.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor, constant: -80).isActive = true
+            return 0
+        } else {
+            collectionView.backgroundView = nil
+            return count
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

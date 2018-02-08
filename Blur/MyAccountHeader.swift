@@ -16,6 +16,7 @@ class MyAccountHeader: UICollectionViewCell {
         didSet {
             guard let name = user?.username else { return }
             userNameLabel.text = name
+
             guard let userProfileImgUrl = user?.profileImgUrl, userProfileImgUrl != "" else {
                 return
             }
@@ -57,11 +58,11 @@ class MyAccountHeader: UICollectionViewCell {
     
     let userProfileImageView: UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .lightGray
+        iv.backgroundColor = .white
         iv.layer.cornerRadius = 40
         iv.layer.masksToBounds = true
         iv.contentMode = .scaleAspectFill
-        
+
         return iv
     }()
     
@@ -79,7 +80,7 @@ class MyAccountHeader: UICollectionViewCell {
         lb.textAlignment = .center
         lb.textColor = UIColor.rgb(red: 84, green: 109, blue: 126, alpha: 1)
         lb.backgroundColor = BACKGROUND_GRAY
-        lb.font = UIFont.boldSystemFont(ofSize: 22)
+        lb.font = UIFont.boldSystemFont(ofSize: 24)
         return lb
     }()
 }

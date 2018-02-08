@@ -97,7 +97,21 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return notifications.count
+        let count = notifications.count
+        if count == 0 {
+            let label = UILabel()
+            label.font = UIFont.boldSystemFont(ofSize: 24)
+            label.textColor = TEXT_GRAY
+            label.text = "No new notifications"
+            label.textAlignment = .center
+            collectionView.backgroundView = label
+            label.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor).isActive = true
+            label.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor).isActive = true
+            return 0
+        } else {
+            collectionView.backgroundView = nil
+            return count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

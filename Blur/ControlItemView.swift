@@ -55,7 +55,6 @@ class ControlItemView: UIView {
         itemLabel.centerXAnchor.constraint(equalTo: itemButton.centerXAnchor).isActive = true
     }
     
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

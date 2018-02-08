@@ -35,8 +35,23 @@ class ReceiverImageMessageController : UIViewController{
                 originalImageView.kf.setImage(with: originalUrl)
                 
                 setupControlPanel(message: message)
+                
+                if !message.caption.trimmingCharacters(in: .whitespaces).isEmpty {
+                    setupCaptionLabel()
+                }
             }
         }
+    }
+    
+    fileprivate func setupCaptionLabel() {
+        guard let caption = message?.caption else { return }
+        captionLabel.text = caption
+        view.addSubview(captionLabel)
+        let rect = NSString(string: caption).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font:UIFont.systemFont(ofSize:CGFloat(14))], context: nil).size
+        print(rect)
+        let height = max(rect.height + 16.0, 40)
+        captionLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: height)
+        captionLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
     let editedImageView : UIImageView = {
@@ -59,14 +74,22 @@ class ReceiverImageMessageController : UIViewController{
         return sv
     }()
     
+    let captionLabel: UILabel = {
+        let lb = UILabel()
+        lb.textAlignment = .center
+        lb.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        lb.textColor = .white
+        lb.numberOfLines = 0
+        lb.font = UIFont.systemFont(ofSize:CGFloat(14))
+        return lb
+    }()
+    
+    
     lazy var controlPanel: UIView = {
         let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight, width: UIScreen.main.bounds.width, height: self.controlPanelHeight)
         let panel = UIView(frame: frame)
         panel.backgroundColor = .clear
-//        panel.alpha = self.controlPanelAlpha
-//        panel.layer.shouldRasterize = true
-        // No setting rasterizationScale, will cause blurry images on retina.
-        //panel.layer.rasterizationScale = UIScreen.main.scale
+
         return panel
     }()
     
@@ -183,7 +206,7 @@ class ReceiverImageMessageController : UIViewController{
     fileprivate func configureAlertStyle() -> KOAlertStyle {
         let style                       = KOAlertStyle()
         style.position = .center
-        style.backgroundColor           = PURPLE_COLOR_LIGHT
+        style.backgroundColor           = DEEP_PURPLE_COLOR_LIGHT
         style.cornerRadius              = 15
         style.titleColor                = UIColor.white
         style.titleFont                 = UIFont.systemFont(ofSize: 24)
@@ -265,6 +288,7 @@ class ReceiverImageMessageController : UIViewController{
         if isShowingControlPanel {
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
                 self.hideControlViews()
+                self.hideCaptionLabel()
             }) { (bool) in
                 self.view.isUserInteractionEnabled = true
                 if bool {
@@ -274,6 +298,7 @@ class ReceiverImageMessageController : UIViewController{
         } else {
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
                 self.showControlViews()
+                self.showCaptionLabel()
             }, completion: { (bool) in
                 self.view.isUserInteractionEnabled = true
                 if bool {
@@ -332,6 +357,14 @@ class ReceiverImageMessageController : UIViewController{
         self.navigationController?.navigationBar.alpha = 0
     }
     
+    fileprivate func hideCaptionLabel() {
+        captionLabel.alpha = 0
+    }
+
+    fileprivate func showCaptionLabel() {
+        captionLabel.alpha = 1
+    }
+    
     fileprivate func showControlViews() {
         for v in controlPanel.subviews {
             v.alpha = 1
@@ -340,7 +373,8 @@ class ReceiverImageMessageController : UIViewController{
     }
     
     fileprivate func rotateToOriginalFirstTime() {
-        isShowingEdited = false
+        //isShowingEdited = false
+        view.isUserInteractionEnabled = false
         self.likeControl.frame = self.showOriginalControl.frame
         self.viewImageControl.frame = self.rejectControl.frame
         UIView.animateKeyframes(
@@ -351,6 +385,7 @@ class ReceiverImageMessageController : UIViewController{
                 }
                 UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
                     self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
+                    self.captionLabel.layer.transform =  AnimationHelper.yRotation(-.pi / 2)
                 }
                 UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                     self.originalScrollView.layer.transform = AnimationHelper.yRotation(0.0)
@@ -365,20 +400,29 @@ class ReceiverImageMessageController : UIViewController{
                     self.likeControl.alpha = 1
                     self.viewImageControl.alpha = 1
                 }
-        }, completion: nil)
+        }, completion: { (bool) in
+            self.view.isUserInteractionEnabled = true
+            if bool {
+                self.isShowingEdited = false
+            }
+        })
+        
+        
     }
     
     fileprivate func animateRotatingImage(toOriginal: Bool) {
         if toOriginal {
-            isShowingEdited = false
+            //isShowingEdited = false
             UIView.animateKeyframes(
                 withDuration: 2.0, delay: 0, options: .calculationModeCubic,
                 animations: {
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/9) {
                         self.hideControlViews()
+                        //self.hideCaptionLabel()
                     }
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
                         self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
+                        self.captionLabel.layer.transform =  AnimationHelper.yRotation(-.pi / 2)
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                         self.originalScrollView.layer.transform = AnimationHelper.yRotation(0.0)
@@ -387,9 +431,14 @@ class ReceiverImageMessageController : UIViewController{
                     UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
                         self.showControlViews()
                     }
-            }, completion: nil)
+            }, completion: { (bool) in
+                self.view.isUserInteractionEnabled = true
+                if bool {
+                    self.isShowingEdited = false
+                }
+            })
         } else {
-            isShowingEdited = true
+//            isShowingEdited = true
             UIView.animateKeyframes(
                 withDuration: 2.0, delay: 0, options: .calculationModeCubic,
                 animations: {
@@ -402,11 +451,18 @@ class ReceiverImageMessageController : UIViewController{
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                         self.editedImageView.layer.transform = CATransform3DIdentity
+                        self.captionLabel.layer.transform = CATransform3DIdentity
                     }
                     UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
                         self.showControlViews()
+                        //self.showCaptionLabel()
                     }
-            }, completion: nil)
+            }, completion: { (bool) in
+                self.view.isUserInteractionEnabled = true
+                if bool {
+                    self.isShowingEdited = true
+                }
+            })
         }
     }
 }
@@ -529,6 +585,9 @@ extension ReceiverImageMessageController {
                                 Firestore.firestore().collection("hasSentRequest").document(messageId).setData(["date": Date()])
                             }
                         })
+                    } else if let _ = error {
+                        AppHUD.progressHidden()
+                        AppHUD.error("Error retrieving current user", isDarkTheme: false)
                     }
                 }
             }

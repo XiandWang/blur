@@ -9,6 +9,8 @@
 import UIKit
 import Firebase
 import Kingfisher
+import Photos
+import AVFoundation
 
 class UserProfileController: UIViewController {
     var user : User? {
@@ -47,13 +49,13 @@ class UserProfileController: UIViewController {
         let bt = UIButton(type: .system)
         bt.backgroundColor = YELLOW_COLOR
         
-        bt.setTitle("Send a Photo", for: .normal)
+        bt.setTitle("Send", for: .normal)
         bt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         bt.setTitleColor(.black, for: .normal)
         
         bt.layer.cornerRadius = 22
         bt.layer.masksToBounds = true
-        bt.addTarget(self, action: #selector(handleSendPhoto), for: .touchUpInside)
+        bt.addTarget(self, action: #selector(handleSendImage), for: .touchUpInside)
         return bt
     }()
     
@@ -72,13 +74,16 @@ class UserProfileController: UIViewController {
         let swipe = UISwipeGestureRecognizer(target: self, action: #selector(navback))
         swipe.direction = .right
         view.addGestureRecognizer(swipe)
+        
+        checkImagePermission()
+        checkCameraPermission()
     }
     
     @objc func navback() {
         self.navigationController?.popToRootViewController(animated: true)
     }
 
-    @objc func handleSendPhoto() {
+    @objc func handleSendImage() {
         let picker = UIImagePickerController()
         picker.delegate = self
         
@@ -99,6 +104,54 @@ class UserProfileController: UIViewController {
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         self.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    fileprivate func checkImagePermission() {
+        let status = PHPhotoLibrary.authorizationStatus()
+        print(status)
+        
+        if status == .notDetermined {
+            print("image not deter")
+        }
+        
+        if status == .authorized {
+            print("image  authorized")
+        }
+        
+        if status == .denied {
+            print("image denied")
+        }
+        
+        if status == .restricted {
+            print("image restricted")
+        }
+    }
+    
+    fileprivate func checkCameraPermission() {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        print(status.rawValue)
+        
+        if status == .notDetermined {
+            print("cam not deter")
+        }
+        
+        if status == .authorized {
+            print("cam  authorized")
+        }
+        
+        if status == .denied {
+            print("cam denied")
+        }
+        
+        if status == .restricted {
+            print("cam restricted")
+        }
+        
+    }
+    
+    func openSettings() {
+        guard let url = URL(string: UIApplicationOpenSettingsURLString) else { return }
+        UIApplication.shared.open(url, completionHandler: nil)
     }
     
     fileprivate func setupViews() {

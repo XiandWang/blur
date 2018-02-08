@@ -784,6 +784,7 @@
 				DEVELOPMENT_TEAM = S5TTSBD3PN;
 				INFOPLIST_FILE = Blur/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				"OTHER_SWIFT_FLAGS[arch=*]" = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.hidingchatApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -807,6 +808,7 @@
 				DEVELOPMENT_TEAM = S5TTSBD3PN;
 				INFOPLIST_FILE = Blur/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				"OTHER_SWIFT_FLAGS[arch=*]" = "-DRELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiandongwang.hidingchatApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

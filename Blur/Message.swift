@@ -16,11 +16,12 @@ class Message {
     var originalImageUrl: String
     var allowOriginal: Bool
     var isAcknowledged: Bool
-    var acknowledgeType: String?
+    var acknowledgeType: String
     var isOriginalViewed: Bool
     var isDeleted: Bool
     var createdTime: Date
     var isLiked: Bool
+    var caption: String
     
     init(dict: [String: Any], messageId: String) {
         self.messageId = messageId
@@ -30,7 +31,7 @@ class Message {
         self.originalImageUrl = dict[MessageSchema.ORIGINAL_IMAGE_URL] as! String
         self.allowOriginal = dict[MessageSchema.ALLOW_ORIGINAL] as! Bool
         self.isAcknowledged = dict[MessageSchema.IS_ACKNOWLEDGED] as! Bool
-        self.acknowledgeType = dict[MessageSchema.ACKNOWLEDGE_TYPE] as? String
+        self.acknowledgeType = dict[MessageSchema.ACKNOWLEDGE_TYPE] as? String ?? "NotAck"
         self.isDeleted = dict[MessageSchema.IS_DELETED] as! Bool
         self.isOriginalViewed = dict[MessageSchema.IS_ORIGINAL_VIEWED] as! Bool
         self.createdTime = dict[MessageSchema.CREATED_TIME] as! Date
@@ -40,6 +41,8 @@ class Message {
         } else {
             self.isLiked = false
         }
+        
+        self.caption = dict[MessageSchema.CAPTION] as? String ?? ""
     }
 }
 
@@ -55,6 +58,6 @@ struct MessageSchema {
     static let IS_ORIGINAL_VIEWED = "isOriginalViewed"
     static let IS_DELETED = "isDeleted"
     static let CREATED_TIME = "createdTime"
-    
     static let IS_LIKED = "isLiked"
+    static let CAPTION = "caption"
 }

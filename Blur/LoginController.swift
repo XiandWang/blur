@@ -17,30 +17,28 @@ class LoginController: UIViewController {
         lb.font = UIFont.boldSystemFont(ofSize: 20)
         lb.textAlignment = .center
         lb.translatesAutoresizingMaskIntoConstraints = false
-        lb.textColor = .black
+        lb.textColor = .white
         return lb
     }()
     
     let dontHaveAccountButton: UIButton = {
         let bt = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+        let attributedTitle = NSMutableAttributedString(string: "Go to ", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: PURPLE_COLOR_LIGHT])
         
-        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: RED_COLOR]))
+        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: PURPLE_COLOR_LIGHT]))
         
         bt.setAttributedTitle(attributedTitle, for: .normal)
         return bt
     }()
     
-    let emailTextField : UITextField = {
-        let tf = UITextField()
+    let emailTextField : AppTextField = {
+        let tf = AppTextField()
         tf.placeholder = "Email: "
         tf.clearButtonMode = .whileEditing
         tf.autocorrectionType = .no
         tf.keyboardType = .emailAddress
         tf.autocapitalizationType = .none
         tf.returnKeyType = .next
-        tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        tf.borderStyle = UITextBorderStyle.roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         tf.translatesAutoresizingMaskIntoConstraints = false
@@ -48,11 +46,9 @@ class LoginController: UIViewController {
         return tf
     }()
     
-    let passWordTextField : UITextField = {
-        let tf = UITextField()
+    let passWordTextField : AppTextField = {
+        let tf = AppTextField()
         tf.placeholder = "Password: "
-        tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
         tf.isSecureTextEntry = true
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
@@ -64,14 +60,11 @@ class LoginController: UIViewController {
     let loginButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.backgroundColor = .lightGray
-
         bt.setTitle("Login", for: .normal)
         bt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         bt.setTitleColor(.white, for: .normal)
-        
         bt.isEnabled = false
-        bt.layer.cornerRadius = 25
-        bt.layer.masksToBounds = true
+        bt.layer.cornerRadius = 20
         bt.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         return bt
     }()
@@ -98,15 +91,29 @@ class LoginController: UIViewController {
     }
     
     fileprivate func setupInputView() {
-        let stackView = UIStackView(arrangedSubviews: [loginLabel, emailTextField, passWordTextField, loginButton])
+        let container = UIView()
+        container.backgroundColor = .white
+        container.layer.cornerRadius = 20
+        container.layer.masksToBounds = true
         
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.distribution = UIStackViewDistribution.fillEqually
-        stackView.axis = .vertical
-        stackView.spacing = 10
+        container.addSubview(loginLabel)
+        container.addSubview(emailTextField)
+        container.addSubview(passWordTextField)
+        container.addSubview(loginButton)
+        view.addSubview(container)
         
-        view.addSubview(stackView)
-        stackView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 220)
+        container.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 70, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 0, height: 250)
+        loginLabel.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        loginLabel.backgroundColor = PURPLE_COLOR_LIGHT
+        emailTextField.anchor(top: loginLabel.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
+        emailTextField.layoutIfNeeded()
+        emailTextField.setupView()
+        passWordTextField.anchor(top: emailTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
+        passWordTextField.layoutIfNeeded()
+        passWordTextField.setupView()
+        loginButton.anchor(top: passWordTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 40)
+        
+        UIView.createShadow(for: container, superview: view)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -157,12 +164,14 @@ extension LoginController {
         let isEmailValid = emailTextField.text?.count ?? 0 > 0
         let isPasswdValid = passWordTextField.text?.count ?? 0 > 0
         if isEmailValid && isPasswdValid {
-            loginButton.backgroundColor = YELLOW_COLOR
-            loginButton.setTitleColor(.black, for: .normal)
+            emailTextField.border.backgroundColor = PURPLE_COLOR_LIGHT.cgColor
+            passWordTextField.border.backgroundColor = PURPLE_COLOR_LIGHT.cgColor
+            loginButton.backgroundColor = PURPLE_COLOR_LIGHT
             loginButton.isEnabled = true
         } else {
+            emailTextField.border.backgroundColor = BACKGROUND_GRAY.cgColor
+            passWordTextField.border.backgroundColor = BACKGROUND_GRAY.cgColor
             loginButton.backgroundColor = UIColor.lightGray
-            loginButton.setTitleColor(.white, for: .normal)
             loginButton.isEnabled = false
         }
     }

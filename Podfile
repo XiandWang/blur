@@ -20,5 +20,8 @@ target 'Blur' do
   pod 'TDBadgedCell', '~> 5.2'
   pod 'FaveButton', '~> 2.0.3'
   pod 'KOAlertController', '~> 1.0.2'
+  pod 'YYKeyboardManager'
+
+  pod 'Hero', '~> 1.0'
 
 end

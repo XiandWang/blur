@@ -25,6 +25,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         window = UIWindow()
         window?.rootViewController = MainTabBarController()
         window?.tintColor = .black
+        
+        #if DEBUG
+            print("debug only man ___________________________________________")
+        #else
+            print("release only woman ___________________________________________")
+        #endif
     
         registerNotifications(app: application)
         
