@@ -60,7 +60,7 @@ class HomeChatCell: UITableViewCell {
     
     let hiddenNumberLabel : UILabel = {
         let lb = UILabel()
-        lb.font = UIFont.systemFont(ofSize: 15)
+        lb.font = TEXT_FONT
         lb.numberOfLines = 1
         lb.text = ""
         return lb
@@ -68,7 +68,7 @@ class HomeChatCell: UITableViewCell {
     
     let timestampLabel : UILabel = {
         let lb = UILabel()
-        lb.font = UIFont.systemFont(ofSize: 15)
+        lb.font = TEXT_FONT
         lb.textColor = .lightGray
         lb.numberOfLines = 1
         lb.text = ""
@@ -82,7 +82,7 @@ class HomeChatCell: UITableViewCell {
     
     let usernameLabel : UILabel = {
         let lb = UILabel()
-        lb.font = UIFont.boldSystemFont(ofSize: 18)
+        lb.font = BOLD_FONT
         lb.numberOfLines = 1
         lb.text = ""
         return lb
@@ -92,7 +92,7 @@ class HomeChatCell: UITableViewCell {
         let iv = UIImageView()
         iv.layer.cornerRadius = 28
         iv.layer.masksToBounds = true
-        iv.backgroundColor = .lightGray
+        iv.backgroundColor = BACKGROUND_GRAY
         iv.contentMode = .scaleAspectFill
         return iv
     }()

@@ -49,6 +49,7 @@ class Message {
 struct MessageSchema {
     static let MESSAGE_ID = "messageId"
     static let SENDER_ID = "senderId"
+    static let SENDER_USER = "senderUser"
     static let RECEIVER_ID = "receiverId"
     static let EDITED_IMAGE_URL = "editedImageUrl"
     static let ORIGINAL_IMAGE_URL = "originalImageUrl"

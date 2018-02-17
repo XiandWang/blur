@@ -209,11 +209,19 @@ class XWImageEditorController: UIViewController {
     }
     
     @objc func imageEditFinishBtn() {
-        let previewPhotoController = PreviewPhotoController()
-        previewPhotoController.user = self.userToSend
-        previewPhotoController.editedImage = self.currentImage
-        previewPhotoController.originalImage = self.originalImage
-        navigationController?.pushViewController(previewPhotoController, animated: true)
+        CurrentUser.getUser { (curUser, error) in
+            if let curUser = curUser {
+                let previewPhotoController = PreviewPhotoController()
+                previewPhotoController.user = self.userToSend
+                previewPhotoController.currentUser = curUser
+                previewPhotoController.editedImage = self.currentImage
+                previewPhotoController.originalImage = self.originalImage
+                self.navigationController?.pushViewController(previewPhotoController, animated: true)
+            } else if let _ = error {
+                AppHUD.error("Cannot retrieve current user. Please try again.", isDarkTheme: false)
+                return
+            }
+        }
     }
     
     @objc func pushedCancelBtn() {

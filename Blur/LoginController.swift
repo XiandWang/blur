@@ -17,15 +17,15 @@ class LoginController: UIViewController {
         lb.font = UIFont.boldSystemFont(ofSize: 20)
         lb.textAlignment = .center
         lb.translatesAutoresizingMaskIntoConstraints = false
-        lb.textColor = .white
+        lb.textColor = .black
         return lb
     }()
     
     let dontHaveAccountButton: UIButton = {
         let bt = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Go to ", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: PURPLE_COLOR_LIGHT])
+        let attributedTitle = NSMutableAttributedString(string: "Go to ", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
         
-        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: PURPLE_COLOR_LIGHT]))
+        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: YELLOW_COLOR]))
         
         bt.setAttributedTitle(attributedTitle, for: .normal)
         return bt
@@ -46,7 +46,7 @@ class LoginController: UIViewController {
         return tf
     }()
     
-    let passWordTextField : AppTextField = {
+    let passwordTextField : AppTextField = {
         let tf = AppTextField()
         tf.placeholder = "Password: "
         tf.font = UIFont.systemFont(ofSize: 14)
@@ -64,7 +64,7 @@ class LoginController: UIViewController {
         bt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         bt.setTitleColor(.white, for: .normal)
         bt.isEnabled = false
-        bt.layer.cornerRadius = 20
+        bt.layer.cornerRadius = 22
         bt.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         return bt
     }()
@@ -81,7 +81,7 @@ class LoginController: UIViewController {
         setupDontHaveAccountButton()
         setupInputView()
         emailTextField.delegate = self
-        passWordTextField.delegate = self
+        passwordTextField.delegate = self
     }
     
     fileprivate func setupDontHaveAccountButton() {
@@ -98,22 +98,22 @@ class LoginController: UIViewController {
         
         container.addSubview(loginLabel)
         container.addSubview(emailTextField)
-        container.addSubview(passWordTextField)
+        container.addSubview(passwordTextField)
         container.addSubview(loginButton)
         view.addSubview(container)
         
         container.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 70, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 0, height: 250)
         loginLabel.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
-        loginLabel.backgroundColor = PURPLE_COLOR_LIGHT
+        loginLabel.backgroundColor = YELLOW_COLOR
         emailTextField.anchor(top: loginLabel.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
         emailTextField.layoutIfNeeded()
         emailTextField.setupView()
-        passWordTextField.anchor(top: emailTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
-        passWordTextField.layoutIfNeeded()
-        passWordTextField.setupView()
-        loginButton.anchor(top: passWordTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 40)
+        passwordTextField.anchor(top: emailTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
+        passwordTextField.layoutIfNeeded()
+        passwordTextField.setupView()
+        loginButton.anchor(top: passwordTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
         
-        UIView.createShadow(for: container, superview: view)
+        let _ = UIView.createShadow(for: container, superview: view)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -124,7 +124,9 @@ class LoginController: UIViewController {
 // mark actions
 extension LoginController {
     @objc func handleLogin() {
-        guard let email = emailTextField.text, let password = passWordTextField.text else { return }
+        emailTextField.resignFirstResponder()
+        passwordTextField.resignFirstResponder()
+        guard let email = emailTextField.text, let password = passwordTextField.text else { return }
         AppHUD.progress(nil,  isDarkTheme: true)
         self.loginButton.isEnabled = false
         Auth.auth().signIn(withEmail: email, password: password, completion: { (user, err) in
@@ -162,16 +164,16 @@ extension LoginController {
     
     @objc func handleTextInputChange() {
         let isEmailValid = emailTextField.text?.count ?? 0 > 0
-        let isPasswdValid = passWordTextField.text?.count ?? 0 > 0
+        let isPasswdValid = passwordTextField.text?.count ?? 0 > 0
         if isEmailValid && isPasswdValid {
-            emailTextField.border.backgroundColor = PURPLE_COLOR_LIGHT.cgColor
-            passWordTextField.border.backgroundColor = PURPLE_COLOR_LIGHT.cgColor
-            loginButton.backgroundColor = PURPLE_COLOR_LIGHT
+            loginButton.backgroundColor = YELLOW_COLOR
+            loginButton.setTitleColor(.black, for: .normal)
             loginButton.isEnabled = true
         } else {
             emailTextField.border.backgroundColor = BACKGROUND_GRAY.cgColor
-            passWordTextField.border.backgroundColor = BACKGROUND_GRAY.cgColor
+            passwordTextField.border.backgroundColor = BACKGROUND_GRAY.cgColor
             loginButton.backgroundColor = UIColor.lightGray
+            loginButton.setTitleColor(.white, for: .normal)
             loginButton.isEnabled = false
         }
     }
@@ -180,10 +182,9 @@ extension LoginController {
 extension LoginController : UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == emailTextField {
-            passWordTextField.becomeFirstResponder()
-        } else if textField == passWordTextField {
+            passwordTextField.becomeFirstResponder()
+        } else if textField == passwordTextField {
             textField.resignFirstResponder()
-            handleLogin()
         }
         return true
     }

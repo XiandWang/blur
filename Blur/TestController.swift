@@ -10,29 +10,47 @@ import FontAwesome_swift
 import Firebase
 import FaveButton
 import KOAlertController
+import AZDialogView
 
 class TestController: UIViewController {
 
     
-    let tf: AppTextField = {
-        let tf = AppTextField()
-
-        return tf
-    }()
-    
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
-        view.addSubview(tf)
-        tf.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
-        tf.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
-        tf.layoutIfNeeded()
-        tf.setupView()
-        //tf.layoutIfNeeded()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let dialog = AZDialogViewController(title: "Request mood?", message: nil)
+        dialog.cancelEnabled = true
+        dialog.cancelTitle = "cancel"
+        
+        dialog.dismissWithOutsideTouch = false
+
+        dialog.imageHandler = { (imageView) in
+            imageView.image = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 50, height: 50))
+            imageView.backgroundColor = PINK_COLOR_LIGHT
+            imageView.contentMode = .center
+            return true //must return true, otherwise image won't show.
+        }
+        
+        dialog.addAction(AZDialogAction(title: "Edit Name") { (dialog) -> (Void) in
+            
+            dialog.dismiss()
+        })
+        
+        dialog.addAction(AZDialogAction(title: "Remove Friend") { (dialog) -> (Void) in
+            //add your actions here.
+            dialog.dismiss()
+        })
+        
+        dialog.addAction(AZDialogAction(title: "Block") { (dialog) -> (Void) in
+            //add your actions here.
+            dialog.dismiss()
+        })
+        dialog.show(in: self)
     }
 
 }

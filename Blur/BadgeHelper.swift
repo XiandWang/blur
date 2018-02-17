@@ -40,14 +40,12 @@ class BadgeHelper {
             
             NSString(string: badgeString).draw(in:CGRect(x:8, y:5, width:textSize.width, height:textSize.height), withAttributes: [
                 NSAttributedStringKey.font:UIFont.boldSystemFont(ofSize:CGFloat(badgeFontSize)),
-                NSAttributedStringKey.foregroundColor: UIColor.clear
+                NSAttributedStringKey.foregroundColor: UIColor.white
                 ])
             
             let badgeImage = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext()
-            
-            //        badgeView.frame = CGRect(x:0, y:0, width:badgeImage.size.width, height:badgeImage.size.height)
-            //        badgeView.image = badgeImage
+
             return badgeImage
         }
     

@@ -45,19 +45,18 @@ class MainTabBarController: UITabBarController {
     }
     
      func setupViewControllers() {
-        tabBar.tintColor = UIColor.hexStringToUIColor(hex: "#9C27B0")
+        tabBar.tintColor = YELLOW_COLOR
+        tabBar.barTintColor = UIColor.hexStringToUIColor(hex: "#141e33")
         tabBar.isTranslucent = false
         let myAccountController = MyAccountController(collectionViewLayout: UICollectionViewFlowLayout())
         let myAccountNavController = UINavigationController(rootViewController: myAccountController)
-        myAccountNavController.tabBarItem.image = #imageLiteral(resourceName: "ic_person")
+        myAccountNavController.tabBarItem.image = #imageLiteral(resourceName: "ic_person").imageWithColor(.white)
         myAccountNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "ic_person")
-        //myAccountNavController.tabBarItem.title = "Me"
         
-        
+
         let friendsNavController = UINavigationController(rootViewController: FriendsController())
         friendsNavController.tabBarItem.image = #imageLiteral(resourceName: "ic_people")
         friendsNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "ic_people")
-        //friendsNavController.tabBarItem.title = "Friends"
         
         let notificationController = NotificationController(collectionViewLayout: UICollectionViewFlowLayout())
         let notificationNavController = UINavigationController(rootViewController: notificationController)
@@ -67,8 +66,6 @@ class MainTabBarController: UITabBarController {
         let homeNavController = UINavigationController(rootViewController: HomeController())
         homeNavController.tabBarItem.image = #imageLiteral(resourceName: "speech_buble")
         homeNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "speech_buble")
-        //homeNavController.tabBarItem.title = "HidingChats"
-        let t = TestController()
-        viewControllers = [ChooseUserNameController(), homeNavController, friendsNavController, notificationNavController, myAccountNavController]
+        viewControllers = [homeNavController, friendsNavController, notificationNavController, myAccountNavController]
     }
 }

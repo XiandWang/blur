@@ -88,7 +88,7 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
                 return
             }
         }
-        
+        self.usernameTextField.resignFirstResponder()
         AppHUD.progress(nil, isDarkTheme: true)
         
         guard let uid = uid else { return }
@@ -147,19 +147,7 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
         submitButton.anchor(top: usernameTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 40)
         
         
-        let shadowView = UIView()
-        shadowView.backgroundColor = UIColor.white
-        shadowView.layer.shadowOffset = CGSize(width: 1, height: 1)
-        shadowView.layer.masksToBounds = false
-        shadowView.layer.shadowOpacity = 0.2
-        shadowView.layer.shadowRadius = 20.0
-        shadowView.layer.cornerRadius = 20.0
-        shadowView.layer.shadowColor = UIColor.black.cgColor
-        
-        view.insertSubview(shadowView, at: 0)
-        shadowView.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: container.bottomAnchor, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-    
-        
+        let _ = UIView.createShadow(for: container, superview: view)    
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

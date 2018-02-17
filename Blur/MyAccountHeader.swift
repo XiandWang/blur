@@ -41,7 +41,7 @@ class MyAccountHeader: UICollectionViewCell {
         editProfileImageButton.anchor(top: nil, left: userProfileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         editProfileImageButton.centerYAnchor.constraint(equalTo: userProfileImageView.centerYAnchor, constant: 20).isActive = true
         
-       bannerLabel.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 56)
+        bannerLabel.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 56)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -50,7 +50,7 @@ class MyAccountHeader: UICollectionViewCell {
     
     let userNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 17)
+        label.font = BOLD_FONT
         label.numberOfLines = 0
         label.text = ""
         return label
@@ -58,7 +58,7 @@ class MyAccountHeader: UICollectionViewCell {
     
     let userProfileImageView: UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .white
+        iv.backgroundColor = BACKGROUND_GRAY
         iv.layer.cornerRadius = 40
         iv.layer.masksToBounds = true
         iv.contentMode = .scaleAspectFill
@@ -68,7 +68,7 @@ class MyAccountHeader: UICollectionViewCell {
     
     let editProfileImageButton: UIButton = {
         let bt = UIButton(type: .system)
-        bt.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        bt.titleLabel?.font = TEXT_FONT
         bt.setTitle("Edit profile image", for: .normal)
         bt.setTitleColor(.purple, for: .normal)
         return bt
@@ -80,7 +80,7 @@ class MyAccountHeader: UICollectionViewCell {
         lb.textAlignment = .center
         lb.textColor = UIColor.rgb(red: 84, green: 109, blue: 126, alpha: 1)
         lb.backgroundColor = BACKGROUND_GRAY
-        lb.font = UIFont.boldSystemFont(ofSize: 24)
+        lb.font = UIFont(name: APP_FONT_BOLD, size: 24)
         return lb
     }()
 }

@@ -82,7 +82,7 @@ class AppHUD {
         }
         hud = MBProgressHUD.showAdded(to: view, animated: true)
     
-        hud?.alpha = 0.9
+        hud?.alpha = 0.8
         hud?.bezelView.style = .solidColor
         if isDarkTheme {
             hud?.bezelView.color = .black
@@ -102,7 +102,6 @@ class AppHUD {
 
 
 extension CALayer {
-    
     func addBorder(edge: UIRectEdge, color: UIColor, thickness: CGFloat) {
         
         let border = CALayer()

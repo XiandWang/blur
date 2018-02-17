@@ -27,7 +27,7 @@ class FriendsController: UITableViewController {
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
 
         view?.backgroundColor = .white
-        tableView.register(UserContactCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(UserFriendCell.self, forCellReuseIdentifier: cellId)
         tableView.sectionIndexColor = .black
         observeFriends()
         observeFriendRequests()
@@ -39,7 +39,7 @@ class FriendsController: UITableViewController {
     
     func setupHeaderView() {
         let rect = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
-        let cell = NewContactHeader(frame: rect)
+        let cell = NewFriendsHeader(frame: rect)
         cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleFriendsRequests)))
 
         tableView.tableHeaderView = cell
@@ -79,7 +79,7 @@ class FriendsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserContactCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserFriendCell
         let user = getUser(from: indexPath)
         cell.user = user
 
@@ -95,9 +95,9 @@ class FriendsController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if let headerView = view as? UITableViewHeaderFooterView {
-            headerView.textLabel?.textColor = .black
             headerView.tintColor = BACKGROUND_GRAY
-            headerView.textLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+            headerView.textLabel?.font = SMALL_TEXT_FONT
+            headerView.textLabel?.textColor = TEXT_GRAY
         }
     }
     
@@ -155,7 +155,7 @@ extension FriendsController {
             
             DispatchQueue.main.async {
                 self.setupHeaderView()
-                let cell = self.tableView.tableHeaderView as? NewContactHeader
+                let cell = self.tableView.tableHeaderView as? NewFriendsHeader
                 if snap.childrenCount > 0 {
                     cell?.newFriendsNum = "\(snap.childrenCount)"
                     if let app = UIApplication.shared.delegate as? AppDelegate {

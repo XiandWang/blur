@@ -27,7 +27,7 @@ class UserProfileController: UIViewController {
     
     let userNameLabel : UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = BOLD_FONT
         label.numberOfLines = 0
         label.text = ""
         return label
@@ -50,7 +50,7 @@ class UserProfileController: UIViewController {
         bt.backgroundColor = YELLOW_COLOR
         
         bt.setTitle("Send", for: .normal)
-        bt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        bt.titleLabel?.font = BOLD_FONT
         bt.setTitleColor(.black, for: .normal)
         
         bt.layer.cornerRadius = 22

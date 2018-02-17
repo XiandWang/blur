@@ -32,7 +32,7 @@ class ControlItemView: UIView {
     
     lazy var itemLabel: UILabel = {
         let lb = UILabel()
-        lb.font = UIFont.boldSystemFont(ofSize: 14)
+        lb.font = TEXT_FONT
         lb.textAlignment = .center
         return lb
     }()

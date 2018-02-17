@@ -1,6 +1,27 @@
 import UIKit
 import Firebase
 import FontAwesome_swift
+import YYKeyboardManager
+
+extension SignUpViewController: YYKeyboardObserver {
+    func keyboardChanged(with transition: YYKeyboardTransition) {
+        UIView.animate(withDuration: transition.animationDuration, delay: 0, options: transition.animationOption, animations: {
+            print(transition.toFrame)
+            print(self.formContainer.bottom)
+            if transition.toVisible.boolValue {
+                self.editedImageView.alpha = 0
+                self.originalImageView.alpha = 0
+                self.formTopAnchor?.constant = -70
+            } else {
+                self.editedImageView.alpha = 1
+                self.originalImageView.alpha = 1
+                self.formTopAnchor?.constant = 10
+            }
+            
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+}
 
 class SignUpViewController: UIViewController {
     var isShowingEdited = true
@@ -8,30 +29,30 @@ class SignUpViewController: UIViewController {
     
     let editedImageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = #imageLiteral(resourceName: "love_half")
+        iv.image = #imageLiteral(resourceName: "inlovehalf")
         iv.contentMode = .scaleAspectFit
         iv.layer.cornerRadius = 50
-        
+        iv.backgroundColor = .clear
+
         return iv
     }()
     
     let originalImageView: UIImageView = {
         let iv = UIImageView()
-        iv.image = #imageLiteral(resourceName: "love")
+        iv.image = #imageLiteral(resourceName: "inlove")
         iv.contentMode = .scaleAspectFit
         iv.layer.cornerRadius = 50
-        
+        iv.backgroundColor = .clear
         return iv
     }()
     
-    let signUpLabel : UILabel = {
+    let signUpLabel: UILabel = {
         let lb = UILabel()
-        lb.text = "Hidingchat Sign up"
+        lb.text = "HidingChat"
         lb.font = UIFont.boldSystemFont(ofSize: 20)
-
         lb.textAlignment = .center
         lb.translatesAutoresizingMaskIntoConstraints = false
-        lb.textColor = .white
+        lb.textColor = .black
         return lb
     }()
     
@@ -63,7 +84,7 @@ class SignUpViewController: UIViewController {
         bt.setTitleColor(.white, for: .normal)
         bt.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         bt.backgroundColor = .lightGray
-        bt.layer.cornerRadius = 20
+        bt.layer.cornerRadius = 22
         bt.isEnabled = false
         
         bt.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
@@ -72,14 +93,15 @@ class SignUpViewController: UIViewController {
     
     let bottomLoginButton: UIButton = {
         let bt = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Go to ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
-        
-        attributedTitle.append(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: PURPLE_COLOR
-            ]))
-        
-        bt.setAttributedTitle(attributedTitle, for: .normal)
+        bt.setTitle("Go to Login", for: .normal)
+        bt.setTitleColor(TEXT_GRAY, for: .normal)
         return bt
     }()
+    
+    let formContainer = UIView()
+    var shadowView: UIView?
+    var formTopAnchor: NSLayoutConstraint?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,6 +116,8 @@ class SignUpViewController: UIViewController {
  
         timer = Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(handleRotate), userInfo: nil, repeats: true)
         timer?.fire()
+        
+        YYKeyboardManager.default().add(self)
     }
     
     deinit {
@@ -128,7 +152,6 @@ class SignUpViewController: UIViewController {
                 animations: {
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
                         self.originalImageView.layer.transform = AnimationHelper.yRotation(.pi / 2)
-                        
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                         self.editedImageView.layer.transform = CATransform3DIdentity
@@ -153,50 +176,55 @@ class SignUpViewController: UIViewController {
     
     fileprivate func setupInputFields() {
         view.addSubview(originalImageView)
-        originalImageView.anchor(top: self.topLayoutGuide.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 30, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 100)
+        
+        originalImageView.anchor(top: self.topLayoutGuide.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 100)
         originalImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         view.addSubview(editedImageView)
         editedImageView.anchor(top: originalImageView.topAnchor, left: originalImageView.leftAnchor, bottom: originalImageView.bottomAnchor, right: originalImageView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
-        let container = UIView()
-        container.backgroundColor = .white
-        container.layer.cornerRadius = 20
-        container.layer.masksToBounds = true
+        formContainer.backgroundColor = .white
+        formContainer.layer.cornerRadius = 20
+        formContainer.layer.masksToBounds = true
     
-        container.addSubview(signUpLabel)
-        container.addSubview(emailTextField)
-        container.addSubview(passwordTextField)
-        container.addSubview(signUpButton)
-        view.addSubview(container)
+        formContainer.addSubview(signUpLabel)
+        formContainer.addSubview(emailTextField)
+        formContainer.addSubview(passwordTextField)
+        formContainer.addSubview(signUpButton)
+        view.addSubview(formContainer)
         
-        container.anchor(top: editedImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 0, height: 250)
-        signUpLabel.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
-        signUpLabel.backgroundColor = PURPLE_COLOR_LIGHT
-        emailTextField.anchor(top: signUpLabel.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
+        formTopAnchor = formContainer.topAnchor.constraint(equalTo: editedImageView.bottomAnchor, constant: 10)
+        formTopAnchor?.isActive = true
+        
+        formContainer.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 0, height: 250)
+        signUpLabel.anchor(top: formContainer.topAnchor, left: formContainer.leftAnchor, bottom: nil, right: formContainer.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        signUpLabel.backgroundColor = YELLOW_COLOR
+        emailTextField.anchor(top: signUpLabel.bottomAnchor, left: formContainer.leftAnchor, bottom: nil, right: formContainer.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
         emailTextField.layoutIfNeeded()
         emailTextField.setupView()
-        passwordTextField.anchor(top: emailTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
+        passwordTextField.anchor(top: emailTextField.bottomAnchor, left: formContainer.leftAnchor, bottom: nil, right: formContainer.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
         passwordTextField.layoutIfNeeded()
         passwordTextField.setupView()
-        signUpButton.anchor(top: passwordTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 40)
+        signUpButton.anchor(top: passwordTextField.bottomAnchor, left: formContainer.leftAnchor, bottom: nil, right: formContainer.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
         
-        UIView.createShadow(for: container, superview: view)
+        self.shadowView = UIView.createShadow(for: formContainer, superview: view)
     }
 }
 
 extension UIView {
-    static func createShadow(for containerView: UIView, superview: UIView) {
+    static func createShadow(for containerView: UIView, superview: UIView) -> UIView {
         let shadowView = UIView()
         shadowView.backgroundColor = UIColor.white
-        shadowView.layer.shadowOffset = CGSize(width: 1, height: 1)
+        shadowView.layer.shadowOffset = CGSize(width: 0, height: 20)
         shadowView.layer.masksToBounds = false
         shadowView.layer.shadowOpacity = 0.2
-        shadowView.layer.shadowRadius = 20.0
-        shadowView.layer.cornerRadius = 20.0
+        shadowView.layer.shadowRadius = 20
+        shadowView.layer.cornerRadius = containerView.layer.cornerRadius
         shadowView.layer.shadowColor = UIColor.black.cgColor
         
         superview.insertSubview(shadowView, at: 0)
         shadowView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.bottomAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        return shadowView
     }
 }
 
@@ -209,6 +237,8 @@ extension SignUpViewController {
         
         signUpButton.setTitle("Signing up...", for: .normal)
         signUpButton.isEnabled = false
+        passwordTextField.resignFirstResponder()
+        emailTextField.resignFirstResponder()
         AppHUD.progress(nil,  isDarkTheme: true)
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user, error) in
             if let error = error {
@@ -253,16 +283,14 @@ extension SignUpViewController {
         let isPasswordValid = passwordTextField.text?.count ?? 0 > 0
         if isEmailValid && isPasswordValid {
             signUpButton.isEnabled = true
-            signUpButton.backgroundColor = PURPLE_COLOR_LIGHT
-            emailTextField.border.backgroundColor = PURPLE_COLOR_LIGHT.cgColor
-            passwordTextField.border.backgroundColor = PURPLE_COLOR_LIGHT.cgColor
-            signUpButton.setTitleColor(.white, for: .normal)
+            signUpButton.backgroundColor = YELLOW_COLOR
+            signUpButton.setTitleColor(.black, for: .normal)
         } else {
             signUpButton.isEnabled = false
             signUpButton.backgroundColor = UIColor.lightGray
+            signUpButton.setTitleColor(.white, for: .normal)
             emailTextField.border.backgroundColor = BACKGROUND_GRAY.cgColor
             passwordTextField.border.backgroundColor = BACKGROUND_GRAY.cgColor
-            signUpButton.setTitleColor(.white, for: .normal)
         }
     }
 

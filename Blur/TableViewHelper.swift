@@ -15,7 +15,7 @@ class TableViewHelper {
         messageLabel.textColor = TEXT_GRAY
         messageLabel.numberOfLines = 0;
         messageLabel.textAlignment = .center;
-        messageLabel.font = UIFont.boldSystemFont(ofSize: 24)
+        messageLabel.font = UIFont(name: APP_FONT_BOLD, size: 24)
         messageLabel.sizeToFit()
  
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: viewController.view.width, height: viewController.view.height))

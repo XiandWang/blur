@@ -89,6 +89,7 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/AZDialogView/AZDialogView.framework"
   install_framework "$BUILT_PRODUCTS_DIR/BoringSSL/openssl.framework"
   install_framework "$BUILT_PRODUCTS_DIR/FaveButton/FaveButton.framework"
   install_framework "$BUILT_PRODUCTS_DIR/FontAwesome.swift/FontAwesome_swift.framework"
@@ -109,6 +110,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/nanopb/nanopb.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "$BUILT_PRODUCTS_DIR/AZDialogView/AZDialogView.framework"
   install_framework "$BUILT_PRODUCTS_DIR/BoringSSL/openssl.framework"
   install_framework "$BUILT_PRODUCTS_DIR/FaveButton/FaveButton.framework"
   install_framework "$BUILT_PRODUCTS_DIR/FontAwesome.swift/FontAwesome_swift.framework"

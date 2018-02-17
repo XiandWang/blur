@@ -26,8 +26,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         setupLogoutButton()
         getCurrentUser()
         getRecentMessages()
-        UIFont.familyNames.map {UIFont.fontNames(forFamilyName: $0)}
-            .forEach {(n:[String]) in n.forEach {print($0)}}
+        
         NotificationCenter.default.addObserver(self, selector: #selector(addNewMessage), name: NEW_MESSAGE_CREATED, object: nil)
     }
     
@@ -70,8 +69,6 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
             return message.createdTime >= yesterday
         }
         collectionView?.reloadData()
-        
-        
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -97,9 +94,9 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         let count = messages.count
         if count == 0 {
             let label = UILabel()
-            label.font = UIFont.boldSystemFont(ofSize: 20)
+            label.font = UIFont(name: APP_FONT_BOLD, size: 20)
             label.textColor = TEXT_GRAY
-            label.text = "No images sent yet"
+            label.text = "No images sent yet~"
             label.textAlignment = .center
             collectionView.backgroundView = label
             label.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor).isActive = true

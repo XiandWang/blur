@@ -13,12 +13,15 @@ class PreviewPhotoController: UIViewController {
     private let PROCESSING_IMAGE_ERR = "Error processing images. Please try again."
     private let UPLOADING_IMAGE_ERR = "Error uploading images. Please try again."
     
+    var currentUser: User?
+    
     var user: User? {
         didSet {
             guard let username = user?.username else { return }
             self.questionlabel.text = "Do you allow \(username) to view the original image?"
         }
     }
+    
     var editedImage: UIImage?
     var originalImage: UIImage?
     
@@ -28,7 +31,6 @@ class PreviewPhotoController: UIViewController {
         iv.contentMode = .scaleAspectFit
         return iv
     }()
-    
     
     let questionlabel: UILabel = {
         let lb =  UILabel()
@@ -52,8 +54,7 @@ class PreviewPhotoController: UIViewController {
     let allowSwitch : UISwitch = {
         let s = UISwitch()
         s.isOn = false
-        s.onTintColor = DEEP_PURPLE_COLOR
-        
+        s.onTintColor = PURPLE_COLOR
         return s
     }()
 
@@ -157,7 +158,10 @@ class PreviewPhotoController: UIViewController {
     }
     
     fileprivate func send() {
-        guard let senderId = Auth.auth().currentUser?.uid else { return }
+        guard let senderId = Auth.auth().currentUser?.uid, let senderUser = currentUser else {
+            showError("Cannot retrieve current user. Please try again.")
+            return
+        }
         guard let originalImage = originalImage, let editedImage = editedImage else {
             showError(PROCESSING_IMAGE_ERR)
             return
@@ -205,6 +209,7 @@ class PreviewPhotoController: UIViewController {
                 }
                 guard let receiverId = self.user?.uid else { return }
                 let data = [MessageSchema.SENDER_ID: senderId, MessageSchema.RECEIVER_ID: receiverId,
+                            MessageSchema.SENDER_USER: ["username": senderUser.username, "profileImgUrl": senderUser.profileImgUrl],
                             MessageSchema.EDITED_IMAGE_URL: editedImageUrl, MessageSchema.ORIGINAL_IMAGE_URL: originalImageUrl,
                             MessageSchema.ALLOW_ORIGINAL: self.allowSwitch.isOn,
                             MessageSchema.IS_ACKNOWLEDGED: false, MessageSchema.IS_ORIGINAL_VIEWED: false,

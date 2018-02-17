@@ -78,7 +78,7 @@ class NewFriendsRequestController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if newRequestUsers.count == 0 {
-            TableViewHelper.emptyMessage(message: "You have no new requests", viewController: self)
+            TableViewHelper.emptyMessage(message: "No new requests yet~", viewController: self)
             return 0
         } else {
             tableView.backgroundView = nil

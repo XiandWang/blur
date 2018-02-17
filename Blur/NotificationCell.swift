@@ -71,7 +71,7 @@ class NotificationCell: UICollectionViewCell {
     let userProfileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
-        iv.backgroundColor = .lightGray
+        iv.backgroundColor = BACKGROUND_GRAY
         iv.layer.cornerRadius = 20
         iv.layer.masksToBounds = true
         return iv
@@ -121,7 +121,7 @@ class NotificationCell: UICollectionViewCell {
     
     fileprivate func buildText(notification: MessageNotification) -> NSMutableAttributedString {
         let type = notification.type
-        let attributedText = NSMutableAttributedString(string: notification.user.username, attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedStringKey.foregroundColor: UIColor.black])
+        let attributedText = NSMutableAttributedString(string: notification.user.username, attributes: [NSAttributedStringKey.font: TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.black])
         var text = " "
         if type == NotificationType.allowAccess.rawValue {
             text = " allows you to access the image "
@@ -132,8 +132,8 @@ class NotificationCell: UICollectionViewCell {
         } else if type == NotificationType.likeMessage.rawValue {
             text = " likes your image "
         }
-        attributedText.append(NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16), NSAttributedStringKey.foregroundColor: UIColor.black]))
-        attributedText.append(NSAttributedString(string: notification.createdTime.timeAgoDisplay(), attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
+        attributedText.append(NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.black]))
+        attributedText.append(NSAttributedString(string: notification.createdTime.timeAgoDisplay(), attributes: [NSAttributedStringKey.font: SMALL_TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
         return attributedText
     }
 }

@@ -1,4 +1,5 @@
 PODS:
+  - AZDialogView (1.2.1)
   - BoringSSL (9.2):
     - BoringSSL/Implementation (= 9.2)
     - BoringSSL/Interface (= 9.2)
@@ -105,6 +106,7 @@ PODS:
   - YYKeyboardManager (1.0.1)
 
 DEPENDENCIES:
+  - AZDialogView
   - FaveButton (~> 2.0.3)
   - Firebase/Auth
   - Firebase/Core
@@ -121,6 +123,7 @@ DEPENDENCIES:
   - YYKeyboardManager
 
 SPEC CHECKSUMS:
+  AZDialogView: 75a481ef11e78b047e9d7d212a83b76a8d91627f
   BoringSSL: f3d6b8ce199b9c450a8cfc14895d07a2627fc232
   FaveButton: cfcbc5e73da159c4f916613da5687357b5bb4783
   Firebase: 7d3b8cd837ad9fcd391657734c0d56dab8e9a5a3
@@ -149,6 +152,6 @@ SPEC CHECKSUMS:
   TDBadgedCell: c166ffcb0d1f2fce244df8ae5bac23056803217b
   YYKeyboardManager: ff53d2e80d1808567a7f004028bd200d9469a89f
 
-PODFILE CHECKSUM: f3fb34fce3e896019d415b6142c3507de3ae5bfe
+PODFILE CHECKSUM: ea00fbb387b38f6f0f8394608df3d75cf748496e
 
 COCOAPODS: 1.2.0

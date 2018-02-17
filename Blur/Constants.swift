@@ -27,6 +27,15 @@ let PINK_COLOR_LIGHT = UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 0.9)
 let PURPLE_COLOR_LIGHT = UIColor.rgb(red: 206, green: 147, blue: 216, alpha: 1)
 let PURPLE_COLOR = UIColor.rgb(red: 123, green: 31, blue: 162, alpha: 1)
 
+let APP_FONT: String = "AvenirNext-Medium"
+let APP_FONT_BOLD: String = "AvenirNext-DemiBold"
+//let APP_FONT: String = "Lato-Regular"
+//let APP_FONT_BOLD: String = "Lato-Bold"
+
+let BOLD_FONT = UIFont(name: APP_FONT_BOLD, size: 17) ??  UIFont.boldSystemFont(ofSize: 17)
+let TEXT_FONT = UIFont(name: APP_FONT, size: 16) ??  UIFont.boldSystemFont(ofSize: 16)
+let SMALL_TEXT_FONT = UIFont(name: APP_FONT, size: 14) ?? UIFont.systemFont(ofSize: 14)
+
 let USERS_NODE = "users"
 let PROFILE_IMAGES_NODE = "profileImages"
 let RECEIVER_FRIEND_REQUESTS_NODE = "receiverFriendRequests"

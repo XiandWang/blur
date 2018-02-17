@@ -22,7 +22,6 @@ class HomeController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: DEEP_PURPLE_COLOR]
         view.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.register(HomeChatCell.self, forCellReuseIdentifier: cellId)
@@ -81,7 +80,6 @@ class HomeController: UITableViewController {
         let row = indexPath.row
         let userId = self.userIdsSorted[row]
         guard let messages = self.imageMessages[userId] else { return }
-        print(messages)
         AppHUD.progress("Deleting...", isDarkTheme: true)
         for message in messages {
             Firestore.firestore()
@@ -120,19 +118,18 @@ class HomeController: UITableViewController {
                 self.isIntialLoading = false
                 messagesSnap?.documentChanges.forEach({ (docChange: DocumentChange) in
                     if docChange.type == .added {
-                        print("added not modified...")
-                        print(docChange.document.documentID)
-
-                        let senderId = docChange.document.data()[MessageSchema.SENDER_ID] as! String
+                        guard let senderId = docChange.document.data()[MessageSchema.SENDER_ID] as? String else { return }
+                        guard let senderUser = docChange.document.data()[MessageSchema.SENDER_USER] as? [String: Any] else { return }
                         self.addMessage(doc: docChange.document)
                         self.sortUserIdsByMessageCreatedTime()
-                        if self.usersDict[senderId] == nil {
-                            self.getUser(uid: senderId) // async
-                        } else {
-                            DispatchQueue.main.async {
-                                self.tableView?.reloadData()
-                            }
-                        }
+//                        if self.usersDict[senderId] == nil {
+//                            self.getUser(uid: senderId) // async
+//                        } else {
+//                            DispatchQueue.main.async {
+//                                self.tableView?.reloadData()
+//                            }
+//                        }
+                        self.usersDict[senderId] = User(dictionary: senderUser, uid: senderId)
                     } else if docChange.type == .removed {
                         self.removeMessage(doc: docChange.document)
                     } else if docChange.type == .modified {
@@ -140,7 +137,7 @@ class HomeController: UITableViewController {
                     }
                 })
                 self.setBadge()
-                //self.tableView.reloadData()
+                self.tableView.reloadData()
             }
         }
     
@@ -186,7 +183,6 @@ class HomeController: UITableViewController {
     }
     
     fileprivate func removeMessage(doc: DocumentSnapshot) {
-        print("************************debugging", "removing")
         guard let docData = doc.data() else { return }
         guard let senderId = docData[MessageSchema.SENDER_ID] as? String else { return }
         let messageIdToRemove = doc.documentID
@@ -200,15 +196,13 @@ class HomeController: UITableViewController {
         }
     
         sortUserIdsByMessageCreatedTime()
-        print("************************debugging", "removingDone")
 
-        self.tableView?.reloadData()
+        //self.tableView?.reloadData()
         
     }
     
     fileprivate func modifyMessage(doc: DocumentSnapshot) {
         guard let docData = doc.data() else { return }
-        print("************************debugging", "modifying")
         guard let senderId = docData[MessageSchema.SENDER_ID] as? String else { return }
         let messageIdToModify = doc.documentID
         guard let messages = self.imageMessages[senderId] else { return }
@@ -216,10 +210,10 @@ class HomeController: UITableViewController {
             return message.messageId == messageIdToModify
         }) else { return }
         self.imageMessages[senderId]?[index] = Message(dict: docData, messageId: messageIdToModify)
-        print("************************debugging", "modifying done done done", self.imageMessages[senderId]?[index].isAcknowledged)
+        
         self.sortUserIdsByMessageCreatedTime()
         //DispatchQueue.main.async {
-        self.tableView?.reloadData()
+        //self.tableView?.reloadData()
         //}
     }
     

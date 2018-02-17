@@ -57,12 +57,27 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                             }
                         }
                 })
+                
+                if !message.caption.trimmingCharacters(in: .whitespaces).isEmpty {
+                    setupCaptionLabel()
+                }
             }
         }
     }
     
     deinit {
         self.listener?.remove()
+    }
+    
+    fileprivate func setupCaptionLabel() {
+        guard let caption = message?.caption else { return }
+        captionLabel.text = caption
+        view.addSubview(captionLabel)
+        let rect = NSString(string: caption).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font:UIFont.systemFont(ofSize:CGFloat(14))], context: nil).size
+        print(rect)
+        let height = max(rect.height + 16.0, 40)
+        captionLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: height)
+        captionLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
     func setupLikeImage() {
@@ -80,7 +95,15 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         return
     }
     
-   
+    let captionLabel: UILabel = {
+        let lb = UILabel()
+        lb.textAlignment = .center
+        lb.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        lb.textColor = .white
+        lb.numberOfLines = 0
+        lb.font = UIFont.systemFont(ofSize:CGFloat(14))
+        return lb
+    }()
     
     lazy var likeButton: UIButton = {
         let bt = UIButton()
@@ -309,6 +332,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         if isShowingControlPanel {
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
                 self.hideControlViews()
+                self.captionLabel.alpha = 0
             }) { (bool) in
                 self.view.isUserInteractionEnabled = true
                 if bool {
@@ -318,6 +342,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         } else {
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
                 self.showControlViews()
+                self.captionLabel.alpha = 1
             }, completion: { (bool) in
                 self.view.isUserInteractionEnabled = true
                 if bool {
@@ -347,6 +372,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                     }
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
                         self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
+                        self.captionLabel.layer.transform = AnimationHelper.yRotation(-.pi / 2)
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                         self.originalScrollView.layer.transform = AnimationHelper.yRotation(0.0)
@@ -370,6 +396,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                     }
                     UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
                         self.editedImageView.layer.transform = CATransform3DIdentity
+                        self.captionLabel.layer.transform = CATransform3DIdentity
                     }
                     UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
                         self.showControlViews()

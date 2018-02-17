@@ -18,9 +18,13 @@
 		EE29A357201AF17A00EA6112 /* ControlItemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE29A356201AF17A00EA6112 /* ControlItemInfo.swift */; };
 		EE33B3E81FD2430C000816D0 /* ChooseUserNameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE33B3E71FD2430C000816D0 /* ChooseUserNameController.swift */; };
 		EE3C2D8E1F91B5DD00DE609F /* AddFriendController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3C2D8D1F91B5DD00DE609F /* AddFriendController.swift */; };
+		EE4C72E92036EE7D00AB1C47 /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE4C72E52036EE7A00AB1C47 /* Lato-Medium.ttf */; };
+		EE4C72EA2036EE7D00AB1C47 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE4C72E62036EE7B00AB1C47 /* Lato-Italic.ttf */; };
+		EE4C72EB2036EE7D00AB1C47 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE4C72E72036EE7C00AB1C47 /* Lato-Regular.ttf */; };
+		EE4C72EC2036EE7D00AB1C47 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE4C72E82036EE7D00AB1C47 /* Lato-Bold.ttf */; };
 		EE4F33D31F73BB2300BFC6AF /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4F33D21F73BB2300BFC6AF /* TestController.swift */; };
 		EE641EDC1FA99D1D000B1105 /* BadgeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDB1FA99D1D000B1105 /* BadgeHelper.swift */; };
-		EE641EDE1FA9A392000B1105 /* NewContactHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDD1FA9A392000B1105 /* NewContactHeader.swift */; };
+		EE641EDE1FA9A392000B1105 /* NewFriendsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDD1FA9A392000B1105 /* NewFriendsHeader.swift */; };
 		EE641EE01FA9A888000B1105 /* NewRequestUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDF1FA9A888000B1105 /* NewRequestUserCell.swift */; };
 		EE682C40200ADC1000C9349A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EE682C3F200ADC1000C9349A /* GoogleService-Info.plist */; };
 		EE6837CE1FAD66FA002E561E /* ReceiverImageMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6837CD1FAD66FA002E561E /* ReceiverImageMessageController.swift */; };
@@ -28,7 +32,7 @@
 		EE6CB8381FF7B59A0018453E /* MyAccountImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6CB8371FF7B59A0018453E /* MyAccountImageCell.swift */; };
 		EE6D54CB200DA90F0025162B /* XRGBTool.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6D54CA200DA90F0025162B /* XRGBTool.m */; };
 		EE6D54CE200DA9520025162B /* XPixelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6D54CD200DA9520025162B /* XPixelItem.m */; };
-		EE73E9FC1F8B0D1D00BED900 /* UserContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE73E9FB1F8B0D1D00BED900 /* UserContactCell.swift */; };
+		EE73E9FC1F8B0D1D00BED900 /* UserFriendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE73E9FB1F8B0D1D00BED900 /* UserFriendCell.swift */; };
 		EE73E9FE1F8B320E00BED900 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE73E9FD1F8B320E00BED900 /* Message.swift */; };
 		EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */; };
 		EE78EEFA1F0D52C0008662C0 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE78EEF91F0D52C0008662C0 /* SignUpViewController.swift */; };
@@ -100,9 +104,13 @@
 		EE29A356201AF17A00EA6112 /* ControlItemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlItemInfo.swift; sourceTree = "<group>"; };
 		EE33B3E71FD2430C000816D0 /* ChooseUserNameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseUserNameController.swift; sourceTree = "<group>"; };
 		EE3C2D8D1F91B5DD00DE609F /* AddFriendController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFriendController.swift; sourceTree = "<group>"; };
+		EE4C72E52036EE7A00AB1C47 /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
+		EE4C72E62036EE7B00AB1C47 /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Italic.ttf"; sourceTree = "<group>"; };
+		EE4C72E72036EE7C00AB1C47 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
+		EE4C72E82036EE7D00AB1C47 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
 		EE4F33D21F73BB2300BFC6AF /* TestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestController.swift; sourceTree = "<group>"; };
 		EE641EDB1FA99D1D000B1105 /* BadgeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeHelper.swift; sourceTree = "<group>"; };
-		EE641EDD1FA9A392000B1105 /* NewContactHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewContactHeader.swift; sourceTree = "<group>"; };
+		EE641EDD1FA9A392000B1105 /* NewFriendsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFriendsHeader.swift; sourceTree = "<group>"; };
 		EE641EDF1FA9A888000B1105 /* NewRequestUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestUserCell.swift; sourceTree = "<group>"; };
 		EE682C3F200ADC1000C9349A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EE6837CD1FAD66FA002E561E /* ReceiverImageMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverImageMessageController.swift; sourceTree = "<group>"; };
@@ -112,7 +120,7 @@
 		EE6D54CA200DA90F0025162B /* XRGBTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XRGBTool.m; sourceTree = "<group>"; };
 		EE6D54CC200DA93D0025162B /* XPixelItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XPixelItem.h; sourceTree = "<group>"; };
 		EE6D54CD200DA9520025162B /* XPixelItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPixelItem.m; sourceTree = "<group>"; };
-		EE73E9FB1F8B0D1D00BED900 /* UserContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserContactCell.swift; sourceTree = "<group>"; };
+		EE73E9FB1F8B0D1D00BED900 /* UserFriendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFriendCell.swift; sourceTree = "<group>"; };
 		EE73E9FD1F8B320E00BED900 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		EE78EEF41F0D52C0008662C0 /* Blur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE78EEF71F0D52C0008662C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -211,8 +219,8 @@
 			children = (
 				EE1AB0A31F11A530009C011E /* AppHUD.swift */,
 				EEDF24F91FD65C89001FCA84 /* AppTextField.swift */,
-				EE73E9FB1F8B0D1D00BED900 /* UserContactCell.swift */,
-				EE641EDD1FA9A392000B1105 /* NewContactHeader.swift */,
+				EE73E9FB1F8B0D1D00BED900 /* UserFriendCell.swift */,
+				EE641EDD1FA9A392000B1105 /* NewFriendsHeader.swift */,
 				EE641EDF1FA9A888000B1105 /* NewRequestUserCell.swift */,
 				EE26D7531F8F59F50059AA61 /* HomeChatCell.swift */,
 				EEE38EC52000774300C80F7A /* NotificationCell.swift */,
@@ -278,6 +286,10 @@
 				EE6D54CA200DA90F0025162B /* XRGBTool.m */,
 				EE682C3F200ADC1000C9349A /* GoogleService-Info.plist */,
 				EEDA4DFB1F7DDE9B0088286A /* Blur-Bridging-Header.h */,
+				EE4C72E82036EE7D00AB1C47 /* Lato-Bold.ttf */,
+				EE4C72E62036EE7B00AB1C47 /* Lato-Italic.ttf */,
+				EE4C72E52036EE7A00AB1C47 /* Lato-Medium.ttf */,
+				EE4C72E72036EE7C00AB1C47 /* Lato-Regular.ttf */,
 			);
 			path = Blur;
 			sourceTree = "<group>";
@@ -480,10 +492,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE4C72E92036EE7D00AB1C47 /* Lato-Medium.ttf in Resources */,
 				EE78EF021F0D52C0008662C0 /* LaunchScreen.storyboard in Resources */,
 				EE682C40200ADC1000C9349A /* GoogleService-Info.plist in Resources */,
 				EE78EEFF1F0D52C0008662C0 /* Assets.xcassets in Resources */,
+				EE4C72EB2036EE7D00AB1C47 /* Lato-Regular.ttf in Resources */,
+				EE4C72EA2036EE7D00AB1C47 /* Lato-Italic.ttf in Resources */,
 				EE78EEFD1F0D52C0008662C0 /* Main.storyboard in Resources */,
+				EE4C72EC2036EE7D00AB1C47 /* Lato-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,9 +605,9 @@
 				EEDA4F741F8098410088286A /* User.swift in Sources */,
 				EE78EEFA1F0D52C0008662C0 /* SignUpViewController.swift in Sources */,
 				EEE38EC01FFCAD1D00C80F7A /* DatabaseHelper.swift in Sources */,
-				EE73E9FC1F8B0D1D00BED900 /* UserContactCell.swift in Sources */,
+				EE73E9FC1F8B0D1D00BED900 /* UserFriendCell.swift in Sources */,
 				EE9E0FAC1FBE89930034E44C /* XWScaleButton.swift in Sources */,
-				EE641EDE1FA9A392000B1105 /* NewContactHeader.swift in Sources */,
+				EE641EDE1FA9A392000B1105 /* NewFriendsHeader.swift in Sources */,
 				EE9E0FB61FBE89930034E44C /* XWToolBarItem.swift in Sources */,
 				EE9E0FB01FBE89930034E44C /* XWImageToolProtocol.swift in Sources */,
 				EE78EEF81F0D52C0008662C0 /* AppDelegate.swift in Sources */,
