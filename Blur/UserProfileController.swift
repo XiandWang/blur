@@ -11,23 +11,37 @@ import Firebase
 import Kingfisher
 import Photos
 import AVFoundation
+import Hero
 
 class UserProfileController: UIViewController {
     var user : User? {
         didSet {
-            guard let name = user?.username else { return }
-            userNameLabel.text = "Username: \(name)"
-            guard let userProfileImgUrl = user?.profileImgUrl, userProfileImgUrl != "" else {
-                return
+            if let name = user?.username {
+                userNameLabel.text = name
+            }
+            if let userProfileImgUrl = user?.profileImgUrl, userProfileImgUrl != ""  {
+                userProfileImageView.kf.setImage(with: URL(string: userProfileImgUrl))
+            }
+            if let fullName = user?.fullName {
+                fullNameLabel.text = fullName
             }
             
-            userProfileImageView.kf.setImage(with: URL(string: userProfileImgUrl))
         }
     }
     
     let userNameLabel : UILabel = {
         let label = UILabel()
-        label.font = BOLD_FONT
+        label.font = UIFont(name: APP_FONT_BOLD, size: 18)
+        label.numberOfLines = 0
+        label.text = ""
+        label.textColor = UIColor.hexStringToUIColor(hex: "#5D4037")
+        return label
+    }()
+    
+    let fullNameLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: APP_FONT_BOLD, size: 17)
+        label.textColor = .lightGray
         label.numberOfLines = 0
         label.text = ""
         return label
@@ -40,8 +54,6 @@ class UserProfileController: UIViewController {
         iv.layer.masksToBounds = true
         iv.contentMode = .scaleAspectFill
         
-        iv.layer.borderWidth = 5
-        iv.layer.borderColor = UIColor.white.cgColor
         return iv
     }()
     
@@ -62,6 +74,8 @@ class UserProfileController: UIViewController {
     let userView : UIView = {
         let v = UIView()
         v.backgroundColor = .white
+        v.layer.cornerRadius = 15
+        
         return v
     }()
 
@@ -86,18 +100,17 @@ class UserProfileController: UIViewController {
     @objc func handleSendImage() {
         let picker = UIImagePickerController()
         picker.delegate = self
+        picker.allowsEditing = false
         
-        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: "HidingChat Image", message: nil, preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
             picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
             picker.sourceType = .camera
-            picker.allowsEditing = false
             self.present(picker, animated: true, completion: nil)
         }))
-        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
+        actionSheet.addAction(UIAlertAction(title: "Image Library", style: .default, handler: { (action) in
             picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
             picker.sourceType = .photoLibrary
-            picker.allowsEditing = false
             self.present(picker, animated: true, completion: nil)
         }))
 
@@ -105,6 +118,9 @@ class UserProfileController: UIViewController {
         
         self.present(actionSheet, animated: true, completion: nil)
     }
+   
+   
+    
     
     fileprivate func checkImagePermission() {
         let status = PHPhotoLibrary.authorizationStatus()
@@ -146,7 +162,6 @@ class UserProfileController: UIViewController {
         if status == .restricted {
             print("cam restricted")
         }
-        
     }
     
     func openSettings() {
@@ -157,20 +172,38 @@ class UserProfileController: UIViewController {
     fileprivate func setupViews() {
         view.addSubview(userView)
         
-        userView.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 100)
-        userView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20).isActive = true
+        userView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingBottom: 0, paddingRight: 10, width: 0, height: 200)
 
-        view.addSubview(userProfileImageView)
-        userProfileImageView.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 100)
-        userProfileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        userProfileImageView.centerYAnchor.constraint(equalTo: userView.topAnchor).isActive = true
+        userView.addSubview(userProfileImageView)
+        userProfileImageView.anchor(top: userView.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 0, width: 100, height: 100)
+        userProfileImageView.centerXAnchor.constraint(equalTo: userView.centerXAnchor, constant: -80).isActive = true
         
-        view.addSubview(userNameLabel)
-        userNameLabel.anchor(top: userProfileImageView.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        userNameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+        userView.addSubview(userNameLabel)
+        userNameLabel.anchor(top: nil, left: userProfileImageView.rightAnchor, bottom: nil, right: userView.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
+        userNameLabel.centerYAnchor.constraint(equalTo: userProfileImageView.centerYAnchor, constant: -20).isActive = true
+        
+        userView.addSubview(fullNameLabel)
+        fullNameLabel.anchor(top: userNameLabel.bottomAnchor, left: userProfileImageView.rightAnchor, bottom: nil, right: userView.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 0, paddingRight: 10, width: 0, height: 0)
+        
+        let divider = UIView()
+        divider.backgroundColor = BACKGROUND_GRAY
+        userView.addSubview(divider)
+        divider.anchor(top: userProfileImageView.bottomAnchor, left: userView.leftAnchor, bottom: nil, right: userView.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 1)
 
         view.addSubview(sendPhotoButton)
         sendPhotoButton.anchor(top: userView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
+        
+        userProfileImageView.heroID = "imageViewHeroId"
+        userProfileImageView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleShowImage))
+        userProfileImageView.addGestureRecognizer(tap)
+    }
+    
+    @objc func handleShowImage() {
+        let imageController = SimpleImageController()        
+        self.present(imageController, animated: true) {
+            imageController.imageView.image = self.userProfileImageView.image
+        }
     }
 }
 

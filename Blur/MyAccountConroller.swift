@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class MyAccountController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class MyAccountController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     private let headerId = "myAccountHeaderId"
     private let cellId = "myAccountCellId"
     var user: User?
@@ -21,35 +21,31 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         collectionView?.backgroundColor = .white
         collectionView?.register(MyAccountHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
         collectionView?.register(MyAccountImageCell.self, forCellWithReuseIdentifier: cellId)
-        navigationItem.title = "My Account"
+        navigationItem.title = "Me"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
         setupLogoutButton()
         getCurrentUser()
         getRecentMessages()
         
         NotificationCenter.default.addObserver(self, selector: #selector(addNewMessage), name: NEW_MESSAGE_CREATED, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(changeFullName), name: USER_CHANGED, object: nil)
     }
     
     fileprivate func setupLogoutButton() {
-        let logoutImg = UIImage.fontAwesomeIcon(name: .signOut, textColor: .black, size: CGSize(width: 30, height: 44))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: logoutImg, style: .plain, target: self, action: #selector(handleLogout))
+        let settings = UIImage.fontAwesomeIcon(name: .cog, textColor: .black, size: CGSize(width: 30, height: 44))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: settings, style: .plain, target: self, action: #selector(handleShowSettings))
         navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
     }
     
-    @objc func handleLogout() {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
-            do {
-                CurrentUser.user = nil
-                try Auth.auth().signOut()
-                let navController = UINavigationController(rootViewController: LoginController())
-                self.present(navController, animated: true, completion: nil)
-            } catch let signOutError {
-                AppHUD.error(signOutError.localizedDescription, isDarkTheme: true)
-            }
-        }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(alertController, animated: true, completion: nil)
+    @objc func handleShowSettings() {
+        guard let user = self.user else { return }
+        self.navigationController?.pushViewController( SettingsController(user: user), animated: true)
+    }
+    
+    @objc func changeFullName(notification: NSNotification) {
+        guard let user = notification.userInfo?["user"] as? User else { return }
+        self.user = user
+        self.collectionView?.reloadData()
     }
     
     @objc func addNewMessage(notification: NSNotification) {
@@ -74,12 +70,26 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! MyAccountHeader
         header.user = user
-        header.editProfileImageButton.addTarget(self, action: #selector(handleChangeProfileImage), for: .touchUpInside)
+        
+        header.userProfileImageView.heroID = "imageViewHeroId"
+        header.userProfileImageView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleShowImage))
+        header.userProfileImageView.addGestureRecognizer(tap)
+        
         return header
+    }
+    
+    @objc func handleShowImage() {
+        print("************************debugging")
+        let imageController = SimpleImageController()
+        guard let profileImg = self.user?.profileImgUrl else { return }
+        self.present(imageController, animated: true) {
+            imageController.imageView.kf.setImage(with: URL(string: profileImg))
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: view.frame.width, height: 160)
+        return CGSize(width: view.frame.width, height: 144)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -99,8 +109,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
             label.text = "No images sent yet~"
             label.textAlignment = .center
             collectionView.backgroundView = label
-            label.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor).isActive = true
-            label.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor, constant: -80).isActive = true
+            label.center = collectionView.center
             return 0
         } else {
             collectionView.backgroundView = nil
@@ -175,49 +184,5 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
                 self.collectionView?.reloadData()
             }
         }
-    }
-    
-    @objc func handleChangeProfileImage() {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.allowsEditing = true
-        imagePicker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-        present(imagePicker, animated: true, completion: nil)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage
-        let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage
-        if let image = editedImage {
-            uploadProfileImage(image: image)
-        } else if let image = originalImage {
-            uploadProfileImage(image: image)
-        }
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func uploadProfileImage(image: UIImage) {
-        guard let data = UIImageJPEGRepresentation(image, 0.3) else { return }
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        let metaData = StorageMetadata()
-        metaData.contentType = "image/jpeg"
-        Storage.storage().reference().child(PROFILE_IMAGES_NODE).child(uid).putData(data, metadata: metaData, completion: { (metaData, error) in
-            if let error = error {
-                AppHUD.error(error.localizedDescription + "\nPlease try again.",  isDarkTheme: false)
-                return
-            }
-            
-            guard let profileImgUrl = metaData?.downloadURL()?.absoluteString else { return }
-            Database.database().reference().child(USERS_NODE).child(uid).updateChildValues(["profileImgUrl": profileImgUrl], withCompletionBlock: { (error, ref) in
-                if let error = error {
-                    AppHUD.error(error.localizedDescription + "\nPlease try again.",  isDarkTheme: false)
-                    return
-                }
-                DispatchQueue.main.async {
-                    self.user?.profileImgUrl = profileImgUrl
-                    self.collectionView?.reloadData()
-                }
-            })
-        })
     }
 }

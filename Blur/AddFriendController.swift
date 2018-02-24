@@ -22,7 +22,7 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
         super.viewDidLoad()
         UIBarButtonItem.appearance(whenContainedInInstancesOf:[UISearchBar.self]).tintColor = UIColor.black
         navigationItem.title = "Search"
-        tableView?.register(UserSearchCell.self, forCellReuseIdentifier: cellId)
+        tableView?.register(SimpleUserCell.self, forCellReuseIdentifier: cellId)
         setupSearchController()
         tableView.keyboardDismissMode = .none
         tableView.separatorStyle = .none
@@ -123,7 +123,7 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! UserSearchCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as! SimpleUserCell
         cell.selectionStyle = .none
         cell.user = users[indexPath.row]
         return cell
@@ -163,12 +163,12 @@ extension AddFriendController : UISearchBarDelegate {
     }
 }
 
-class UserSearchCell: UITableViewCell {
+class SimpleUserCell: UITableViewCell {
     
     var user: User? {
         didSet {
             usernameLabel.text = user?.username
-            
+            fullNameLabel.text = user?.fullName
             guard let profileImageUrl = user?.profileImgUrl else { return }
             
             profileImageView.kf.setImage(with: URL(string: profileImageUrl))
@@ -178,7 +178,7 @@ class UserSearchCell: UITableViewCell {
     let profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
-        iv.backgroundColor = .lightGray
+        iv.backgroundColor = BACKGROUND_GRAY
         iv.layer.cornerRadius = 25
         iv.clipsToBounds = true
         return iv
@@ -186,8 +186,16 @@ class UserSearchCell: UITableViewCell {
     
     let usernameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Username"
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.text = ""
+        label.font = BOLD_FONT
+        return label
+    }()
+    
+    let fullNameLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = TEXT_FONT
+        label.textColor = .lightGray
         return label
     }()
     
@@ -196,11 +204,13 @@ class UserSearchCell: UITableViewCell {
         
         contentView.addSubview(profileImageView)
         contentView.addSubview(usernameLabel)
-        
+        contentView.addSubview(fullNameLabel)
+
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
         profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        
-        usernameLabel.anchor(top: topAnchor, left: profileImageView.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        usernameLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -10).isActive = true
+        usernameLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 20)
+        fullNameLabel.anchor(top: usernameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 20)
     }
     
     required init?(coder aDecoder: NSCoder) {

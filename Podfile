@@ -6,7 +6,6 @@ target 'Blur' do
   use_frameworks!
 
   # Pods for Blur
-
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
@@ -17,11 +16,12 @@ target 'Blur' do
   pod 'FontAwesome.swift'  
   pod 'MBProgressHUD'
   pod 'Kingfisher'
-  pod 'TDBadgedCell', '~> 5.2'
+#  pod 'TDBadgedCell', '~> 5.2'
   pod 'FaveButton', '~> 2.0.3'
-  pod 'KOAlertController', '~> 1.0.2'
+#  pod 'KOAlertController', '~> 1.0.2'
   pod 'YYKeyboardManager'
   pod 'Hero', '~> 1.0'
   pod 'AZDialogView'
+  pod 'Static', '~> 2.1'
 
 end

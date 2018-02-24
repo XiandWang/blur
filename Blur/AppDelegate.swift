@@ -32,17 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
             print("release only woman ___________________________________________")
         #endif
         
-        
-    
         registerNotifications(app: application)
-        for family: String in UIFont.familyNames
-        {
-            print("\(family)")
-            for names: String in UIFont.fontNames(forFamilyName: family)
-            {
-                print("== \(names)")
-            }
-        }
         return true
     }
     

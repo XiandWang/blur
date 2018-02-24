@@ -53,7 +53,7 @@ class NewFriendsHeader : UITableViewCell {
     }
     
     func setupConstraints() {
-        newFriendImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 0, width:50, height: 50)
+        newFriendImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width:50, height: 50)
         newFriendsLabel.anchor(top: nil, left: newFriendImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         newFriendsLabel.centerYAnchor.constraint(equalTo: newFriendImageView.centerYAnchor).isActive = true
         badgeImageView.anchor(top: nil, left: nil, bottom: nil, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 15, width: 0, height: 0)

@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '21F19624559F68E9E946A1856ED5E999'
-               BlueprintName = 'TDBadgedCell'
+               BlueprintIdentifier = 'B6FC57452D7106F9915678DF45846F61'
+               BlueprintName = 'Static'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'TDBadgedCell.framework'>
+               BuildableName = 'Static.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

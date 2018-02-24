@@ -16,7 +16,7 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
     let usernameTextField: AppTextField = {
         let tf = AppTextField()
         tf.borderStyle = .none
-        tf.placeholder = "Username"
+        tf.placeholder = "Username (unique)"
         tf.clearButtonMode = .whileEditing
         tf.autocorrectionType = .no
         tf.autocapitalizationType = .none
@@ -26,30 +26,36 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
         tf.font = UIFont.systemFont(ofSize: 16)
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         
-        
+        return tf
+    }()
+    
+    let fullNameTextField: AppTextField = {
+        let tf = AppTextField()
+        tf.borderStyle = .none
+        tf.placeholder = "Full Name"
+        tf.clearButtonMode = .whileEditing
+        tf.autocorrectionType = .no
+        tf.autocapitalizationType = .none
+        tf.keyboardType = .default
+        tf.returnKeyType = .done
+        tf.backgroundColor = UIColor(white: 1, alpha:1)
+        tf.font = UIFont.systemFont(ofSize: 16)
+        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         
         return tf
     }()
     
     let chooseUserNameLabel: UILabel = {
         let lb = UILabel()
-        lb.text = "Choose Username"
+        lb.text = "Username and Full Name"
         lb.font = UIFont.boldSystemFont(ofSize: 20)
-        lb.textColor = .white
+        lb.textColor = .black
+        lb.backgroundColor = YELLOW_COLOR
         lb.textAlignment = .center
         lb.translatesAutoresizingMaskIntoConstraints = false
         return lb
     }()
-    
-    let usernameDescriptionLabel: UILabel = {
-        let lb = UILabel()
-        lb.text = "（Username is your unique identifier in Hidingchat）"
-        lb.font = UIFont.systemFont(ofSize: 14)
-        lb.textAlignment = .center
-        lb.textColor = TEXT_GRAY
-        lb.translatesAutoresizingMaskIntoConstraints = false
-        return lb
-    }()
+
     
     let submitButton: UIButton = {
         let bt = UIButton(type: .system)
@@ -69,7 +75,6 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
         usernameTextField.delegate = self
         setupViews()
         usernameTextField.becomeFirstResponder()
-        
     }
     
     @objc func handleUpdateUsername() {
@@ -81,18 +86,25 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
             AppHUD.error("username should not have white spaces", isDarkTheme: true)
             return
         }
-        
         for char in name {
             if !legalCharSet.contains(char) {
                 AppHUD.error("Invalid charaters found. Please use numbers, alphabets, dash and underscore", isDarkTheme: true)
                 return
             }
         }
+        
+        guard let fullName = fullNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), fullName.count < 32 && fullName.count > 2 else {
+            AppHUD.error("Full name should have more than 2 characters and less than 32 characters.", isDarkTheme: true)
+            return
+        }
+        
         self.usernameTextField.resignFirstResponder()
+        self.fullNameTextField.resignFirstResponder()
         AppHUD.progress(nil, isDarkTheme: true)
         
         guard let uid = uid else { return }
         let childUpdates = ["/\(USERS_NODE)/\(uid)/username": name,
+                            "/\(USERS_NODE)/\(uid)/fullName": fullName,
                             "/usernames/\(name)": uid] as [String : Any]
         print("************************debugging", childUpdates)
         Database.database().reference().updateChildValues(childUpdates) { (err, ref) in
@@ -109,15 +121,14 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func handleTextInputChange() {
-        let color = UIColor.hexStringToUIColor(hex: "#CE93D8")
         let usernameCount = usernameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
-        if usernameCount > 2 && usernameCount < 16 {
-            usernameTextField.border.backgroundColor = color.cgColor
-            submitButton.backgroundColor = color
-            submitButton.setTitleColor(.white, for: .normal)
+        let fullNameCount = fullNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines).count ?? 0
+        
+        if (usernameCount > 2 && usernameCount < 16) && (fullNameCount > 2 && fullNameCount < 40) {
+            submitButton.backgroundColor = YELLOW_COLOR
+            submitButton.setTitleColor(.black, for: .normal)
             submitButton.isEnabled = true
         } else {
-            usernameTextField.border.backgroundColor = UIColor.lightGray.cgColor
             submitButton.backgroundColor = UIColor.lightGray
             submitButton.setTitleColor(.white, for: .normal)
             submitButton.isEnabled = false
@@ -133,18 +144,19 @@ class ChooseUserNameController: UIViewController, UITextFieldDelegate {
         
         container.addSubview(chooseUserNameLabel)
         container.addSubview(usernameTextField)
+        container.addSubview(fullNameTextField)
         container.addSubview(submitButton)
-        
-        
         view.addSubview(container)
         
-        container.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 70, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 200)
+        container.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 70, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 250)
         chooseUserNameLabel.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
-        chooseUserNameLabel.backgroundColor = UIColor.hexStringToUIColor(hex: "#CE93D8")
         usernameTextField.anchor(top: chooseUserNameLabel.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
         usernameTextField.layoutIfNeeded()
         usernameTextField.setupView()
-        submitButton.anchor(top: usernameTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 40)
+        fullNameTextField.anchor(top: usernameTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 50)
+        fullNameTextField.layoutIfNeeded()
+        fullNameTextField.setupView()
+        submitButton.anchor(top: fullNameTextField.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 40)
         
         
         let _ = UIView.createShadow(for: container, superview: view)    

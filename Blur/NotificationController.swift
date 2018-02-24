@@ -100,13 +100,12 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         let count = notifications.count
         if count == 0 {
             let label = UILabel()
-            label.font = UIFont.boldSystemFont(ofSize: 24)
+            label.font = UIFont(name: APP_FONT_BOLD, size: 24)
             label.textColor = TEXT_GRAY
             label.text = "No new notifications"
             label.textAlignment = .center
             collectionView.backgroundView = label
-            label.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor).isActive = true
-            label.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor).isActive = true
+            label.center = collectionView.center
             return 0
         } else {
             collectionView.backgroundView = nil

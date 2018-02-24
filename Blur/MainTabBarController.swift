@@ -50,7 +50,7 @@ class MainTabBarController: UITabBarController {
         tabBar.isTranslucent = false
         let myAccountController = MyAccountController(collectionViewLayout: UICollectionViewFlowLayout())
         let myAccountNavController = UINavigationController(rootViewController: myAccountController)
-        myAccountNavController.tabBarItem.image = #imageLiteral(resourceName: "ic_person").imageWithColor(.white)
+        myAccountNavController.tabBarItem.image = #imageLiteral(resourceName: "ic_person")
         myAccountNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "ic_person")
         
 
@@ -66,6 +66,7 @@ class MainTabBarController: UITabBarController {
         let homeNavController = UINavigationController(rootViewController: HomeController())
         homeNavController.tabBarItem.image = #imageLiteral(resourceName: "speech_buble")
         homeNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "speech_buble")
+        
         viewControllers = [homeNavController, friendsNavController, notificationNavController, myAccountNavController]
     }
 }

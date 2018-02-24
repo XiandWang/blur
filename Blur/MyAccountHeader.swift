@@ -9,13 +9,14 @@
 import UIKit
 import Firebase
 import Kingfisher
+import Hero
 
 class MyAccountHeader: UICollectionViewCell {
     
     var user : User? {
         didSet {
-            guard let name = user?.username else { return }
-            userNameLabel.text = name
+            userNameLabel.text = user?.username
+            fullNameLabel.text = user?.fullName
 
             guard let userProfileImgUrl = user?.profileImgUrl, userProfileImgUrl != "" else {
                 return
@@ -28,18 +29,17 @@ class MyAccountHeader: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
+        
 
-        [userNameLabel, userProfileImageView, editProfileImageButton, bannerLabel].forEach { (view) in
+        [userNameLabel, fullNameLabel, userProfileImageView, bannerLabel].forEach { (view) in
             addSubview(view)
         }
+        userProfileImageView.heroID = "imageViewHeroId"
         
-        bannerLabel.layer.addBorder(edge: .bottom, color: YELLOW_COLOR, thickness: 10.0)
-       
-        userProfileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 12, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 80, height: 80)
-        userNameLabel.anchor(top: nil, left: userProfileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 100, height: 0)
+        userProfileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 12, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 64, height: 64)
+        userNameLabel.anchor(top: nil, left: userProfileImageView.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 0, height: 20)
         userNameLabel.centerYAnchor.constraint(equalTo: userProfileImageView.centerYAnchor, constant: -10).isActive = true
-        editProfileImageButton.anchor(top: nil, left: userProfileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        editProfileImageButton.centerYAnchor.constraint(equalTo: userProfileImageView.centerYAnchor, constant: 20).isActive = true
+        fullNameLabel.anchor(top: userNameLabel.bottomAnchor, left: userProfileImageView.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 2, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 0, height: 20)
         
         bannerLabel.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 56)
     }
@@ -56,10 +56,19 @@ class MyAccountHeader: UICollectionViewCell {
         return label
     }()
     
+    let fullNameLabel: UILabel = {
+        let label = UILabel()
+        label.font = TEXT_FONT
+        label.textColor = .lightGray
+        label.numberOfLines = 0
+        label.text = ""
+        return label
+    }()
+    
     let userProfileImageView: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = BACKGROUND_GRAY
-        iv.layer.cornerRadius = 40
+        iv.layer.cornerRadius = 32
         iv.layer.masksToBounds = true
         iv.contentMode = .scaleAspectFill
 

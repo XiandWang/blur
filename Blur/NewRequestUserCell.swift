@@ -14,6 +14,7 @@ class NewRequestUserCell : UITableViewCell {
         didSet {
             if let user = user {
                 usernameLabel.text = user.username
+                fullNameLabel.text = user.fullName
                 if let imgUrl = user.profileImgUrl {
                     userImageView.kf.setImage(with: URL(string: imgUrl))
                 } else {
@@ -27,8 +28,17 @@ class NewRequestUserCell : UITableViewCell {
     
     let usernameLabel : UILabel = {
         let lb = UILabel()
-        lb.font = UIFont.systemFont(ofSize: 16)
+        lb.font = BOLD_FONT
         lb.numberOfLines = 1
+        lb.text = ""
+        return lb
+    }()
+    
+    let fullNameLabel : UILabel = {
+        let lb = UILabel()
+        lb.font = TEXT_FONT
+        lb.textColor = .lightGray
+        lb.numberOfLines = 0
         lb.text = ""
         return lb
     }()
@@ -37,7 +47,7 @@ class NewRequestUserCell : UITableViewCell {
         let iv = UIImageView()
         iv.layer.cornerRadius = 25
         iv.layer.masksToBounds = true
-        iv.backgroundColor = .lightGray
+        iv.backgroundColor = BACKGROUND_GRAY
         iv.contentMode = .scaleAspectFill
         return iv
     }()
@@ -57,6 +67,7 @@ class NewRequestUserCell : UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(usernameLabel)
+        contentView.addSubview(fullNameLabel)
         contentView.addSubview(userImageView)
         contentView.addSubview(acceptButton)
         setupConstraints()
@@ -64,11 +75,11 @@ class NewRequestUserCell : UITableViewCell {
     
     func setupConstraints() {
         userImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
-        usernameLabel.anchor(top: nil, left: userImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        usernameLabel.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor).isActive = true
-        
+        usernameLabel.anchor(top: nil, left: userImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 20)
+        usernameLabel.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor, constant: -10).isActive = true
+        fullNameLabel.anchor(top: usernameLabel.bottomAnchor, left: userImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 20)
         acceptButton.anchor(top: nil, left: nil, bottom: nil, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 90, height: 38)
-        acceptButton.centerYAnchor.constraint(equalTo: usernameLabel.centerYAnchor).isActive = true
+        acceptButton.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor).isActive = true
         
     }
     

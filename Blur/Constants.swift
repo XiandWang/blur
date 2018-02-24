@@ -46,11 +46,13 @@ let USER_NOTIFICATIONS_NODE = "userNotifications"
 let NOTIFICATIONS_NODE = "notifications"
 
 let NEW_MESSAGE_CREATED = NSNotification.Name(rawValue: "NEW_MESSAGE_CREATED")
+let USER_CHANGED = NSNotification.Name(rawValue: "USER_CHANGED")
 
 enum FriendStatus: String {
     case pending
     case added
     case deleted
+    case blocked
 }
 
 enum NotificationType: String {

@@ -9,7 +9,6 @@
 import FontAwesome_swift
 import Firebase
 import FaveButton
-import KOAlertController
 import AZDialogView
 
 class TestController: UIViewController {
@@ -53,17 +52,5 @@ class TestController: UIViewController {
         dialog.show(in: self)
     }
 
-}
-
-struct KOAlertButtonUtil {
-    static func getAppButton(title: String)  -> KOAlertButton {
-        let bt = KOAlertButton(.default, title: title)
-        bt.backgroundColor = UIColor.white
-        bt.titleColor = .black
-        bt.cornerRadius = 27.5
-        bt.font = UIFont.boldSystemFont(ofSize: 17)
-        
-        return bt
-    }
 }
 

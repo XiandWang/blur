@@ -16,9 +16,9 @@ class FriendsController: UITableViewController {
     let ref = Database.database().reference()
     
     var newRequestUids = [User]()
-    var users : [User] = []
+    var users = [User]()
     var titleUserDict = [String: [User]]()
-    var userTitles : [String] = []
+    var userTitles = [String]()
     var isIntialLoading = true
     
     override func viewDidLoad() {
@@ -28,7 +28,7 @@ class FriendsController: UITableViewController {
 
         view?.backgroundColor = .white
         tableView.register(UserFriendCell.self, forCellReuseIdentifier: cellId)
-        tableView.sectionIndexColor = .black
+        tableView.sectionIndexColor = TEXT_GRAY
         observeFriends()
         observeFriendRequests()
         
@@ -38,7 +38,7 @@ class FriendsController: UITableViewController {
     }
     
     func setupHeaderView() {
-        let rect = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+        let rect = CGRect(x: 0, y: 0, width: view.frame.width, height: 66)
         let cell = NewFriendsHeader(frame: rect)
         cell.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleFriendsRequests)))
 
@@ -65,7 +65,7 @@ class FriendsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+        return 66
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -101,12 +101,47 @@ class FriendsController: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let blockAction  = UITableViewRowAction(style: .normal, title: "Block") { (action, indexPath) in
+            let user = self.getUser(from: indexPath)
+            guard let curUid = Auth.auth().currentUser?.uid else { return }
+            let alert = UIAlertController(title: "Confirm Block?", message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Block", style: .default, handler: { (_) in
+                let updates = ["/\(FRIENDS_NODE)/\(curUid)/\(user.uid)/status": FriendStatus.blocked.rawValue,
+                               "/\(FRIENDS_NODE)/\(user.uid)/\(curUid)/status": FriendStatus.blocked.rawValue]
+                Database.database().reference().updateChildValues(updates) { (error, ref) in
+                    if let error = error {
+                        AppHUD.error(error.localizedDescription, isDarkTheme: false)
+                        return
+                    }
+                    AppHUD.success("Blocked", isDarkTheme: true)
+                    self.removeUser(for: indexPath)
+                    self.tableView.reloadData()
+                }
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        return [blockAction]
+    }
+    
     fileprivate func getUser(from indexPath: IndexPath) -> User {
         let title = userTitles[indexPath.section]
         let users = titleUserDict[title]!
         let user = users[indexPath.row]
-    
+
         return user
+    }
+    
+    fileprivate func removeUser(for indexPath: IndexPath) {
+        let title = userTitles[indexPath.section]
+
+        titleUserDict[title]?.remove(at: indexPath.row)
+        if titleUserDict[title]?.count == 0 {
+            titleUserDict.removeValue(forKey: title)
+        }
+        self.userTitles = self.titleUserDict.keys.sorted()
     }
 }
 
@@ -114,7 +149,7 @@ class FriendsController: UITableViewController {
 extension FriendsController {
     fileprivate func observeFriends() {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        self.ref.child(FRIENDS_NODE).child(currentUid).observe(.childAdded, with: { (snap) in
+        self.ref.child(FRIENDS_NODE).child(currentUid).queryOrdered(byChild: "status").queryEqual(toValue: "added").observe(.childAdded, with: { (snap) in
             let uid = snap.key
             self.ref.child(USERS_NODE).child(uid).observeSingleEvent(of: .value, with: { (usersnap) in
                 guard let userDict = usersnap.value as? [String: Any] else { return }
@@ -131,9 +166,8 @@ extension FriendsController {
                 
                 self.userTitles = self.titleUserDict.keys.sorted()
                 self.isIntialLoading = false
-                //DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                //}
+                self.tableView.reloadData()
+            
             }, withCancel: nil)
         }, withCancel: nil)
     }

@@ -173,6 +173,7 @@ class ReceiverImageMessageController : UIViewController{
     @objc func handleLikeImage() {
         guard let messageId = message?.messageId else { return }
         guard let receiverUid = self.senderUser?.uid else { return }
+        guard let senderId = Auth.auth().currentUser?.uid else { return }
         if let liked = message?.isLiked, liked {
             AppHUD.success("Already liked", isDarkTheme: false)
             return
@@ -195,24 +196,24 @@ class ReceiverImageMessageController : UIViewController{
             button.layer.borderColor = PURPLE_COLOR.cgColor
         }
         dialog.addAction(AZDialogAction(title: "😍Nice") { (dialog) -> (Void) in
-            self.likeImage(messageId: messageId, receiverId: receiverUid, likeType: "😍Nice")
+            self.likeImage(messageId: messageId, senderId: senderId, receiverId: receiverUid, likeType: "😍Nice")
             dialog.dismiss()
         })
         dialog.addAction(AZDialogAction(title: "😂Creative") { (dialog) -> (Void) in
-            self.likeImage(messageId: messageId, receiverId: receiverUid, likeType: "😂Creative")
+            self.likeImage(messageId: messageId,  senderId: senderId, receiverId: receiverUid, likeType: "😂Creative")
             dialog.dismiss()
         })
         dialog.addAction(AZDialogAction(title: "😐Underwhelmed") { (dialog) -> (Void) in
-            self.likeImage(messageId: messageId, receiverId: receiverUid, likeType: "😐Underwhelmed")
+            self.likeImage(messageId: messageId,  senderId: senderId, receiverId: receiverUid, likeType: "😐Underwhelmed")
             dialog.dismiss()
         })
         dialog.show(in: self)
     }
     
-    fileprivate func likeImage(messageId: String, receiverId: String, likeType: String) {
+    fileprivate func likeImage(messageId: String, senderId: String, receiverId: String, likeType: String) {
         let batch = fireStoreRef.batch()
         let likeDoc = fireStoreRef.collection("messageLikes").document(messageId)
-        batch.setData(["type": likeType, "createdTime": Date()], forDocument: likeDoc)
+        batch.setData(["type": likeType, "createdTime": Date(), "senderId": senderId, "receiverId": receiverId], forDocument: likeDoc)
         
         let messageDoc = fireStoreRef.collection("imageMessages").document(messageId)
         batch.updateData([MessageSchema.IS_LIKED: true], forDocument: messageDoc)
@@ -396,8 +397,6 @@ class ReceiverImageMessageController : UIViewController{
                 self.isShowingEdited = false
             }
         })
-        
-        
     }
     
     fileprivate func animateRotatingImage(toOriginal: Bool) {
@@ -584,12 +583,12 @@ extension ReceiverImageMessageController {
                     button.layer.masksToBounds = true
                     button.layer.borderColor = DEEP_PURPLE_COLOR.cgColor
                 }
-                dialog.addAction(AZDialogAction(title: "😔") { (dialog) -> (Void) in
-                    self.requestAccess(messageId: messageId, receiverUserId: notificationUser.uid, mood: "😔")
-                    dialog.dismiss()
-                })
                 dialog.addAction(AZDialogAction(title: "☹️") { (dialog) -> (Void) in
                     self.requestAccess(messageId: messageId, receiverUserId: notificationUser.uid, mood: "☹️")
+                    dialog.dismiss()
+                })
+                dialog.addAction(AZDialogAction(title: "😔") { (dialog) -> (Void) in
+                    self.requestAccess(messageId: messageId, receiverUserId: notificationUser.uid, mood: "😔")
                     dialog.dismiss()
                 })
                 dialog.addAction(AZDialogAction(title: "😎") { (dialog) -> (Void) in
