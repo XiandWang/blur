@@ -26,7 +26,7 @@
 		EE4F33D31F73BB2300BFC6AF /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4F33D21F73BB2300BFC6AF /* TestController.swift */; };
 		EE53D49E203E5F370053BBFE /* BlockedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE53D49D203E5F370053BBFE /* BlockedController.swift */; };
 		EE53D4A0203E6D380053BBFE /* SimpleImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE53D49F203E6D380053BBFE /* SimpleImageController.swift */; };
-		EE53D4A22042A3950053BBFE /* DBNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE53D4A12042A3950053BBFE /* DBNode.swift */; };
+		EE53D4A22042A3950053BBFE /* FIRRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE53D4A12042A3950053BBFE /* FIRRef.swift */; };
 		EE641EDC1FA99D1D000B1105 /* BadgeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDB1FA99D1D000B1105 /* BadgeHelper.swift */; };
 		EE641EDE1FA9A392000B1105 /* NewFriendsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDD1FA9A392000B1105 /* NewFriendsHeader.swift */; };
 		EE641EE01FA9A888000B1105 /* NewRequestUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE641EDF1FA9A888000B1105 /* NewRequestUserCell.swift */; };
@@ -115,7 +115,7 @@
 		EE4F33D21F73BB2300BFC6AF /* TestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestController.swift; sourceTree = "<group>"; };
 		EE53D49D203E5F370053BBFE /* BlockedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedController.swift; sourceTree = "<group>"; };
 		EE53D49F203E6D380053BBFE /* SimpleImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleImageController.swift; sourceTree = "<group>"; };
-		EE53D4A12042A3950053BBFE /* DBNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBNode.swift; sourceTree = "<group>"; };
+		EE53D4A12042A3950053BBFE /* FIRRef.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FIRRef.swift; sourceTree = "<group>"; };
 		EE641EDB1FA99D1D000B1105 /* BadgeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeHelper.swift; sourceTree = "<group>"; };
 		EE641EDD1FA9A392000B1105 /* NewFriendsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFriendsHeader.swift; sourceTree = "<group>"; };
 		EE641EDF1FA9A888000B1105 /* NewRequestUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestUserCell.swift; sourceTree = "<group>"; };
@@ -239,7 +239,7 @@
 			isa = PBXGroup;
 			children = (
 				EE1AB09F1F107CE1009C011E /* Extension.swift */,
-				EE53D4A12042A3950053BBFE /* DBNode.swift */,
+				EE53D4A12042A3950053BBFE /* FIRRef.swift */,
 				EEFE52881F9981C000F7C1D7 /* TableViewHelper.swift */,
 				EE641EDB1FA99D1D000B1105 /* BadgeHelper.swift */,
 				EEE38EBF1FFCAD1D00C80F7A /* DatabaseHelper.swift */,
@@ -628,7 +628,7 @@
 				EE9E0FAB1FBE89930034E44C /* XWCutCircle.swift in Sources */,
 				EEDF24FA1FD65C89001FCA84 /* AppTextField.swift in Sources */,
 				EE9FE4AA1F611FDD00CF0A71 /* FriendsController.swift in Sources */,
-				EE53D4A22042A3950053BBFE /* DBNode.swift in Sources */,
+				EE53D4A22042A3950053BBFE /* FIRRef.swift in Sources */,
 				EE9E0FB81FBE89930034E44C /* XWCutTool.swift in Sources */,
 				EE9E0FB41FBE89930034E44C /* XWImageToolBase.swift in Sources */,
 				EEE38EC82001B45600C80F7A /* CurrentUser.swift in Sources */,

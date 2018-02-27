@@ -40,7 +40,7 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         guard let curUserId = Auth.auth().currentUser?.uid else { return }
         for notif in notifications {
             notif.isRead = true
-            Firestore.firestore().collection("notifications").document(curUserId)
+            FIRRef.getNotifications().document(curUserId)
                 .collection("messageNotifications").document(notif.notificationId).updateData(["isRead": true])
         }
         if let app = UIApplication.shared.delegate as? AppDelegate {
@@ -57,7 +57,7 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         guard let curUserId = Auth.auth().currentUser?.uid else { return }
         AppHUD.progress(nil, isDarkTheme: true)
         for notif in notifications {
-            Firestore.firestore().collection("notifications").document(curUserId)
+            FIRRef.getNotifications().document(curUserId)
                     .collection("messageNotifications").document(notif.notificationId).delete(completion: { (error) in
                         if let error = error  {
                             AppHUD.error(error.localizedDescription, isDarkTheme: true)
@@ -75,7 +75,7 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
     
     fileprivate func listenForNotifications() {
         guard let curUserId = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("notifications")
+        FIRRef.getNotifications()
             .document(curUserId).collection("messageNotifications").order(by: "createdTime", descending: false).addSnapshotListener { (snap, error) in
                 if let error = error {
                     print(error.localizedDescription)
@@ -100,10 +100,9 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
     }
     
     fileprivate func getMessage(notification: MessageNotification) {
-        Firestore.firestore().collection("imageMessages").document(notification.messageId).getDocument { (snap, _) in
+        FIRRef.getMessages().document(notification.messageId).getDocument { (snap, _) in
             if let snap = snap, let snapData = snap.data() {
                 let message = Message(dict: snapData, messageId: notification.messageId)
-                print("messagemessagemessage", message)
                 self.notificationMessages[notification.notificationId] = message
             }
         }

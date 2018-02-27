@@ -221,10 +221,10 @@ class ReceiverImageMessageController : UIViewController {
     
     fileprivate func likeImage(messageId: String, senderId: String, receiverId: String, likeType: String) {
         let batch = fireStoreRef.batch()
-        let likeDoc = fireStoreRef.collection("messageLikes").document(messageId)
+        let likeDoc = FIRRef.getMessageLikes().document(messageId)
         batch.setData(["type": likeType, "createdTime": Date(), "senderId": senderId, "receiverId": receiverId], forDocument: likeDoc)
         
-        let messageDoc = fireStoreRef.collection("imageMessages").document(messageId)
+        let messageDoc = FIRRef.getMessages().document(messageId)
         batch.updateData([MessageSchema.IS_LIKED: true], forDocument: messageDoc)
         
         batch.commit { error in
@@ -268,7 +268,7 @@ class ReceiverImageMessageController : UIViewController {
         if message.createdTime < yesterday {
             AppHUD.progress("HidingChat expired. Deleting...", isDarkTheme: false)
             
-            fireStoreRef.collection("imageMessages")
+            FIRRef.getMessages()
                 .document(message.messageId).updateData([MessageSchema.IS_DELETED: true], completion: { (error) in
                     if let err = error {
                         AppHUD.progressHidden()
@@ -517,7 +517,7 @@ extension ReceiverImageMessageController {
         guard let messageId = message?.messageId  else { return }
         self.view.isUserInteractionEnabled = false
         message?.isAcknowledged = true
-        fireStoreRef.collection("imageMessages")
+        FIRRef.getMessages()
             .document(messageId).updateData([MessageSchema.IS_DELETED: true, MessageSchema.IS_ACKNOWLEDGED: true, MessageSchema.ACKNOWLEDGE_TYPE: "Reject"]) { (error) in
                 self.view.isUserInteractionEnabled = true
                 if let error = error {
@@ -548,7 +548,7 @@ extension ReceiverImageMessageController {
         let data = [MessageSchema.IS_ACKNOWLEDGED: true,
                     MessageSchema.ACKNOWLEDGE_TYPE: "Accept",
                     MessageSchema.IS_ORIGINAL_VIEWED: isOriginalViewed] as [String : Any]
-        fireStoreRef.collection("imageMessages")
+        FIRRef.getMessages()
             .document(messageId).updateData(data) { (error) in
                 if let error = error {
                     AppHUD.error(error.localizedDescription,  isDarkTheme: false)
@@ -630,7 +630,7 @@ extension ReceiverImageMessageController {
                     } else {
                         AppHUD.progressHidden()
                         AppHUD.success("Request sent", isDarkTheme: false)
-                        Firestore.firestore().collection("hasSentRequest").document(messageId).setData(["date": Date()])
+                        FIRRef.getHasSentRequest().document(messageId).setData(["createdTime": Date()])
                     }
                 })
             } else if let _ = error {
@@ -644,7 +644,7 @@ extension ReceiverImageMessageController {
         guard let messageId = message?.messageId else { return }
         guard let notificationUser = self.senderUser else { return }
         self.requestControl.itemButton.isEnabled = false
-        Firestore.firestore().collection("hasSentRequest").document(messageId).getDocument { (snap, error) in
+        FIRRef.getHasSentRequest().document(messageId).getDocument { (snap, error) in
             if let error = error {
                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
                 return

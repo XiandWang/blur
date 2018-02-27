@@ -62,8 +62,7 @@ struct NotificationHelper {
         if let text = text {
             data["text"] = text
         }
-        Firestore.firestore()
-            .collection("notifications")
+        FIRRef.getNotifications()
             .document(receiverUserId).collection("messageNotifications").addDocument(data: data) { (error) in
                 if let error = error {
                     completion(error)

@@ -82,8 +82,7 @@ class HomeController: UITableViewController {
         guard let messages = self.imageMessages[userId] else { return }
         AppHUD.progress("Deleting...", isDarkTheme: true)
         for message in messages {
-            Firestore.firestore()
-                .collection("imageMessages").document(message.messageId).updateData([MessageSchema.IS_DELETED: true])
+            FIRRef.getMessages().document(message.messageId).updateData([MessageSchema.IS_DELETED: true])
         }
         AppHUD.progressHidden()
     }
@@ -112,7 +111,7 @@ class HomeController: UITableViewController {
     
     func listenForMessages() {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("imageMessages").whereField(MessageSchema.RECEIVER_ID, isEqualTo: currentUserId)
+        FIRRef.getMessages().whereField(MessageSchema.RECEIVER_ID, isEqualTo: currentUserId)
             .whereField(MessageSchema.IS_DELETED, isEqualTo: false)
             .addSnapshotListener { (messagesSnap, error) in
                 self.isIntialLoading = false

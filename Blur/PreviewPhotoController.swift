@@ -207,7 +207,10 @@ class PreviewPhotoController: UIViewController {
                     self.showError(self.UPLOADING_IMAGE_ERR)
                     return
                 }
-                guard let receiverId = self.user?.uid else { return }
+                guard let receiverId = self.user?.uid else {
+                    self.showError("cannot retrieve receiver id")
+                    return
+                }
                 let data = [MessageSchema.SENDER_ID: senderId, MessageSchema.RECEIVER_ID: receiverId,
                             MessageSchema.SENDER_USER: ["username": senderUser.username, "profileImgUrl": senderUser.profileImgUrl],
                             MessageSchema.EDITED_IMAGE_URL: editedImageUrl, MessageSchema.ORIGINAL_IMAGE_URL: originalImageUrl,
@@ -216,7 +219,7 @@ class PreviewPhotoController: UIViewController {
                             MessageSchema.IS_LIKED: false,  MessageSchema.CAPTION: self.captionTextView.text ?? "",
                             MessageSchema.IS_DELETED: false, MessageSchema.CREATED_TIME: Date()] as [String : Any]
                 var ref: DocumentReference? = nil
-                ref = Firestore.firestore().collection("imageMessages").addDocument(data: data, completion: { (error) in
+                ref = FIRRef.getMessages().addDocument(data: data, completion: { (error) in
                     if let error = error {
                         self.showError(error.localizedDescription)
                         return

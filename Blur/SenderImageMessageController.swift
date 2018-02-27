@@ -48,7 +48,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                 let receiverId = message.receiverId
                 getUserData(uid: receiverId)
                 
-                self.listener = self.fireStoreRef.collection("messageLikes").document(message.messageId)
+                self.listener = FIRRef.getMessageLikes().document(message.messageId)
                     .addSnapshotListener({ (snap, error) in
                         if let snapData = snap?.data() {
                             print(snapData)
@@ -175,7 +175,6 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         }, completion: nil)
     }
     
-    
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
         self.navigationController?.navigationBar.barTintColor = YELLOW_COLOR
@@ -273,7 +272,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         AppHUD.progress(nil, isDarkTheme: false)
         self.allowAccessControl.itemButton.isEnabled = false
         
-        self.fireStoreRef.collection("hasAllowedAccess").document(messageId).getDocument { (snap, error) in
+        FIRRef.getHasAllowedAccess().document(messageId).getDocument { (snap, error) in
             if let error = error {
                 AppHUD.progressHidden()
                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
@@ -284,26 +283,28 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                 AppHUD.success("Already allowed", isDarkTheme: false)
                 return
             } else {
+                print("_______________________________ allow access")
                 self.allowAccess(messageId: messageId, receiverUser: receiverUser)
             }
         }
     }
     
     fileprivate func allowAccess(messageId: String, receiverUser: User) {
-        fireStoreRef.collection("imageMessages").document(messageId).updateData([MessageSchema.ALLOW_ORIGINAL: true]) { (error) in
+        FIRRef.getMessages().document(messageId).updateData([MessageSchema.ALLOW_ORIGINAL: true]) { (error) in
             if let error = error {
                 AppHUD.progressHidden()
                 AppHUD.error(error.localizedDescription, isDarkTheme: false)
                 return
             }
+            print("_________________________________ before current user")
             CurrentUser.getUser(completion: { (senderUser, error) in
                 if let senderUser = senderUser {
                     NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: receiverUser.uid, type: .allowAccess, senderUser: senderUser, text: nil, completion: { (error) in
                         if error == nil {
                             AppHUD.progressHidden()
                             AppHUD.success("Access allowed", isDarkTheme: false)
-                            self.fireStoreRef.collection("hasAllowedAccess").document(messageId).setData(["date": Date()])
-                        } else {
+                            FIRRef.getHasAllowedAccess().document(messageId).setData(["createdTime": Date()])
+                        } else  {
                             AppHUD.progressHidden()
                             AppHUD.error(error?.localizedDescription, isDarkTheme: false)
                         }

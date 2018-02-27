@@ -19,7 +19,7 @@ class FIRRef {
         #endif
     }
     
-    static func getLikes() -> CollectionReference {
+    static func getMessageLikes() -> CollectionReference {
         #if DEBUG
             return fireStore.collection("test_messageLikes")
         #else

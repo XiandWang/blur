@@ -54,7 +54,7 @@ class NotificationCell: UICollectionViewCell {
     
     fileprivate func getMessage() {
         guard let notification = notification else { return }
-        Firestore.firestore().collection(IMAGE_MESSAGES_NODE).document(notification.messageId).getDocument { (snap, error) in
+        FIRRef.getMessages().document(notification.messageId).getDocument { (snap, error) in
             if let error = error {
                 AppHUD.error(error.localizedDescription,  isDarkTheme: true)
                 return
@@ -126,12 +126,12 @@ class NotificationCell: UICollectionViewCell {
         } else if type == NotificationType.rejectMessage.rawValue {
             text = " rejects your image. "
             if let moodText = notification.text, !moodText.isEmpty {
-                text.append("Mood: \(moodText) .")
+                text.append("Mood: \(moodText) . ")
             }
         } else if type == NotificationType.requestAccess.rawValue {
             text = " wants to access your image. "
             if let moodText = notification.text, !moodText.isEmpty {
-                text.append("Mood: \(moodText) .")
+                text.append("Mood: \(moodText) . ")
             }
         } else if type == NotificationType.likeMessage.rawValue {
             text = " likes your image. "

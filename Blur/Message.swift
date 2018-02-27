@@ -25,16 +25,16 @@ class Message {
     
     init(dict: [String: Any], messageId: String) {
         self.messageId = messageId
-        self.senderId = dict[MessageSchema.SENDER_ID] as! String
-        self.receiverId = dict[MessageSchema.RECEIVER_ID] as! String
-        self.editedImageUrl = dict[MessageSchema.EDITED_IMAGE_URL] as! String
-        self.originalImageUrl = dict[MessageSchema.ORIGINAL_IMAGE_URL] as! String
-        self.allowOriginal = dict[MessageSchema.ALLOW_ORIGINAL] as! Bool
-        self.isAcknowledged = dict[MessageSchema.IS_ACKNOWLEDGED] as! Bool
+        self.senderId = dict[MessageSchema.SENDER_ID] as? String ?? ""
+        self.receiverId = dict[MessageSchema.RECEIVER_ID] as? String ?? ""
+        self.editedImageUrl = dict[MessageSchema.EDITED_IMAGE_URL] as? String ?? ""
+        self.originalImageUrl = dict[MessageSchema.ORIGINAL_IMAGE_URL] as? String ?? ""
+        self.allowOriginal = dict[MessageSchema.ALLOW_ORIGINAL] as? Bool ?? false
+        self.isAcknowledged = dict[MessageSchema.IS_ACKNOWLEDGED] as? Bool ?? false
         self.acknowledgeType = dict[MessageSchema.ACKNOWLEDGE_TYPE] as? String ?? "NotAck"
-        self.isDeleted = dict[MessageSchema.IS_DELETED] as! Bool
-        self.isOriginalViewed = dict[MessageSchema.IS_ORIGINAL_VIEWED] as! Bool
-        self.createdTime = dict[MessageSchema.CREATED_TIME] as! Date
+        self.isDeleted = dict[MessageSchema.IS_DELETED] as? Bool ?? true 
+        self.isOriginalViewed = dict[MessageSchema.IS_ORIGINAL_VIEWED] as? Bool ?? false
+        self.createdTime = dict[MessageSchema.CREATED_TIME] as? Date ?? Date()
         
         if let isLiked = dict[MessageSchema.IS_LIKED] as? Bool {
             self.isLiked = isLiked

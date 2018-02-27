@@ -160,7 +160,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
     func getRecentMessages() {
         guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) else { return }
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("imageMessages").whereField(MessageSchema.SENDER_ID, isEqualTo: currentUserId).whereField(MessageSchema.CREATED_TIME, isGreaterThan: yesterday).getDocuments { (messagesSnap, error) in
+        FIRRef.getMessages().whereField(MessageSchema.SENDER_ID, isEqualTo: currentUserId).whereField(MessageSchema.CREATED_TIME, isGreaterThan: yesterday).getDocuments { (messagesSnap, error) in
             if let error = error {
                 print(error.localizedDescription)
                 AppHUD.error(error.localizedDescription,  isDarkTheme: true)

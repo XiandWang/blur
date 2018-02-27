@@ -19,6 +19,7 @@ class CurrentUser {
             return
         } else {
             guard let uid = Auth.auth().currentUser?.uid  else {
+                print("Error auth uid")
                 completion(nil, NSError())
                 return
             }

@@ -241,7 +241,7 @@ class UserProfileController: UIViewController {
         guard let user = self.user else { return }
         guard let sevenDaysAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) else { return }
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("messageLikes").whereField("senderId", isEqualTo: user.uid).whereField("receiverId", isEqualTo: uid).whereField("createdTime", isGreaterThan: sevenDaysAgo).getDocuments { (snap, error) in
+        FIRRef.getMessageLikes().whereField("senderId", isEqualTo: user.uid).whereField("receiverId", isEqualTo: uid).whereField("createdTime", isGreaterThan: sevenDaysAgo).getDocuments { (snap, error) in
             if let error = error {
                 print(error.localizedDescription)
                 AppHUD.error(error.localizedDescription, isDarkTheme: true)
@@ -258,7 +258,7 @@ class UserProfileController: UIViewController {
         guard let user = self.user else { return }
         guard let sevenDaysAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date()) else { return }
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        Firestore.firestore().collection("imageMessages")
+        FIRRef.getMessages()
             .whereField("senderId", isEqualTo: user.uid)
             .whereField("receiverId", isEqualTo: uid)
             .whereField("createdTime", isGreaterThan: sevenDaysAgo).getDocuments { (snap, error) in
