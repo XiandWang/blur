@@ -22,7 +22,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         collectionView?.register(MyAccountHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
         collectionView?.register(MyAccountImageCell.self, forCellWithReuseIdentifier: cellId)
         navigationItem.title = "Me"
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        setupNavTitleAttr()
         setupLogoutButton()
         getCurrentUser()
         getRecentMessages()
@@ -134,20 +134,9 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         let senderMessageController = SenderImageMessageController()
         senderMessageController.message = message
         senderMessageController.hidesBottomBarWhenPushed = true
-        configureTransparentNav()
+        self.configureTransparentNav()
         
         navigationController?.pushViewController(senderMessageController, animated: true)
-    }
-    
-    fileprivate func configureTransparentNav() {
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.view.backgroundColor = .clear
-
-        navigationItem.backBarButtonItem?.tintColor = YELLOW_COLOR
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: YELLOW_COLOR]
     }
     
     fileprivate func getCurrentUser() {

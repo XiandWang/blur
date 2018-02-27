@@ -13,6 +13,7 @@ import Kingfisher
 class SenderImageMessageController: UIViewController, UINavigationControllerDelegate {
     let fireStoreRef = Firestore.firestore()
     var listener: ListenerRegistration?
+    private let controlSidePadding: CGFloat = UIScreen.main.bounds.width / 4.0 - 35
     let heartImg = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 44, height: 44))
     
     private var isShowingEdited = true
@@ -37,11 +38,10 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
             if let message = message {
                 let editedUrl = URL(string: message.editedImageUrl)
                 editedImageView.kf.indicatorType = .activity
-                editedImageView.kf.setImage(with: editedUrl)
-                
+                editedImageView.kf.setImage(with: editedUrl, placeholder:#imageLiteral(resourceName: "image_bg_512"), options: nil, progressBlock: nil, completionHandler: nil)
                 let originalUrl = URL(string: message.originalImageUrl)
                 originalImageView.kf.indicatorType = .activity
-                originalImageView.kf.setImage(with: originalUrl)
+                originalImageView.kf.setImage(with: originalUrl, placeholder:#imageLiteral(resourceName: "image_bg_512"), options: nil, progressBlock: nil, completionHandler: nil)
               
                 setupControls()
                 
@@ -165,10 +165,10 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
     
     func setupControls() {
         view.addSubview(allowAccessControl)
-        allowAccessControl.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 30, paddingBottom: 40, paddingRight: 0, width: 60, height: 60)
+        allowAccessControl.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: controlSidePadding, paddingBottom: 40, paddingRight: 0, width: 60, height: 60)
         
         view.addSubview(viewImageControl)
-        viewImageControl.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 40, paddingRight: 30, width: 60, height: 60)
+        viewImageControl.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 40, paddingRight: controlSidePadding, width: 60, height: 60)
         
         UIView.animate(withDuration: 1, delay: 0.3, options: [.showHideTransitionViews], animations: {
             self.showControlViews()

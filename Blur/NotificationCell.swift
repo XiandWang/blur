@@ -54,8 +54,6 @@ class NotificationCell: UICollectionViewCell {
     
     fileprivate func getMessage() {
         guard let notification = notification else { return }
-        print(notification.notificationId, "notificationId")
-        print(notification.messageId, "messageId")
         Firestore.firestore().collection(IMAGE_MESSAGES_NODE).document(notification.messageId).getDocument { (snap, error) in
             if let error = error {
                 AppHUD.error(error.localizedDescription,  isDarkTheme: true)
@@ -127,6 +125,9 @@ class NotificationCell: UICollectionViewCell {
             text = " allows you to access the image. "
         } else if type == NotificationType.rejectMessage.rawValue {
             text = " rejects your image. "
+            if let moodText = notification.text, !moodText.isEmpty {
+                text.append("Mood: \(moodText) .")
+            }
         } else if type == NotificationType.requestAccess.rawValue {
             text = " wants to access your image. "
             if let moodText = notification.text, !moodText.isEmpty {

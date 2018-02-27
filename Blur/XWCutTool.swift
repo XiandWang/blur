@@ -23,7 +23,7 @@ class XWCutTool: XWImageToolBase {
             gridView = XWCutGridView(superView: superView, frame: self.editor.imageView.frame)
             gridView?.backgroundColor = .clear
             gridView?.setBgColor(UIColor.black.withAlphaComponent(0.8))
-            gridView?.setGridColor(UIColor.red.withAlphaComponent(0.8))
+            gridView?.setGridColor(TINT_COLOR)
             gridView?.clipsToBounds = false
             
             menuContainer = UIView(frame: self.editor.menuView.frame)

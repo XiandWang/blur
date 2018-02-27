@@ -17,7 +17,7 @@ struct User {
     init(dictionary: [String: Any], uid: String) {
         self.uid = uid
         self.username = dictionary["username"] as? String ?? ""
-        self.fullName = dictionary["fullName"] as? String ?? "(Full Name Not Provided)"
+        self.fullName = dictionary["fullName"] as? String ?? "(NO_FULL_NAME)"
         self.profileImgUrl =  dictionary["profileImgUrl"] as? String
     }
 }

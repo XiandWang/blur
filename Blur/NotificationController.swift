@@ -12,6 +12,9 @@ import Firebase
 class NotificationController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var notifications = [MessageNotification]()
+    var notificationMessages = [String: Message]()
+    var senderTypes = [NotificationType.likeMessage.rawValue, NotificationType.rejectMessage.rawValue, NotificationType.requestAccess.rawValue]
+    var receiverTypes = [NotificationType.allowAccess.rawValue]
     
     let cellId = "notificationCellId"
     
@@ -19,7 +22,7 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         super.viewDidLoad()
         
         navigationItem.title = "Notifications"
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        self.setupNavTitleAttr()
         collectionView?.backgroundColor = .white
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .interactive
@@ -80,11 +83,11 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
                     return
                 }
                 guard let docChanges = snap?.documentChanges else { return }
-                print(docChanges.count)
                 for docChange in docChanges {
                     if docChange.type == .added {
                         let doc = docChange.document
                         let notification = MessageNotification(dict: doc.data(), notificationId: doc.documentID)
+                        self.getMessage(notification: notification)
                         self.notifications.insert(notification, at: 0)
                         print(notification)
                         self.collectionView?.reloadData()
@@ -93,6 +96,16 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
                 guard let app = UIApplication.shared.delegate as? AppDelegate else { return }
                 let unreadNum = self.notifications.filter({$0.isRead == false}).count
                 app.setBadge(tabBarIndex: 2, num: unreadNum)
+        }
+    }
+    
+    fileprivate func getMessage(notification: MessageNotification) {
+        Firestore.firestore().collection("imageMessages").document(notification.messageId).getDocument { (snap, _) in
+            if let snap = snap, let snapData = snap.data() {
+                let message = Message(dict: snapData, messageId: notification.messageId)
+                print("messagemessagemessage", message)
+                self.notificationMessages[notification.notificationId] = message
+            }
         }
     }
     
@@ -130,7 +143,43 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         cell.notification = self.notifications[indexPath.row]
         
         return cell
-    }  
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let notification = self.notifications[indexPath.row]
+        guard let message: Message = self.notificationMessages[notification.notificationId] else { return }
+        if receiverTypes.contains(notification.type) {
+            let receiverController = ReceiverImageMessageController()
+            receiverController.message = message
+            receiverController.senderUser = notification.user
+            receiverController.hidesBottomBarWhenPushed = true
+            present(receiverController, animated: true, completion: nil)
+        } else if senderTypes.contains(notification.type) {
+            let senderController = SenderImageMessageController()
+            senderController.receiverUser = notification.user
+            senderController.message = message
+            senderController.hidesBottomBarWhenPushed = true
+            self.configureTransparentNav()
+            self.navigationController?.pushViewController(senderController, animated: true)
+        }
+    }
+}
+
+extension UIViewController {
+     public func configureTransparentNav() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.view.backgroundColor = .clear
+        
+        navigationItem.backBarButtonItem?.tintColor = YELLOW_COLOR
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: YELLOW_COLOR]
+    }
+    
+    public func setupNavTitleAttr() {
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.font: BOLD_FONT]
+    }
 }
 
 extension UIBarButtonItem {

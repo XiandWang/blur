@@ -54,7 +54,7 @@ class PreviewPhotoController: UIViewController {
     let allowSwitch : UISwitch = {
         let s = UISwitch()
         s.isOn = false
-        s.onTintColor = PURPLE_COLOR
+        s.onTintColor = TINT_COLOR
         return s
     }()
 

@@ -12,9 +12,10 @@ import Firebase
 import FaveButton
 import AZDialogView
 
-class ReceiverImageMessageController : UIViewController{
+class ReceiverImageMessageController : UIViewController {
     private let controlPanelHeight: CGFloat = 80.0
     private let controlPanelAlpha: CGFloat = 1.0
+    private let controlSidePadding: CGFloat = UIScreen.main.bounds.width / 4.0 - 35
     
     let placeholder = UIImage.fontAwesomeIcon(name: .image, textColor: .white, size: CGSize(width: 30, height: 30))
 
@@ -23,6 +24,14 @@ class ReceiverImageMessageController : UIViewController{
     private var isShowingControlPanel = true
     var senderUser: User?
     var photoIndex : Int?
+    
+    var pageController: UIPageViewController? {
+        didSet {
+            guard let message = message else { return }
+            guard let sender = senderUser else { return }
+            pageController?.navigationItem.title = "\(sender.username)(\(message.createdTime.timeAgoDisplay()))"
+        }
+    }
     
     var message: Message? {
         didSet {
@@ -179,7 +188,7 @@ class ReceiverImageMessageController : UIViewController{
             return
         }
         self.likeControl.itemButton.isEnabled = false
-        let dialog = AZDialogViewController(title: "Like type?", message: nil, verticalSpacing: -1, buttonSpacing: 10, sideSpacing: -20, titleFontSize: 22, messageFontSize: 0, buttonsHeight: 50, cancelButtonHeight: 0, fontName: "AvenirNext-Medium", boldFontName: "AvenirNext-DemiBold")
+        let dialog = AZDialogViewController(title: "Like type?", message: nil, verticalSpacing: -1, buttonSpacing: 10, sideSpacing: 20, titleFontSize: 22, messageFontSize: 0, buttonsHeight: 50, cancelButtonHeight: 0, fontName: "AvenirNext-Medium", boldFontName: "AvenirNext-DemiBold")
         dialog.dismissWithOutsideTouch = false
         dialog.blurBackground = false
         dialog.imageHandler = { (imageView) in
@@ -251,10 +260,44 @@ class ReceiverImageMessageController : UIViewController{
         view.addGestureRecognizer(swipeRecognizer)
     }
     
-    @objc func navBack() {
-        navigationController?.isNavigationBarHidden = false
-        navigationController?.popViewController(animated: true)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) else { return }
+        guard let message = message else { return }
+        if message.createdTime < yesterday {
+            AppHUD.progress("HidingChat expired. Deleting...", isDarkTheme: false)
+            
+            fireStoreRef.collection("imageMessages")
+                .document(message.messageId).updateData([MessageSchema.IS_DELETED: true], completion: { (error) in
+                    if let err = error {
+                        AppHUD.progressHidden()
+                        AppHUD.error(err.localizedDescription, isDarkTheme: false)
+                        return
+                    }
+                    AppHUD.progressHidden()
+                    self.navigationController?.popToRootViewController(animated: true)
+                })
+        }
     }
+    
+    @objc func navBack() {
+        if let nav = navigationController {
+            nav.isNavigationBarHidden = false
+            nav.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
+        
+    }
+    
+//    override func willMove(toParentViewController parent: UIViewController?) {
+//        if parent == nil {
+//            self.navigationController?.navigationBar.alpha = 1
+//            self.navigationController?.navigationBar.isTranslucent = false
+//            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+//        }
+//    }
     
     fileprivate func setupScrollView() {
         originalScrollView = UIScrollView(frame: view.bounds)
@@ -323,8 +366,8 @@ class ReceiverImageMessageController : UIViewController{
         }
         controlPanel.addSubview(leftControl)
         controlPanel.addSubview(rightControl)
-        leftControl.anchor(top: controlPanel.topAnchor, left: controlPanel.leftAnchor, bottom: nil, right: nil, paddingTop: 4, paddingLeft: 32, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
-        rightControl.anchor(top: controlPanel.topAnchor, left: nil, bottom: nil, right: controlPanel.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: 0, paddingRight: 32, width: 50, height: 50)
+        leftControl.anchor(top: controlPanel.topAnchor, left: controlPanel.leftAnchor, bottom: nil, right: nil, paddingTop: 4, paddingLeft: controlSidePadding, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+        rightControl.anchor(top: controlPanel.topAnchor, left: nil, bottom: nil, right: controlPanel.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: 0, paddingRight: controlSidePadding, width: 50, height: 50)
         
         UIView.animate(withDuration: 0.5) {
             leftControl.alpha = 1
@@ -460,6 +503,7 @@ extension ReceiverImageMessageController {
             self.acceptImageMessage(isOriginalViewed: true)
             self.rotateToOriginalFirstTime()
         } else {
+            AppHUD.custom("Not Allowed at current time. Try requesting access.", img: #imageLiteral(resourceName: "tongue"))
             self.acceptImageMessage(isOriginalViewed: false)
             self.controlPanel.addSubview(requestControl)
             requestControl.alpha = 1
@@ -514,7 +558,7 @@ extension ReceiverImageMessageController {
     }
     
     @objc func handleRejectImage() {
-        let dialog = AZDialogViewController(title: "Reject", message: "Do you want to send your rejection back?", verticalSpacing: -1, buttonSpacing: 10, sideSpacing: -20, titleFontSize: 22, messageFontSize: 15, buttonsHeight: 50, cancelButtonHeight: 0, fontName: "AvenirNext-Medium", boldFontName: "AvenirNext-DemiBold")
+        let dialog = AZDialogViewController(title: "Reject", message: "Do you want to send your rejection back?",  titleFontSize: 22, messageFontSize: 15, buttonsHeight: 50)
         
         dialog.buttonStyle = { (button,height,position) in
             button.setTitleColor(PINK_COLOR, for: .normal)
@@ -525,14 +569,50 @@ extension ReceiverImageMessageController {
         dialog.dismissWithOutsideTouch = false
         dialog.blurBackground = false
         dialog.addAction(AZDialogAction(title: "Yes") { (dialog) -> (Void) in
-            self.rejectImageMessage(shouldSendNotification: true, additionalText: nil)
-            dialog.dismiss()
+            
+            dialog.dismiss(animated: true, completion: {
+                self.showRejectMoodDialog()
+            })
         })
         dialog.addAction(AZDialogAction(title: "No, don't send") { (dialog) -> (Void) in
             self.rejectImageMessage(shouldSendNotification: false, additionalText: nil)
             dialog.dismiss()
         })
         dialog.addAction(AZDialogAction(title: "Cancel") { (dialog) -> (Void) in
+            dialog.dismiss()
+        })
+        dialog.show(in: self)
+    }
+    
+    fileprivate func showRejectMoodDialog() {
+        let dialog = AZDialogViewController(title: "Reject mood?", message: nil,  titleFontSize: 22, buttonsHeight: 50)
+        dialog.dismissWithOutsideTouch = false
+        dialog.blurBackground = false
+        dialog.buttonStyle = { (button,height,position) in
+            button.setTitleColor(PINK_COLOR, for: .normal)
+            button.titleLabel?.font = TEXT_FONT
+            button.layer.masksToBounds = true
+            button.layer.borderColor = PINK_COLOR.cgColor
+        }
+        
+        dialog.addAction(AZDialogAction(title: "😔") { (dialog) -> (Void) in
+            self.rejectImageMessage(shouldSendNotification: true, additionalText: "😔😔😔")
+            dialog.dismiss()
+        })
+        dialog.addAction(AZDialogAction(title: "😤") { (dialog) -> (Void) in
+            self.rejectImageMessage(shouldSendNotification: true, additionalText: "😤😤😤")
+            dialog.dismiss()
+        })
+        dialog.addAction(AZDialogAction(title: "😜") { (dialog) -> (Void) in
+            self.rejectImageMessage(shouldSendNotification: true, additionalText: "😜😜😜")
+            dialog.dismiss()
+        })
+        dialog.addAction(AZDialogAction(title: "😎") { (dialog) -> (Void) in
+            self.rejectImageMessage(shouldSendNotification: true, additionalText: "😎😎😎")
+            dialog.dismiss()
+        })
+        dialog.addAction(AZDialogAction(title: "No mood") { (dialog) -> (Void) in
+            self.rejectImageMessage(shouldSendNotification: true, additionalText: "")
             dialog.dismiss()
         })
         dialog.show(in: self)
@@ -573,8 +653,7 @@ extension ReceiverImageMessageController {
                 AppHUD.success("Request already sent", isDarkTheme: false)
                 return
             } else {
-                let dialog = AZDialogViewController(title: "Request mood?", message: nil, verticalSpacing: -1, buttonSpacing: 10, sideSpacing: -20, titleFontSize: 22, messageFontSize: 14, buttonsHeight: 50, cancelButtonHeight: 0, fontName: "AvenirNext-Medium", boldFontName: "AvenirNext-DemiBold")
-                dialog.showSeparator = false
+                let dialog = AZDialogViewController(title: "Request mood?", titleFontSize: 22, messageFontSize: 14, buttonsHeight: 50)
                 dialog.dismissWithOutsideTouch = false
                 dialog.blurBackground = false
                 dialog.buttonStyle = { (button,height,position) in

@@ -11,7 +11,7 @@ import UIKit
 class XWCutGridLayer: CALayer {
     var clippingRect: CGRect //裁剪范围
     var bgColor: UIColor = .black   //背景颜色
-    var gridColor: UIColor = .red //线条颜色
+    var gridColor: UIColor = TINT_COLOR //线条颜色
 
     
     override init(layer: Any) {

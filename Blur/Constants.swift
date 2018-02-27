@@ -26,7 +26,7 @@ let PINK_COLOR_LIGHT = UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 0.9)
 
 let PURPLE_COLOR_LIGHT = UIColor.rgb(red: 206, green: 147, blue: 216, alpha: 1)
 let PURPLE_COLOR = UIColor.rgb(red: 123, green: 31, blue: 162, alpha: 1)
-
+let TINT_COLOR = UIColor.hexStringToUIColor(hex: "#7E57C2")
 let APP_FONT: String = "AvenirNext-Medium"
 let APP_FONT_BOLD: String = "AvenirNext-DemiBold"
 //let APP_FONT: String = "Lato-Regular"

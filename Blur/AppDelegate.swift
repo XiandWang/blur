@@ -19,12 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
-        UINavigationBar.appearance().barTintColor = UIColor.rgb(red: 255, green: 218, blue: 68, alpha: 1)
+        UINavigationBar.appearance().barTintColor = YELLOW_COLOR
         UINavigationBar.appearance().tintColor = .black
 
         window = UIWindow()
         window?.rootViewController = MainTabBarController()
-        window?.tintColor = .black
+        window?.tintColor = TINT_COLOR
         
         #if DEBUG
             print("debug only man ___________________________________________")

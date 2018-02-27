@@ -23,8 +23,10 @@ extension Database {
         Database.database().reference().child(USERS_NODE).child(uid).observeSingleEvent(of: .value, with: { (snap) in
             let dict = snap.value as? [String: Any]
             if dict == nil || dict?["username"] == nil {
+                print("--------------------------------------username is nil")
                 completion(false, nil)
             } else {
+                print("--------------------------------------username is not nil")
                 completion(true, nil)
             }
         }) { (error) in

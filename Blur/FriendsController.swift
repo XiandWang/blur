@@ -24,8 +24,7 @@ class FriendsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Friends"
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-
+        setupNavTitleAttr()
         view?.backgroundColor = .white
         tableView.register(UserFriendCell.self, forCellReuseIdentifier: cellId)
         tableView.sectionIndexColor = TEXT_GRAY
@@ -56,11 +55,10 @@ class FriendsController: UITableViewController {
         } else {
             if userTitles.count > 0 {
                 tableView.backgroundView = nil
-                return userTitles.count
             } else {
                 TableViewHelper.emptyMessage(message: "You have no contacts yet.", viewController: self)
-                return 0
             }
+            return userTitles.count
         }
     }
     

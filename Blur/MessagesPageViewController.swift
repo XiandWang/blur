@@ -49,6 +49,7 @@ class MessagesPageViewController: UIPageViewController {
             imageMessageController.message = message
             imageMessageController.senderUser = senderUser
             imageMessageController.photoIndex = index
+            imageMessageController.pageController = self
             return imageMessageController
         }
         return nil

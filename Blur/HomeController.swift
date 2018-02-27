@@ -37,9 +37,10 @@ class HomeController: UITableViewController {
     }
     
     func setupNavigationItems() {
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-        self.navigationItem.title = "Hidingchats"
+        self.setupNavTitleAttr()
+        self.navigationItem.title = "HidingChats"
     }
+    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isIntialLoading {
@@ -93,21 +94,21 @@ class HomeController: UITableViewController {
         if let messages = imageMessages[senderId], let user = self.usersDict[senderId] {
             let messagesPageViewController = MessagesPageViewController(messages: messages, senderUser: user)
             messagesPageViewController.hidesBottomBarWhenPushed = true
-            configureTransparentNav()
+            self.configureTransparentNav()
             navigationController?.pushViewController(messagesPageViewController, animated: true)
         }
     }
     
-    fileprivate func configureTransparentNav() {
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.view.backgroundColor = .clear
-        
-        navigationItem.backBarButtonItem?.tintColor = .white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
-    }
+//    fileprivate func configureTransparentNav() {
+//        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+//        navigationController?.navigationBar.shadowImage = UIImage()
+//        navigationController?.navigationBar.isTranslucent = true
+//        navigationController?.view.backgroundColor = .clear
+//        
+//        navigationItem.backBarButtonItem?.tintColor = .white
+//        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
+//    }
     
     func listenForMessages() {
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }

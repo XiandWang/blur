@@ -137,23 +137,23 @@ extension LoginController {
                 return
             }
             AppHUD.progressHidden()
-            guard let uid = user?.uid else { return }
+            guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
+            mainTabBarController.setupViewControllers()
+            self.dismiss(animated: true, completion: nil)
             
-            Database.isUsernameChosen(uid: uid, completion: { (isChosen, userNameError) in
-                if let userNameError = userNameError {
-                    AppHUD.error(userNameError.localizedDescription, isDarkTheme: true)
-                    return
-                }
-                if isChosen {
-                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
-                    mainTabBarController.setupViewControllers()
-                    self.dismiss(animated: true, completion: nil)
-                } else {
-                    let chooseNameController = ChooseUserNameController()
-                    chooseNameController.uid = uid
-                    self.navigationController?.pushViewController(chooseNameController, animated: true)
-                }
-            })
+//            Database.isUsernameChosen(uid: uid, completion: { (isChosen, userNameError) in
+//                if let userNameError = userNameError {
+//                    AppHUD.error(userNameError.localizedDescription, isDarkTheme: true)
+//                    return
+//                }
+//                if isChosen {
+//                    
+//                } else {
+//                    let chooseNameController = ChooseUserNameController()
+//                    chooseNameController.uid = uid
+//                    self.navigationController?.pushViewController(chooseNameController, animated: true)
+//                }
+//            })
         })
     }
 
