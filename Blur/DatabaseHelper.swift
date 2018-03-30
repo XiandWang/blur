@@ -23,10 +23,8 @@ extension Database {
         Database.database().reference().child(USERS_NODE).child(uid).observeSingleEvent(of: .value, with: { (snap) in
             let dict = snap.value as? [String: Any]
             if dict == nil || dict?["username"] == nil {
-                print("--------------------------------------username is nil")
                 completion(false, nil)
             } else {
-                print("--------------------------------------username is not nil")
                 completion(true, nil)
             }
         }) { (error) in
@@ -35,43 +33,5 @@ extension Database {
     }
 }
 
-struct AnimationHelper {
-    static func yRotation(_ angle: Double) -> CATransform3D {
-        return CATransform3DMakeRotation(CGFloat(angle), 0.0, 1.0, 0.0)
-    }
-    
-    static func zRotation(_ angle: Double) -> CATransform3D {
-        return CATransform3DMakeRotation(CGFloat(angle), 0.0, 0.0, 1.0)
-    }
-    
-    static func xRotation(_ angle: Double) -> CATransform3D {
-        return CATransform3DMakeRotation(CGFloat(angle), 1.0, 0.0, 0.0)
-    }
-    
-    static func perspectiveTransform(for containerView: UIView) {
-        var transform = CATransform3DIdentity
-        transform.m34 = -0.002
-        containerView.layer.sublayerTransform = transform
-    }
-}
 
-struct NotificationHelper {
-    static func createMessageNotification(messageId: String, receiverUserId: String, type: NotificationType, senderUser sender: User, text: String?, completion: @escaping (Error?) -> ()) {
-        let userData = ["userId": sender.uid, "username": sender.username, "profileImgUrl": sender.profileImgUrl]
-        var data = ["type": type.rawValue, "user": userData, "messageId": messageId, "isRead": false, "createdTime": Date()] as [String : Any]
-        if let text = text {
-            data["text"] = text
-        }
-        FIRRef.getNotifications()
-            .document(receiverUserId).collection("messageNotifications").addDocument(data: data) { (error) in
-                if let error = error {
-                    completion(error)
-                    return
-                } else {
-                    completion(nil)
-                    return
-                }
-        }
-    }
-}
 

@@ -94,10 +94,23 @@ class XWImageEditorController: UIViewController {
     
     func initMenuView() {
         if menuView == nil {
-            menuView = UIView(frame: CGRect(x: 0, y: view.height - 80, width: self.view.width, height: 80))
-            menuView.backgroundColor = XWImageEditorTheme.toolbarColor
+            
+            let height = 80 + getBottomPadding()
+            menuView = UIView(frame: CGRect(x: 0, y: view.height - height, width: self.view.width, height: height))
             self.view.addSubview(menuView)
+            menuView.backgroundColor = XWImageEditorTheme.toolbarColor
         }
+    }
+    
+    private func getBottomPadding() -> CGFloat {
+        if #available(iOS 11.0, *) {
+            if let bottomPadding = UIApplication.shared.keyWindow?.safeAreaInsets.bottom,
+                bottomPadding > 0 {
+                return 20
+            }
+        }
+        
+        return 0
     }
     
     func initImageScrollView() {
@@ -115,7 +128,6 @@ class XWImageEditorController: UIViewController {
             }
             
             if let top = navigationController?.navigationBar.bottom {
-                print(top)
                 scrollView.top = top
             }
             scrollView.height = view.height - scrollView.top - self.menuView.height
@@ -131,7 +143,7 @@ class XWImageEditorController: UIViewController {
         var x: CGFloat = 0
         let W: CGFloat = 105
         let H: CGFloat = menuView.height
-        let toolCount: CGFloat = 2
+        let toolCount: CGFloat = 3
         
         var padding: CGFloat = 0
         
@@ -284,6 +296,9 @@ class XWImageEditorController: UIViewController {
         } else if toolInfo.toolName == "mosaic" {
             let mosaicTool = XWMosaicTool(editor: self, toolInfo: toolInfo)
             self.configureCurrentTool(curtool: mosaicTool)
+        } else if toolInfo.toolName == "emoji" {
+            let emojiTool = XWEmojiTool(editor: self, toolInfo: toolInfo)
+            self.configureCurrentTool(curtool: emojiTool)
         }
     }
     

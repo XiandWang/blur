@@ -60,21 +60,29 @@ class XWMosaicTool: XWImageToolBase {
         if let image = buildImage() {
             completion(image, nil)
         } else {
-            completion(nil, "Error creating mosaic image")
+            completion(nil, "Error creating image")
         }
     }
     
     fileprivate func buildImage() -> UIImage? {
         if let mosaicView = mosaicView {
             UIGraphicsBeginImageContextWithOptions(mosaicView.bounds.size, false, 0.0)
-            mosaicView.layer.render(in: UIGraphicsGetCurrentContext()!)
-//            print("new code is here")
-//            mosaicView.drawHierarchy(in: mosaicView.bounds, afterScreenUpdates: true)
-            //mosaicView.layer.render(in: UIGraphicsGetCurrentContext()!)
-            let image = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
+
+//            mosaicView.layer.render(in: UIGraphicsGetCurrentContext()!)
+//
+//            let image = UIGraphicsGetImageFromCurrentImageContext()
+//            UIGraphicsEndImageContext()
+//            
+//            return image
             
-            return image
+            if let ctx = UIGraphicsGetCurrentContext() {
+                mosaicView.layer.render(in: ctx)
+                let image = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
+                
+                return image
+            }
+            return nil
         } else {
             return nil
         }
@@ -84,7 +92,7 @@ class XWMosaicTool: XWImageToolBase {
         let ciImage = CIImage(image: image)
         guard let filter = CIFilter(name: "CIPixellate") else { return nil }
         filter.setValue(ciImage, forKey: kCIInputImageKey)
-        filter.setValue(80, forKey: kCIInputScaleKey)
+        filter.setValue(70, forKey: kCIInputScaleKey)
         //filter.setDefaults()
         guard let outImage = filter.value(forKey: kCIOutputImageKey) as? CIImage else { return nil }
         let ctx = CIContext(options: nil)

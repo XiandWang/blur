@@ -19,7 +19,6 @@ class AppTextField: UITextField {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupView()
     }
     

@@ -8,15 +8,21 @@
 
 import UIKit
 import Firebase
+import AZDialogView
 
 class NotificationController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+    let maxString = "zzzzzzzzzzzzzzzz requests access to your image. Mood: ♥️♥️♥️♥️♥️♥️♥️♥️♥️♥️. 13 mins."
+    
     
     var notifications = [MessageNotification]()
     var notificationMessages = [String: Message]()
     var senderTypes = [NotificationType.likeMessage.rawValue, NotificationType.rejectMessage.rawValue, NotificationType.requestAccess.rawValue]
     var receiverTypes = [NotificationType.allowAccess.rawValue]
     
-    let cellId = "notificationCellId"
+    let messageCellId = "messageNotifCellId"
+    let otherCellId = "otherNotifCellId"
+
+    var notificationsListener: ListenerRegistration?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,30 +33,18 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .interactive
         
-        collectionView?.register(NotificationCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.register(MessageNotificationCell.self, forCellWithReuseIdentifier: messageCellId)
+        collectionView?.register(OtherNotificationCell.self, forCellWithReuseIdentifier: otherCellId)
         let trashImg = UIImage.fontAwesomeIcon(name: .trash, textColor: .black, size: CGSize(width: 30, height: 44))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: trashImg, style: .plain, target: self, action: #selector(deleteNotifications))
         navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
         listenForNotifications()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        guard let curUserId = Auth.auth().currentUser?.uid else { return }
-        for notif in notifications {
-            notif.isRead = true
-            FIRRef.getNotifications().document(curUserId)
-                .collection("messageNotifications").document(notif.notificationId).updateData(["isRead": true])
-        }
-        if let app = UIApplication.shared.delegate as? AppDelegate {
-            app.setBadge(tabBarIndex: 2, num: 0)
-        }
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        collectionView?.reloadData()
+
+        self.collectionView?.reloadData()
     }
     
     @objc fileprivate func deleteNotifications() {
@@ -75,11 +69,16 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
     
     fileprivate func listenForNotifications() {
         guard let curUserId = Auth.auth().currentUser?.uid else { return }
-        FIRRef.getNotifications()
-            .document(curUserId).collection("messageNotifications").order(by: "createdTime", descending: false).addSnapshotListener { (snap, error) in
+        guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) else { return }
+        self.notificationsListener =
+            FIRRef.getNotifications()
+                .document(curUserId)
+                .collection("messageNotifications")
+                .order(by: "createdTime", descending: false)
+                .whereField("createdTime", isGreaterThan: yesterday)
+                .addSnapshotListener { (snap, error) in
                 if let error = error {
-                    print(error.localizedDescription)
-                    AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                    AppHUD.error("Notifications error: " + error.localizedDescription, isDarkTheme: true)
                     return
                 }
                 guard let docChanges = snap?.documentChanges else { return }
@@ -87,26 +86,33 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
                     if docChange.type == .added {
                         let doc = docChange.document
                         let notification = MessageNotification(dict: doc.data(), notificationId: doc.documentID)
-                        self.getMessage(notification: notification)
                         self.notifications.insert(notification, at: 0)
-                        print(notification)
-                        self.collectionView?.reloadData()
+                    }
+                    else if docChange.type  == .modified {
+                        let id = docChange.document.documentID
+                        if let index = self.notifications.index(where: { (notif) -> Bool in
+                            return notif.notificationId == id
+                        }) {
+                            let notification = MessageNotification(dict: docChange.document.data(), notificationId: docChange.document.documentID)
+                            self.notifications[index] = notification
+                        }
+                    }  else if docChange.type  == .removed {
+                        let id = docChange.document.documentID
+                        if let index = self.notifications.index(where: { (notif) -> Bool in
+                            return notif.notificationId == id
+                        }) {
+                            self.notifications.remove(at: index)
+                        }
                     }
                 }
+                self.collectionView?.reloadData()
                 guard let app = UIApplication.shared.delegate as? AppDelegate else { return }
                 let unreadNum = self.notifications.filter({$0.isRead == false}).count
                 app.setBadge(tabBarIndex: 2, num: unreadNum)
         }
     }
     
-    fileprivate func getMessage(notification: MessageNotification) {
-        FIRRef.getMessages().document(notification.messageId).getDocument { (snap, _) in
-            if let snap = snap, let snapData = snap.data() {
-                let message = Message(dict: snapData, messageId: notification.messageId)
-                self.notificationMessages[notification.notificationId] = message
-            }
-        }
-    }
+    
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let count = notifications.count
@@ -118,16 +124,25 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
             label.textAlignment = .center
             collectionView.backgroundView = label
             label.center = collectionView.center
-            return 0
         } else {
             collectionView.backgroundView = nil
-            return count
         }
+        return count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 72.0)
-    }
+        
+        let notif = self.notifications[indexPath.row]
+        if notif.type == NotificationType.askForChat.rawValue ||  notif.type == NotificationType.compliment.rawValue {
+            return CGSize(width: view.frame.width, height: 80.0)
+        } else {
+            let rect = NSString(string: notif.buildNotifString()).boundingRect(with: CGSize(width:view.width - 80.0 - 32.0, height: 999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font: TEXT_FONT], context: nil).size
+
+            let height = max(rect.height + 24.0, 80)
+            return CGSize(width: view.frame.width, height: height)
+        }
+     }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0.0
     }
@@ -138,29 +153,120 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
     
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! NotificationCell
-        cell.notification = self.notifications[indexPath.row]
-        
-        return cell
+        let notif = self.notifications[indexPath.row]
+        if notif.type == NotificationType.askForChat.rawValue || notif.type == NotificationType.compliment.rawValue {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: otherCellId, for: indexPath) as! OtherNotificationCell
+            cell.notification = notif
+            cell.userProfileImageView.tag = indexPath.row
+            cell.userProfileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleShowUserProfile(sender:))))
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: messageCellId, for: indexPath) as! MessageNotificationCell
+            cell.notification = notif
+            cell.userProfileImageView.tag = indexPath.row
+            cell.userProfileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleShowUserProfile(sender:))))
+            return cell
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    
         let notification = self.notifications[indexPath.row]
-        guard let message: Message = self.notificationMessages[notification.notificationId] else { return }
         if receiverTypes.contains(notification.type) {
-            let receiverController = ReceiverImageMessageController()
-            receiverController.message = message
-            receiverController.senderUser = notification.user
-            receiverController.hidesBottomBarWhenPushed = true
-            present(receiverController, animated: true, completion: nil)
+            guard let yesterday = Calendar.current.date(byAdding: .second, value: -1, to: Date()) else { return }
+            if notification.createdTime >= yesterday {
+                let receiverController = ReceiverImageMessageController()
+                receiverController.message = notification.message
+                receiverController.senderUser = notification.user
+                receiverController.hidesBottomBarWhenPushed = true
+                present(receiverController, animated: true, completion: nil)
+            } else {
+                deleteNotification(notifId: notification.notificationId, row: indexPath.row)
+                return
+            }
         } else if senderTypes.contains(notification.type) {
-            let senderController = SenderImageMessageController()
-            senderController.receiverUser = notification.user
-            senderController.message = message
-            senderController.hidesBottomBarWhenPushed = true
-            self.configureTransparentNav()
-            self.navigationController?.pushViewController(senderController, animated: true)
+            guard let yesterday = Calendar.current.date(byAdding: .second, value: -1, to: Date()) else { return }
+            if notification.createdTime >= yesterday {
+                let senderController = SenderImageMessageController()
+                senderController.receiverUser = notification.user
+                senderController.message = notification.message
+                senderController.hidesBottomBarWhenPushed = true
+                self.configureTransparentNav()
+                self.navigationController?.pushViewController(senderController, animated: true)
+            } else {
+                deleteNotification(notifId: notification.notificationId, row: indexPath.row)
+                return
+            }
+        } else if notification.type == NotificationType.askForChat.rawValue {
+            let user = notification.user
+            let userController = UserProfileController()
+            userController.user = user
+            self.navigationController?.pushViewController(userController, animated: true)
+        } else if notification.type == NotificationType.compliment.rawValue {
+            guard let complimentText = notification.text else { return }
+            showComplimentDialog(compliment: complimentText, user: notification.user.fullName)
         }
+        
+        if !notification.isRead {
+            notification.isRead = true
+            guard let curUserId = Auth.auth().currentUser?.uid else { return }
+            FIRRef.getNotifications().document(curUserId)
+                .collection("messageNotifications").document(notification.notificationId).updateData(["isRead": true])
+        }
+    }
+    
+    
+    func deleteNotification(notifId: String, row: Int) {
+        guard let curUserId = Auth.auth().currentUser?.uid else { return }
+        AppHUD.progress("Message expired...", isDarkTheme: true)
+        
+        
+        FIRRef.getNotifications().document(curUserId)
+            .collection("messageNotifications").document(notifId).delete { (error) in
+                if let e = error {
+                    AppHUD.progressHidden()
+                    AppHUD.error(e.localizedDescription, isDarkTheme: true)
+                    return
+                }
+                //if row >= 0 && row < self.notifications.count {
+                    self.notifications.remove(at: row)
+                //}
+                AppHUD.progressHidden()
+                self.collectionView?.reloadData()
+        }
+        
+    }
+    
+    func showComplimentDialog(compliment: String, user: String) {
+        let dialog = AZDialogViewController(title: user, message: compliment, verticalSpacing: -1, buttonSpacing: 10, sideSpacing: 17, titleFontSize: 20, messageFontSize: 15, buttonsHeight: 44)
+        dialog.dismissWithOutsideTouch = true
+        dialog.blurBackground = true
+        dialog.imageHandler = { (imageView) in
+            imageView.image = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 50, height: 50))
+            imageView.backgroundColor = PINK_COLOR_LIGHT
+            imageView.contentMode = .center
+            return true //must return true, otherwise image won't show.
+        }
+        dialog.buttonStyle = { (button,height,position) in
+            button.setTitleColor(PINK_COLOR, for: .normal)
+            button.titleLabel?.font = TEXT_FONT
+            button.layer.masksToBounds = true
+            button.layer.borderColor = PINK_COLOR.cgColor
+        }
+        dialog.addAction(AZDialogAction(title: "close", handler: { (dialog) -> (Void) in
+            dialog.dismiss()
+        }))
+        
+        dialog.show(in: self)
+
+    }
+    
+    @objc func handleShowUserProfile(sender: UITapGestureRecognizer) {
+        guard let tag = sender.view?.tag else { return }
+        guard let user = self.notifications[safe: tag]?.user else { return }
+        let userProfile = UserProfileController()
+        userProfile.user = user
+        self.navigationController?.pushViewController(userProfile, animated: true)
     }
 }
 
@@ -172,50 +278,12 @@ extension UIViewController {
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.view.backgroundColor = .clear
         
-        navigationItem.backBarButtonItem?.tintColor = YELLOW_COLOR
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: YELLOW_COLOR]
+        navigationItem.backBarButtonItem?.tintColor = UIColor.white
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: TINT_COLOR]
     }
     
     public func setupNavTitleAttr() {
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.font: BOLD_FONT]
+        let font = UIFont(name: APP_FONT_BOLD, size: 18) ?? UIFont.boldSystemFont(ofSize: 18)
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.font: font]
     }
-}
-
-extension UIBarButtonItem {
-    
-    /// 生成一个窄的 UIBarButtonItem
-    ///
-    /// - parameter image:
-    /// - parameter target:
-    /// - parameter action:
-    ///
-    /// - returns: UIBarButtonItem
-    static func narrowButtonItem(image: UIImage?, target: AnyObject?, action: Selector) -> UIBarButtonItem {
-        let (item, _) = narrowButtonItem2(image: image, target: target, action: action)
-        return item
-    }
-    
-    /// 生成一个窄的 UIBarButtonItem(同时返回 UIBarButtonItem 和里面的 UIButton)
-    ///
-    /// - parameter image:
-    /// - parameter target:
-    /// - parameter action:
-    ///
-    /// - returns: (UIBarButtonItem, UIButton)
-    static func narrowButtonItem2(image: UIImage?, target: AnyObject?, action: Selector) -> (UIBarButtonItem, UIButton) {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
-        button.setImage(image, for: UIControlState())
-        button.addTarget(target, action: action, for: .touchUpInside)
-        return (UIBarButtonItem(customView: button), button)
-    }
-    
-    /// 返回一个负宽度的 FixedSpace，使得 leftBarButtonItem 和 rightBarButtonItem 距离屏幕边框不那么远。
-    ///
-    /// - returns: 负宽度的 FixedSpace
-    static func fixNavigationSpacer() -> UIBarButtonItem {
-        let item = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil);
-        item.width = -20;
-        return item
-    }
-    
 }

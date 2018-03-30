@@ -52,8 +52,8 @@ class EditFullNameController: UIViewController {
     @objc func updateFullName() {
         editTextField.resignFirstResponder()
         guard var user = user else { return }
-        guard let fullName = editTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), fullName.count < 32 && fullName.count > 2 else {
-            AppHUD.error("Full name should have more than 2 characters and less than 32 characters.", isDarkTheme: true)
+        guard let fullName = editTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), fullName.count < 32 && fullName.count >= 1  else {
+            AppHUD.error("Full name should have more than 0 characters and less than 32 characters.", isDarkTheme: true)
             return
         }
         AppHUD.progress(nil, isDarkTheme: true)

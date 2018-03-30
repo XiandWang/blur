@@ -9,6 +9,8 @@
 import UIKit
 
 class ControlItemView: UIView {
+    static let IMAGE_SIZE = CGSize(width: 44, height: 44)
+    static let BUTTON_WIDTH: CGFloat = 56
     
     var itemInfo: ControlItemInfo? {
         didSet {
@@ -24,7 +26,7 @@ class ControlItemView: UIView {
     
     var itemButton: UIButton = {
         let bt = UIButton()
-        bt.layer.cornerRadius = 25
+        bt.layer.cornerRadius = ControlItemView.BUTTON_WIDTH / 2
         bt.layer.masksToBounds = true
         
         return bt
@@ -32,26 +34,25 @@ class ControlItemView: UIView {
     
     lazy var itemLabel: UILabel = {
         let lb = UILabel()
-        lb.font = TEXT_FONT
+        lb.font = UIFont(name: APP_FONT, size: 17) ??  UIFont.systemFont(ofSize: 17)
         lb.textAlignment = .center
         return lb
     }()
-    
     
     init(target: Any, action: Selector) {
         super.init(frame: .zero)
         addSubview(itemButton)
         addSubview(itemLabel)
-        itemButton.addTarget(target, action: action, for: UIControlEvents.touchUpInside)
+        itemButton.addTarget(target, action: action, for: .touchUpInside)
         
         setupConstraints()
     }
     
     func setupConstraints() {
-        itemButton.anchor(top: topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 1, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+        itemButton.anchor(top: topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 1, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: ControlItemView.BUTTON_WIDTH, height: ControlItemView.BUTTON_WIDTH)
         itemButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         
-        itemLabel.anchor(top: itemButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 120, height: 0)
+        itemLabel.anchor(top: itemButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 150, height: 0)
         itemLabel.centerXAnchor.constraint(equalTo: itemButton.centerXAnchor).isActive = true
     }
     

@@ -11,10 +11,14 @@ import Firebase
 import Kingfisher
 import Foundation
 
+
 class FriendsController: UITableViewController {
     private let cellId = "userFriendCellId"
     let ref = Database.database().reference()
     
+    var friendRequestsRef: DatabaseQuery?
+    var friendsRef: DatabaseQuery?
+
     var newRequestUids = [User]()
     var users = [User]()
     var titleUserDict = [String: [User]]()
@@ -30,10 +34,17 @@ class FriendsController: UITableViewController {
         tableView.sectionIndexColor = TEXT_GRAY
         observeFriends()
         observeFriendRequests()
-        
+
         let userPlus = UIImage.fontAwesomeIcon(name: .userPlus, textColor: .black, size: CGSize(width: 30, height: 44))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: userPlus, style: .plain, target: self, action: #selector(handleAddFriends))
         navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Invite", style: .plain, target: self, action: #selector(handleInvite))
+    }
+    
+    @objc func handleInvite() {
+        let contacts = ContactsController(style: .plain)
+        self.navigationController?.pushViewController(contacts, animated: true)  
     }
     
     func setupHeaderView() {
@@ -147,15 +158,17 @@ class FriendsController: UITableViewController {
 extension FriendsController {
     fileprivate func observeFriends() {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        self.ref.child(FRIENDS_NODE).child(currentUid).queryOrdered(byChild: "status").queryEqual(toValue: "added").observe(.childAdded, with: { (snap) in
+        friendsRef = self.ref.child(FRIENDS_NODE).child(currentUid).queryOrdered(byChild: "status").queryEqual(toValue: FriendStatus.added.rawValue)
+        friendsRef?.observe(.childAdded, with: { (snap) in
             let uid = snap.key
             self.ref.child(USERS_NODE).child(uid).observeSingleEvent(of: .value, with: { (usersnap) in
                 guard let userDict = usersnap.value as? [String: Any] else { return }
                 let user = User(dictionary: userDict, uid: uid)
                 self.users.append(user)
                 
-                guard let letterChar = user.username.first else { return }
+                guard let letterChar = user.fullName.first else { return }
                 let letter = "\(letterChar)".uppercased()
+                
                 if let _ = self.titleUserDict[letter] {
                     self.titleUserDict[letter]?.append(user)
                 } else {
@@ -172,9 +185,9 @@ extension FriendsController {
     
     fileprivate func observeFriendRequests() {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        
-        self.ref.child(RECEIVER_FRIEND_REQUESTS_NODE)
-            .child(currentUid).queryOrdered(byChild: "status").queryEqual(toValue: FriendStatus.pending.rawValue).observe(.value) { (snap : DataSnapshot) in
+        self.friendRequestsRef = self.ref.child(RECEIVER_FRIEND_REQUESTS_NODE)
+            .child(currentUid).queryOrdered(byChild: "status").queryEqual(toValue: FriendStatus.pending.rawValue)
+        self.friendRequestsRef?.observe(.value) { (snap : DataSnapshot) in
             self.newRequestUids = []
             for c in snap.children {
                 guard let child = c as? DataSnapshot else { return }

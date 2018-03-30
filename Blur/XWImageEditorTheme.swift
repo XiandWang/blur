@@ -10,7 +10,7 @@ import UIKit
 
 struct XWImageEditorTheme {
     static let backgroundColor = UIColor.white
-    static let toolbarColor = UIColor.black
+    static let toolbarColor = UIColor.hexStringToUIColor(hex: "#141e33")
     static let toolIconColor = "black"
     static let toobarTextColor = UIColor.black
 }

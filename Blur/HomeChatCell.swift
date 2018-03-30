@@ -13,7 +13,7 @@ class HomeChatCell: UITableViewCell {
     var user: User? {
         didSet {
             if let user = user {
-                usernameLabel.text = user.username
+                usernameLabel.text = user.fullName
                 if let imgUrl = user.profileImgUrl {
                     userAvatarView.kf.setImage(with: URL(string: imgUrl))
                 } else {
@@ -43,13 +43,13 @@ class HomeChatCell: UITableViewCell {
             }
             if let totalCount = messages?.count, totalCount > 0 {
                 if let hiddenNum = self.messages?.filter({ (message) -> Bool in
-                    return !message.allowOriginal
+                    return !message.allowOriginal && message.isAcknowledged
                 }).count, hiddenNum > 0 {
                     hiddenNumberLabel.textColor = .gray
                     hiddenNumberLabel.text = "\(hiddenNum) hiding, \(totalCount) total"
                 } else {
                     hiddenNumberLabel.textColor = .gray
-                    hiddenNumberLabel.text = "no hiding left, \(totalCount) total"
+                    hiddenNumberLabel.text = "0 hiding, \(totalCount) total"
                 }
             } else {
                 hiddenNumberLabel.text = nil
@@ -93,6 +93,7 @@ class HomeChatCell: UITableViewCell {
         iv.layer.masksToBounds = true
         iv.backgroundColor = BACKGROUND_GRAY
         iv.contentMode = .scaleAspectFill
+        iv.isUserInteractionEnabled = true
         return iv
     }()
     

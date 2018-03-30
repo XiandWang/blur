@@ -11,7 +11,6 @@ import UIKit
 class MessagesPageViewController: UIPageViewController {
     
     var messages: [Message]?
-    
     var senderUser: User? {
         didSet {
             if let senderUser = senderUser {
@@ -19,7 +18,6 @@ class MessagesPageViewController: UIPageViewController {
             }
         }
     }
-    
     var currentIndex: Int?
     
     init(messages: [Message], senderUser: User) {
@@ -41,6 +39,12 @@ class MessagesPageViewController: UIPageViewController {
             
             self.setViewControllers(controllers, direction: .forward, animated: false, completion: nil)
         }
+        
+        UIApplication.shared.isStatusBarHidden = true
+    }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
     func configureImageMessageController(index: Int) -> ReceiverImageMessageController? {
@@ -58,6 +62,7 @@ class MessagesPageViewController: UIPageViewController {
     
     override func willMove(toParentViewController parent: UIViewController?) {
         if parent == nil {
+            UIApplication.shared.isStatusBarHidden = false
             self.navigationController?.navigationBar.alpha = 1
             self.navigationController?.navigationBar.isTranslucent = false
             self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]

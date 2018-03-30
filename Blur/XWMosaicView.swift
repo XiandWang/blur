@@ -75,7 +75,6 @@ class XWMosaicView: UIView {
             let point = touch.location(in: self)
             path.addLine(to: point)
 //            if let pathCopy = path.copy() {
-//                print("copy")
 //                UIGraphicsBeginImageContextWithOptions(self.frame.size, true, 0)
 //                let ctx = UIGraphicsGetCurrentContext()
 //                ctx?.addPath(pathCopy)

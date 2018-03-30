@@ -30,13 +30,23 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
         let swipe = UISwipeGestureRecognizer(target: self, action: #selector(navback))
         swipe.direction = .right
         view.addGestureRecognizer(swipe)
+        
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        DispatchQueue.main.async {
+            self.searchController.searchBar.becomeFirstResponder()
+        }
     }
 
     @objc func navback() {
         self.navigationController?.popViewController(animated: true)
     }
     
-    func setupSearchController() {
+    fileprivate func setupSearchController() {
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
@@ -53,10 +63,10 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
         searchBar.barTintColor = YELLOW_COLOR
         searchBar.layer.borderColor = YELLOW_COLOR.cgColor
         tableView.tableHeaderView = searchBar
-        searchBar.becomeFirstResponder()
-        //navigationItem.titleView = searchController.searchBar
         
-        
+        if let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") as? UITextField {
+            textFieldInsideSearchBar.font = TEXT_FONT
+        }
     }
     
     
@@ -87,7 +97,7 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
             guard let currentUid = Auth.auth().currentUser?.uid else { return }
             AppHUD.progress(nil, isDarkTheme: true)
             let receiverValues = [currentUid : ["status": FriendStatus.pending.rawValue, "createdTime":                 Date().timeIntervalSince1970]]
-            self.ref.child(RECEIVER_FRIEND_REQUESTS_NODE).child(user.uid).updateChildValues(receiverValues, withCompletionBlock: { (err : Error?, _) in
+            self.ref.child(RECEIVER_FRIEND_REQUESTS_NODE).child(user.uid).updateChildValues(receiverValues, withCompletionBlock: { (err, _) in
                 AppHUD.progressHidden()
                 if let err = err {
                     AppHUD.error(err.localizedDescription, isDarkTheme: true)
@@ -117,7 +127,7 @@ class AddFriendController: UITableViewController, UISearchResultsUpdating {
                 return 0
             }
         } else {
-            TableViewHelper.emptyMessage(message: "", viewController: self)
+            tableView.backgroundView = nil
             return 0
         }
     }
@@ -138,7 +148,7 @@ extension AddFriendController : UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let term = searchController.searchBar.text?.trimmingCharacters(in: .whitespaces), term != "" {
             AppHUD.progress(nil, isDarkTheme: true)
-            Database.database().reference().child(USERS_NODE).queryOrdered(byChild: "username").queryEqual(toValue: term).observeSingleEvent(of: .value, with: { (snap) in
+            Database.database().reference().child(USERS_NODE).queryOrdered(byChild: "usernameLowercased").queryEqual(toValue: term.lowercased()).observeSingleEvent(of: .value, with: { (snap) in
                 self.hasSearched = true
                 AppHUD.progressHidden()
                 self.users = []
@@ -150,14 +160,32 @@ extension AddFriendController : UISearchBarDelegate {
                         let user = User(dictionary: userDict, uid: uid)
                         self.users.append(user)
                     }
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
                 }
+                
+                Database.database().reference().child(USERS_NODE).queryOrdered(byChild: "username").queryEqual(toValue: term).observeSingleEvent(of: .value, with: { (usernap) in
+                    AppHUD.progressHidden()
+                    if usernap.exists() {
+                        for c in usernap.children {
+                            let child = c as? DataSnapshot
+                            guard let userDict = child?.value as? [String: Any] else { return }
+                            guard let uid = child?.key else { return }
+                            let user = User(dictionary: userDict, uid: uid)
+                            self.users.append(user)
+                        }
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                })
+                    
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }, withCancel: { (error) in
+                self.hasSearched = true
+                AppHUD.progressHidden()
+                AppHUD.error("Error finding users. Please try again.", isDarkTheme: true)
             })
         }
     }
@@ -167,11 +195,20 @@ class SimpleUserCell: UITableViewCell {
     
     var user: User? {
         didSet {
-            usernameLabel.text = user?.username
-            fullNameLabel.text = user?.fullName
-            guard let profileImageUrl = user?.profileImgUrl else { return }
+            if let user = user {
+                usernameLabel.text = "@" + user.username
+                fullNameLabel.text = user.fullName
+                if let profileImageUrl = user.profileImgUrl {
+                    profileImageView.kf.setImage(with: URL(string: profileImageUrl))
+                } else {
+                    profileImageView.kf.setImage(with: nil)
+                }
+            } else {
+                usernameLabel.text = ""
+                fullNameLabel.text = ""
+                profileImageView.kf.setImage(with: nil)
+            }
             
-            profileImageView.kf.setImage(with: URL(string: profileImageUrl))
         }
     }
     
@@ -186,16 +223,15 @@ class SimpleUserCell: UITableViewCell {
     
     let usernameLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
-        label.font = BOLD_FONT
+        label.font = UIFont(name: APP_FONT_BOLD, size: 16)
+        label.textColor = .lightGray
         return label
     }()
     
     let fullNameLabel: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = TEXT_FONT
-        label.textColor = .lightGray
+        label.font = BOLD_FONT
         return label
     }()
     
@@ -208,9 +244,12 @@ class SimpleUserCell: UITableViewCell {
 
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
         profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        usernameLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -10).isActive = true
-        usernameLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 20)
-        fullNameLabel.anchor(top: usernameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: contentView.rightAnchor, paddingTop: 5, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 20)
+        fullNameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor, constant: -10).isActive = true
+        fullNameLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 0)
+        usernameLabel.anchor(top: fullNameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: contentView.rightAnchor, paddingTop: 2, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 0)
+        
+//        usernameLabel.backgroundColor = .red
+//        fullNameLabel.backgroundColor = .purple
     }
     
     required init?(coder aDecoder: NSCoder) {

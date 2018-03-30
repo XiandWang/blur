@@ -1,64 +1,72 @@
 PODS:
   - AZDialogView (1.2.1)
-  - BoringSSL (9.2):
-    - BoringSSL/Implementation (= 9.2)
-    - BoringSSL/Interface (= 9.2)
-  - BoringSSL/Implementation (9.2):
-    - BoringSSL/Interface (= 9.2)
-  - BoringSSL/Interface (9.2)
+  - BoringSSL (10.0):
+    - BoringSSL/Implementation (= 10.0)
+    - BoringSSL/Interface (= 10.0)
+  - BoringSSL/Implementation (10.0):
+    - BoringSSL/Interface (= 10.0)
+  - BoringSSL/Interface (10.0)
+  - Crashlytics (3.10.1):
+    - Fabric (~> 1.7.5)
+  - Fabric (1.7.6)
   - FaveButton (2.0.3)
-  - Firebase/Auth (4.8.2):
+  - Firebase/Auth (4.11.0):
     - Firebase/Core
-    - FirebaseAuth (= 4.4.2)
-  - Firebase/Core (4.8.2):
-    - FirebaseAnalytics (= 4.0.9)
-    - FirebaseCore (= 4.0.14)
-  - Firebase/Database (4.8.2):
+    - FirebaseAuth (= 4.5.0)
+  - Firebase/Core (4.11.0):
+    - FirebaseAnalytics (= 4.1.0)
+    - FirebaseCore (= 4.0.18)
+  - Firebase/Database (4.11.0):
     - Firebase/Core
-    - FirebaseDatabase (= 4.1.4)
-  - Firebase/Firestore (4.8.2):
+    - FirebaseDatabase (= 4.1.5)
+  - Firebase/Firestore (4.11.0):
     - Firebase/Core
-    - FirebaseFirestore (= 0.10.0)
-  - Firebase/Messaging (4.8.2):
+    - FirebaseFirestore (= 0.10.4)
+  - Firebase/Messaging (4.11.0):
     - Firebase/Core
-    - FirebaseMessaging (= 2.0.8)
-  - Firebase/Storage (4.8.2):
+    - FirebaseMessaging (= 2.1.1)
+  - Firebase/Storage (4.11.0):
     - Firebase/Core
-    - FirebaseStorage (= 2.1.2)
-  - FirebaseAnalytics (4.0.9):
+    - FirebaseStorage (= 2.1.3)
+  - FirebaseAnalytics (4.1.0):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseAuth (4.4.2):
-    - FirebaseAnalytics (~> 4.0)
+  - FirebaseAuth (4.5.0):
+    - FirebaseAnalytics (~> 4.1)
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.14):
+  - FirebaseCore (4.0.18):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-  - FirebaseDatabase (4.1.4):
-    - FirebaseAnalytics (~> 4.0)
+  - FirebaseDatabase (4.1.5):
+    - FirebaseAnalytics (~> 4.1)
     - FirebaseCore (~> 4.0)
     - leveldb-library (~> 1.18)
-  - FirebaseFirestore (0.10.0):
-    - FirebaseAnalytics (~> 4.0)
+  - FirebaseFirestore (0.10.4):
+    - FirebaseAnalytics (~> 4.1)
     - FirebaseCore (~> 4.0)
     - gRPC-ProtoRPC (~> 1.0)
     - leveldb-library (~> 1.18)
-    - Protobuf (~> 3.1)
-  - FirebaseInstanceID (2.0.8):
+    - Protobuf (~> 3.5)
+  - FirebaseInstanceID (2.0.10):
     - FirebaseCore (~> 4.0)
-  - FirebaseMessaging (2.0.8):
-    - FirebaseAnalytics (~> 4.0)
+  - FirebaseMessaging (2.1.1):
+    - FirebaseAnalytics (~> 4.1)
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
-    - Protobuf (~> 3.1)
-  - FirebaseStorage (2.1.2):
-    - FirebaseAnalytics (~> 4.0)
+    - Protobuf (~> 3.5)
+  - FirebaseStorage (2.1.3):
+    - FirebaseAnalytics (~> 4.1)
     - FirebaseCore (~> 4.0)
     - GTMSessionFetcher/Core (~> 1.1)
   - FontAwesome.swift (1.3.2)
+  - GoogleSignIn (4.1.2):
+    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - GoogleToolboxForMac/NSString+URLArguments (~> 2.1)
+    - GTMOAuth2 (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
   - GoogleToolboxForMac/DebugUtils (2.1.3):
     - GoogleToolboxForMac/Defines (= 2.1.3)
   - GoogleToolboxForMac/Defines (2.1.3)
@@ -71,28 +79,35 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.1.3)
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
-  - gRPC (1.8.6):
-    - gRPC-RxLibrary (= 1.8.6)
-    - gRPC/Main (= 1.8.6)
-  - gRPC-Core (1.8.6):
-    - gRPC-Core/Implementation (= 1.8.6)
-    - gRPC-Core/Interface (= 1.8.6)
-  - gRPC-Core/Implementation (1.8.6):
-    - BoringSSL (~> 9.0)
-    - gRPC-Core/Interface (= 1.8.6)
+  - gRPC (1.10.0):
+    - gRPC-RxLibrary (= 1.10.0)
+    - gRPC/Main (= 1.10.0)
+  - gRPC-Core (1.10.0):
+    - gRPC-Core/Implementation (= 1.10.0)
+    - gRPC-Core/Interface (= 1.10.0)
+  - gRPC-Core/Implementation (1.10.0):
+    - BoringSSL (~> 10.0)
+    - gRPC-Core/Interface (= 1.10.0)
     - nanopb (~> 0.3)
-  - gRPC-Core/Interface (1.8.6)
-  - gRPC-ProtoRPC (1.8.6):
-    - gRPC (= 1.8.6)
-    - gRPC-RxLibrary (= 1.8.6)
+  - gRPC-Core/Interface (1.10.0)
+  - gRPC-ProtoRPC (1.10.0):
+    - gRPC (= 1.10.0)
+    - gRPC-RxLibrary (= 1.10.0)
     - Protobuf (~> 3.0)
-  - gRPC-RxLibrary (1.8.6)
-  - gRPC/Main (1.8.6):
-    - gRPC-Core (= 1.8.6)
-    - gRPC-RxLibrary (= 1.8.6)
-  - GTMSessionFetcher/Core (1.1.13)
-  - Hero (1.0.1)
-  - Kingfisher (4.6.1)
+  - gRPC-RxLibrary (1.10.0)
+  - gRPC/Main (1.10.0):
+    - gRPC-Core (= 1.10.0)
+    - gRPC-RxLibrary (= 1.10.0)
+  - GTMOAuth2 (1.1.6):
+    - GTMSessionFetcher (~> 1.1)
+  - GTMSessionFetcher (1.1.14):
+    - GTMSessionFetcher/Full (= 1.1.14)
+  - GTMSessionFetcher/Core (1.1.14)
+  - GTMSessionFetcher/Full (1.1.14):
+    - GTMSessionFetcher/Core (= 1.1.14)
+  - Hero (1.1.0)
+  - JSSAlertView (4.0.0)
+  - Kingfisher (4.6.4)
   - leveldb-library (1.20)
   - MBProgressHUD (1.1.0)
   - nanopb (0.3.8):
@@ -101,11 +116,13 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.5.0)
+  - SCLAlertView (0.8)
   - Static (2.3.0)
-  - YYKeyboardManager (1.0.1)
 
 DEPENDENCIES:
   - AZDialogView
+  - Crashlytics (~> 3.10.1)
+  - Fabric (~> 1.7.5)
   - FaveButton (~> 2.0.3)
   - Firebase/Auth
   - Firebase/Core
@@ -114,41 +131,48 @@ DEPENDENCIES:
   - Firebase/Messaging
   - Firebase/Storage
   - FontAwesome.swift
+  - GoogleSignIn
   - Hero (~> 1.0)
+  - JSSAlertView
   - Kingfisher
   - MBProgressHUD
+  - SCLAlertView
   - Static (~> 2.1)
-  - YYKeyboardManager
 
 SPEC CHECKSUMS:
   AZDialogView: 75a481ef11e78b047e9d7d212a83b76a8d91627f
-  BoringSSL: f3d6b8ce199b9c450a8cfc14895d07a2627fc232
+  BoringSSL: 32764dbaf5f5888cf51fbaa172a010126b41bcd4
+  Crashlytics: aee1a064cbbf99b32efa3f056a5f458d846bc8ff
+  Fabric: f8d42c893bb187326a7968b62abe55c36a987a46
   FaveButton: cfcbc5e73da159c4f916613da5687357b5bb4783
-  Firebase: 7d3b8cd837ad9fcd391657734c0d56dab8e9a5a3
-  FirebaseAnalytics: 388b630c15713f5dbf364071f5f3d6077fb52f4e
-  FirebaseAuth: bd2738c5c1e92b108ba5f7f7335908097a4e50bb
-  FirebaseCore: 2e0b98fb2d64ca8140136beff15772bdd14d2dd7
-  FirebaseDatabase: de4446507ccd3257fca37d16f40e1540324571fd
-  FirebaseFirestore: 713f0c555e7af5ac03d0fec0e2477c48857f4977
-  FirebaseInstanceID: 81df5805a08001e69138664bdd02c6719a9ac80f
-  FirebaseMessaging: dfdcd307c2382290a1e297a81d0f18370f5b1bcd
-  FirebaseStorage: 181bb543d39ee3c53e0558de7ba86b1286a0427f
+  Firebase: cc13dfab1038c8b45d7903e01fc690451d6d0b24
+  FirebaseAnalytics: 3dfae28d4a5e06f86c4fae830efc2ad3fadb19bc
+  FirebaseAuth: 147bf340a0706b44ca1753d6b41ebafd9687cfe6
+  FirebaseCore: b981f47e5254cbcfdeb483355300d743f6fcab2c
+  FirebaseDatabase: 5f0bc6134c5c237cf55f9e1249d406770a75eafd
+  FirebaseFirestore: 796df79c29cf8ecf806564f4d347665bdafa6ef0
+  FirebaseInstanceID: 8d20d890d65c917f9f7d9950b6e10a760ad34321
+  FirebaseMessaging: db0e01c52ef7e1f42846431273558107d084ede4
+  FirebaseStorage: 9a863a2bb96c406958eeff7c2f1dfa9f44c44a13
   FontAwesome.swift: b4e4c8ccbbecb12f9b592bc533ff237af3706667
+  GoogleSignIn: d9ef55b10f0aa401a5de2747f59b725e4b9732ac
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
-  gRPC: 40acd783b734b4d5fc012713090fc92166471fb8
-  gRPC-Core: d58a324ac8889bcc837dbfed4224ef718036926e
-  gRPC-ProtoRPC: 7f3da3b3a90ae851f774c4eec138a9428d54791b
-  gRPC-RxLibrary: c1a5f74a2a54022fc386e09fcdd76fc8febd73aa
-  GTMSessionFetcher: 5bb1eae636127de695590f50e7d248483eb891e6
-  Hero: cee286821578e170d8c0c9c9cda7897357401112
-  Kingfisher: 1f9157d9c02b380cbd0b7cc890161195164eb634
+  gRPC: f54f0e6d603052b4562447da442ce2ff30bcdacc
+  gRPC-Core: a030b1678ded49c88ec5ba7c90ee8ee5f47ec6e1
+  gRPC-ProtoRPC: 22712b23eb1bda656a59715fa5c1da0ea1493ea4
+  gRPC-RxLibrary: a41a4652d220f230ba1c0491a94ce2ee04c6180a
+  GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
+  GTMSessionFetcher: 390ea358e5a0d0133153806f744662dad933d06b
+  Hero: ce59e81c79390613d97b43da7179e2c5e1017e04
+  JSSAlertView: 118a2b17cae7561b514cf74c4b794baea9afd196
+  Kingfisher: 68498a706e46c2a050b0c9572f100e5db407f6e0
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 8a9838fba8dae3389230e1b7f8c104aa32389c03
+  SCLAlertView: 6a77bb2edfc65e04dbe57725546cb4107a506b85
   Static: 26486b4e5462a212b5e7b38c658d2752c413053f
-  YYKeyboardManager: ff53d2e80d1808567a7f004028bd200d9469a89f
 
-PODFILE CHECKSUM: a434c0a91f1f204360f9e437ec828f2e8da73e0b
+PODFILE CHECKSUM: b47c748fa00b95fe8461e7d54461358824d2d18f
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.4.0

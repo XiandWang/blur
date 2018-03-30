@@ -28,7 +28,6 @@ class NewFriendsRequestController: UITableViewController {
         super.viewDidLoad()
         navigationItem.title = "New Requests"
         tableView.register(NewRequestUserCell.self, forCellReuseIdentifier: cellId)
-        //tableView.separatorStyle = .none
         tableView.allowsSelection = false
         
         let swipe = UISwipeGestureRecognizer(target: self, action: #selector(navBack))

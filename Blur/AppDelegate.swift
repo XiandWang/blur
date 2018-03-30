@@ -9,35 +9,53 @@
 import UIKit
 import Firebase
 import UserNotifications
+import GoogleSignIn
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate, GIDSignInDelegate {
+    
 
     var window: UIWindow?
 
+    fileprivate func getEnvFile() -> String? {
+        #if DEBUG
+            return Bundle.main.path(forResource: "GoogleService-Info-dev", ofType: "plist")
+        #else
+            return Bundle.main.path(forResource: "GoogleService-Info-prod", ofType: "plist")
+        #endif
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        FirebaseApp.configure()
+        
+        let filePath = getEnvFile()
+        guard let fileopts = FirebaseOptions(contentsOfFile: filePath!)
+            else { exit(0) }
+
+        FirebaseApp.configure(options: fileopts)
+        
+       // FirebaseApp.configure()
+        GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
+        GIDSignIn.sharedInstance().delegate = self
+        
+                
         UINavigationBar.appearance().barTintColor = YELLOW_COLOR
         UINavigationBar.appearance().tintColor = .black
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: APP_FONT, size: 17) ?? UIFont.systemFont(ofSize: 17)], for: UIControlState.normal)
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor: UIColor.lightGray], for: .disabled)
+        
 
         window = UIWindow()
         window?.rootViewController = MainTabBarController()
         window?.tintColor = TINT_COLOR
-        
-        #if DEBUG
-            print("debug only man ___________________________________________")
-        #else
-            print("release only woman ___________________________________________")
-        #endif
-        
+
         registerNotifications(app: application)
+        
         return true
     }
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-        print("registered with fcm", fcmToken) 
+        //print("registered with fcm", fcmToken)
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -45,7 +63,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print(response.notification)
         
         let userInfo = response.notification.request.content.userInfo
         
@@ -63,27 +80,74 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
     
     
     fileprivate func registerNotifications(app: UIApplication) {
-        print("attempt to register")
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
         
         let options: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(options: options) { (granted, error) in
-            if let error = error {
-                print(error as Any)
-            }
-            
-            if granted {
-                print("granted")
-            } else {
-                print("denied")
+            if let _ = error {
+               // print(error as Any)
             }
         }
         app.registerForRemoteNotifications()
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("device token", deviceToken)
+        //print("device token", deviceToken)
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if let error = error {
+            AppHUD.progressHidden()
+            AppHUD.error(error.localizedDescription, isDarkTheme: true)
+            return
+        }
+        
+        guard let authentication = user.authentication else { return }
+        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
+                                                       accessToken: authentication.accessToken)
+        
+        Auth.auth().signIn(with: credential) { (user, error) in
+            if let error = error {
+                AppHUD.progressHidden()
+                AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                return
+            }
+            guard let uid = user?.uid else { return }
+            Database.database().reference().child(USERS_NODE).child(uid).observeSingleEvent(of: .value, with: { (snap) in
+                if !snap.exists() {
+                    let fcmToken = Messaging.messaging().fcmToken
+                    let time = Date().timeIntervalSince1970
+                    let childUpdates = ["/\(FRIENDS_NODE)/\(uid)/\(uid)": ["status": FriendStatus.added.rawValue, "updatedTime": time],
+                                        "/\(USERS_NODE)/\(uid)": ["createdTime": time, "fcmToken": fcmToken ?? ""]] as [String : Any]
+                    Database.database().reference().updateChildValues(childUpdates, withCompletionBlock: { (error, ref) in
+                        if let error = error  {
+                            AppHUD.progressHidden()
+                            AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                            return
+                        }
+                        NotificationCenter.default.post(name: NEW_GOOGLE_SIGN_UP_SUCCESS, object: nil, userInfo: ["userId": uid])
+                    })
+                } else {
+                    NotificationCenter.default.post(name: GOOGLE_LOGIN_SUCCESS, object: nil, userInfo: ["userId": uid])
+                }
+            })
+        }
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+        if let error = error {
+            AppHUD.progressHidden()
+            AppHUD.error(error.localizedDescription, isDarkTheme: true)
+        }
+    }
+    
+    @available(iOS 9.0, *)
+    func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any])
+        -> Bool {
+            let googleHandled = GIDSignIn.sharedInstance().handle(url, sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                     annotation: [:])
+            return googleHandled
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -121,12 +185,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         var appBadge = 0
         for item in tabBarItems {
             if let curBadgeStr = item.badgeValue, let curBadgeNum = Int(curBadgeStr), curBadgeNum >= 0 {
-                print("cur badge for \(item)", curBadgeStr)
                 appBadge += curBadgeNum
             }
         }
         UIApplication.shared.applicationIconBadgeNumber = appBadge > 0 ? appBadge : 0
     }
-
 }
 

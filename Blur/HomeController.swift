@@ -17,30 +17,32 @@ class HomeController: UITableViewController {
     var usersDict = [String: User]()
     var userIdsSorted = [String]()
     var isIntialLoading = true
-
+    var messageListener: ListenerRegistration?
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.register(HomeChatCell.self, forCellReuseIdentifier: cellId)
         setupNavigationItems()
+        
         listenForMessages()
+ 
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        //ImageCache.default.clearMemoryCache()
         // Reload data to refresh timestamps
         tableView.reloadData()
     }
-    
+
     func setupNavigationItems() {
+        self.navigationItem.title = "HidingChat Inbox"
         self.setupNavTitleAttr()
-        self.navigationItem.title = "HidingChats"
+
     }
-    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isIntialLoading {
@@ -49,13 +51,11 @@ class HomeController: UITableViewController {
         } else {
             let count = imageMessages.keys.count
             if count == 0 {
-                TableViewHelper.emptyMessage(message: "No recent chats", viewController: self)
-                return 0
+                TableViewHelper.emptyMessage(message: "No chats yet~", detail: "Start by going to the Friends tab and let the fun begin 🙈", viewController: self)
             } else {
-                view.backgroundColor = .white
                 tableView.backgroundView = nil
-                return count
             }
+            return count
         }
     }
     
@@ -69,22 +69,39 @@ class HomeController: UITableViewController {
         let messages = imageMessages[senderId]
         cell.messages = messages
         
+        cell.userAvatarView.tag = indexPath.row
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleShowUserProfile))
+        cell.userAvatarView.addGestureRecognizer(tap)
         return cell
+    }
+    
+    @objc func handleShowUserProfile(sender: UITapGestureRecognizer) {
+        guard let tag = sender.view?.tag else { return }
+        guard let userId = userIdsSorted[safe: tag], let user = usersDict[userId] else { return }
+        let userProfile = UserProfileController()
+        userProfile.user = user
+        self.navigationController?.pushViewController(userProfile, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72.0
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        let row = indexPath.row
-        let userId = self.userIdsSorted[row]
-        guard let messages = self.imageMessages[userId] else { return }
-        AppHUD.progress("Deleting...", isDarkTheme: true)
-        for message in messages {
-            FIRRef.getMessages().document(message.messageId).updateData([MessageSchema.IS_DELETED: true])
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            let row = indexPath.row
+            let userId = self.userIdsSorted[row]
+            guard let messages = self.imageMessages[userId] else { return }
+            AppHUD.progress("Deleting...", isDarkTheme: true)
+            for message in messages {
+                FIRRef.getMessages().document(message.messageId).updateData([MessageSchema.IS_DELETED: true])
+            }
+            AppHUD.progressHidden()
         }
-        AppHUD.progressHidden()
+        
+        
+        
+        return [delete]
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -94,53 +111,14 @@ class HomeController: UITableViewController {
             let messagesPageViewController = MessagesPageViewController(messages: messages, senderUser: user)
             messagesPageViewController.hidesBottomBarWhenPushed = true
             self.configureTransparentNav()
-            navigationController?.pushViewController(messagesPageViewController, animated: true)
+            
+            DispatchQueue.main.async {
+                self.navigationController?.pushViewController(messagesPageViewController, animated: true)
+            }
         }
     }
     
-//    fileprivate func configureTransparentNav() {
-//        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-//        navigationController?.navigationBar.shadowImage = UIImage()
-//        navigationController?.navigationBar.isTranslucent = true
-//        navigationController?.view.backgroundColor = .clear
-//        
-//        navigationItem.backBarButtonItem?.tintColor = .white
-//        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
-//    }
-    
-    func listenForMessages() {
-        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
-        FIRRef.getMessages().whereField(MessageSchema.RECEIVER_ID, isEqualTo: currentUserId)
-            .whereField(MessageSchema.IS_DELETED, isEqualTo: false)
-            .addSnapshotListener { (messagesSnap, error) in
-                self.isIntialLoading = false
-                messagesSnap?.documentChanges.forEach({ (docChange: DocumentChange) in
-                    if docChange.type == .added {
-                        guard let senderId = docChange.document.data()[MessageSchema.SENDER_ID] as? String else { return }
-                        guard let senderUser = docChange.document.data()[MessageSchema.SENDER_USER] as? [String: Any] else { return }
-                        self.addMessage(doc: docChange.document)
-                        self.sortUserIdsByMessageCreatedTime()
-//                        if self.usersDict[senderId] == nil {
-//                            self.getUser(uid: senderId) // async
-//                        } else {
-//                            DispatchQueue.main.async {
-//                                self.tableView?.reloadData()
-//                            }
-//                        }
-                        self.usersDict[senderId] = User(dictionary: senderUser, uid: senderId)
-                    } else if docChange.type == .removed {
-                        self.removeMessage(doc: docChange.document)
-                    } else if docChange.type == .modified {
-                        self.modifyMessage(doc: docChange.document)
-                    }
-                })
-                self.setBadge()
-                self.tableView.reloadData()
-            }
-        }
-    
-    func setBadge() {
+    fileprivate func setBadge() {
         var num = 0
         for (_, messages) in self.imageMessages {
             for m in messages {
@@ -150,8 +128,35 @@ class HomeController: UITableViewController {
             }
         }
         guard let app = UIApplication.shared.delegate as? AppDelegate else { return }
-
         app.setBadge(tabBarIndex: 0, num: num)
+    }
+}
+
+// MARK: database
+extension HomeController {
+    func listenForMessages() {
+        guard let currentUserId = Auth.auth().currentUser?.uid else { return }
+
+        self.messageListener = FIRRef.getMessages()
+            .whereField(MessageSchema.RECEIVER_ID, isEqualTo: currentUserId)
+            .whereField(MessageSchema.IS_DELETED, isEqualTo: false)
+            .addSnapshotListener { (messagesSnap, error) in
+                self.isIntialLoading = false
+                messagesSnap?.documentChanges.forEach({ (docChange: DocumentChange) in
+                    if docChange.type == .added {
+                        guard let senderId = docChange.document.data()[MessageSchema.SENDER_ID] as? String else { return }
+                        guard let senderUser = docChange.document.data()[MessageSchema.SENDER_USER] as? [String: Any] else { return }
+                        self.addMessage(doc: docChange.document)
+                        self.usersDict[senderId] = User(dictionary: senderUser, uid: senderId)
+                    } else if docChange.type == .removed {
+                        self.removeMessage(doc: docChange.document)
+                    } else if docChange.type == .modified {
+                        self.modifyMessage(doc: docChange.document)
+                    }
+                })
+                self.setBadge()
+                self.tableView.reloadData()
+        }
     }
     
     fileprivate func sortUserIdsByMessageCreatedTime() {
@@ -165,11 +170,9 @@ class HomeController: UITableViewController {
     
     fileprivate func addMessage(doc : DocumentSnapshot) {
         guard let docData = doc.data() else { return }
-        let senderId = docData[MessageSchema.SENDER_ID] as! String
+        guard let senderId = docData[MessageSchema.SENDER_ID] as? String else { return }
         let message = Message(dict: docData, messageId: doc.documentID)
-        let urls = [docData[MessageSchema.EDITED_IMAGE_URL] as! String, docData[MessageSchema.ORIGINAL_IMAGE_URL] as! String].map { URL(string: $0 )! }
-        let prefetcher = ImagePrefetcher(urls: urls)
-        prefetcher.start()
+        prefetchImages(message: message)
         if let _ = self.imageMessages[senderId] {
             self.imageMessages[senderId]?.append(message)
             // sort by date
@@ -179,6 +182,12 @@ class HomeController: UITableViewController {
         } else {
             self.imageMessages[senderId] = [message]
         }
+        self.sortUserIdsByMessageCreatedTime()
+    }
+    
+    fileprivate func prefetchImages(message: Message) {
+        let urls = [message.editedImageUrl, message.originalImageUrl].map { URL(string: $0 )! }
+        ImagePrefetcher(urls: urls).start()
     }
     
     fileprivate func removeMessage(doc: DocumentSnapshot) {
@@ -193,11 +202,8 @@ class HomeController: UITableViewController {
         if let count = self.imageMessages[senderId]?.count, count == 0 {
             self.imageMessages.removeValue(forKey: senderId)
         }
-    
-        sortUserIdsByMessageCreatedTime()
-
-        //self.tableView?.reloadData()
         
+        sortUserIdsByMessageCreatedTime()
     }
     
     fileprivate func modifyMessage(doc: DocumentSnapshot) {
@@ -211,22 +217,7 @@ class HomeController: UITableViewController {
         self.imageMessages[senderId]?[index] = Message(dict: docData, messageId: messageIdToModify)
         
         self.sortUserIdsByMessageCreatedTime()
-        //DispatchQueue.main.async {
-        //self.tableView?.reloadData()
-        //}
-    }
-    
-    func getUser(uid senderId: String) {
-        Database.getUser(uid: senderId) { (user, error) in
-            if let error = error {
-                AppHUD.error(error.localizedDescription, isDarkTheme: true)
-                return
-            } else if let user = user {
-                self.usersDict[senderId] = user
-                DispatchQueue.main.async {
-                    self.tableView?.reloadData()
-                }
-            }
-        }
     }
 }
+
+

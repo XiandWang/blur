@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0930"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -13,11 +13,11 @@
             buildForProfiling = "YES"
             buildForArchiving = "YES">
             <BuildableReference
-               BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'B6FC57452D7106F9915678DF45846F61'
-               BlueprintName = 'Static'
-               ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'Static.framework'>
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F87583C43AD68F80F9B03E0E80325898"
+               BlueprintName = "Static"
+               ReferencedContainer = "container:Pods.xcodeproj"
+               BuildableName = "Static.framework">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

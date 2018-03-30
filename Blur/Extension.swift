@@ -72,102 +72,7 @@ extension UIView {
     }
 }
 
-extension UIImage {
-    
-    /**
-     生成指定颜色大小为1*1的图片
-     
-     - parameter color: 颜色
-     
-     - returns: 图片
-     */
-    static func fromColor(_ color: UIColor) -> UIImage? {
-        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
-        UIGraphicsBeginImageContext(rect.size)
-        guard let context = UIGraphicsGetCurrentContext() else {
-            UIGraphicsEndImageContext()
-            return nil
-        }
-        context.setFillColor(color.cgColor)
-        context.fill(rect)
-        let img = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return img
-    }
-    
-    
-    /// 生成圆角图片
-    ///
-    /// - parameter imageSize:       图片大小
-    /// - parameter radius:          圆角大小
-    /// - parameter backgroundColor: 背景色
-    /// - parameter borderWidth:     边框宽度
-    /// - parameter borderColor:     边框颜色
-    ///
-    /// - returns: 指定大小的圆角图片
-    static func roundedCorner(imageSize: CGSize, radius: CGFloat, backgroundColor: UIColor, borderWidth: CGFloat, borderColor: UIColor) -> UIImage? {
-        let sizeToFit = imageSize
-        let halfBorderWidth = CGFloat(borderWidth / 2.0)
-        
-        UIGraphicsBeginImageContextWithOptions(sizeToFit, false, UIScreen.main.scale)
-        guard let context = UIGraphicsGetCurrentContext() else {
-            UIGraphicsEndImageContext()
-            return nil
-        }
-        
-        context.setLineWidth(borderWidth)
-        context.setStrokeColor(borderColor.cgColor)
-        context.setFillColor(backgroundColor.cgColor)
-        
-        let width = sizeToFit.width, height = sizeToFit.height
-        // 开始坐标右边开始
-        context.move(to: CGPoint(x: width - halfBorderWidth, y: radius + halfBorderWidth))
-        // 右下角
-        context.addArc(tangent1End: CGPoint(x: width - halfBorderWidth, y: height - halfBorderWidth), tangent2End: CGPoint(x: width - radius - halfBorderWidth, y: height - halfBorderWidth), radius: radius)
-        // 左下角
-        context.addArc(tangent1End: CGPoint(x: halfBorderWidth, y: height - halfBorderWidth), tangent2End: CGPoint(x: halfBorderWidth, y: height - radius - halfBorderWidth), radius: radius)
-        // 左上角
-        context.addArc(tangent1End: CGPoint(x: halfBorderWidth, y: halfBorderWidth), tangent2End: CGPoint(x: width - halfBorderWidth, y: halfBorderWidth), radius: radius)
-        // 右上角
-        context.addArc(tangent1End: CGPoint(x: width - halfBorderWidth, y: halfBorderWidth), tangent2End: CGPoint(x: width - halfBorderWidth, y: radius + halfBorderWidth), radius: radius)
-        
-        context.drawPath(using: .fillStroke)
-        let output = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return output
-    }
-    
-    /**
-     为当前图片用指定颜色填充后取得新的图片
-     
-     - parameter color: 填充色
-     
-     - returns: 新图片
-     */
-    func imageWithColor(_ color: UIColor) -> UIImage? {
-        guard let cgimage = cgImage else {
-            return nil
-        }
-        
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
-        guard let context = UIGraphicsGetCurrentContext() else {
-            UIGraphicsEndImageContext()
-            return nil
-        }
-        
-        context.translateBy(x: 0, y: size.height)
-        context.scaleBy(x: 1.0, y: -1.0)
-        context.setBlendMode(.normal)
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        context.clip(to: rect, mask: cgimage)
-        color.setFill()
-        context.fill(rect)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        
-        UIGraphicsEndImageContext()
-        return newImage
-    }
-    
+extension UIImage {  
     static func fixOrientationOfImage(image: UIImage) -> UIImage? {
         if image.imageOrientation == .up {
             return image
@@ -240,16 +145,16 @@ extension Date {
         let unit: String
         if secondsAgo < minute {
             quotient = secondsAgo
-            unit = "second"
+            unit = "s"
         } else if secondsAgo < hour {
             quotient = secondsAgo / minute
-            unit = "min"
+            unit = "m"
         } else if secondsAgo < day {
             quotient = secondsAgo / hour
-            unit = "hr"
+            unit = "h"
         } else if secondsAgo < week {
             quotient = secondsAgo / day
-            unit = "day"
+            unit = "d"
         } else if secondsAgo < month {
             quotient = secondsAgo / week
             unit = "week"
@@ -258,10 +163,197 @@ extension Date {
             unit = "month"
         }
         
-        return "\(quotient) \(unit)\(quotient == 1 ? "" : "s")"
+        return "\(quotient)\(unit)"
     }
 }
 
+extension UIView {
+    static func createShadow(for containerView: UIView, superview: UIView, radius: CGFloat?=CGFloat(10)) -> UIView {
+        let shadowView = UIView()
+        shadowView.backgroundColor = UIColor.white
+        shadowView.layer.shadowOffset = CGSize(width: 0, height: radius ?? 10)
+        shadowView.layer.masksToBounds = false
+        shadowView.layer.shadowOpacity = 0.2
+        shadowView.layer.shadowRadius = radius ?? 10
+        shadowView.layer.cornerRadius = containerView.layer.cornerRadius
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        
+        superview.insertSubview(shadowView, at: 0)
+        shadowView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.bottomAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        return shadowView
+    }
+    
+    static func addShadow(for view: UIView, radius: CGFloat?=CGFloat(10)) {
+        view.layer.shadowOffset = CGSize(width: 0, height: radius ?? 10)
+        view.layer.masksToBounds = false
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowRadius = radius ?? 10.0
+        view.layer.shadowColor = UIColor.black.cgColor
+    }
+}
+
+extension CALayer {
+    func addBorder(edge: UIRectEdge, color: UIColor, thickness: CGFloat) {
+        let border = CALayer()
+        
+        switch edge {
+        case UIRectEdge.top:
+            border.frame = CGRect.init(x: 0, y: 0, width: frame.width, height: thickness)
+            break
+        case UIRectEdge.bottom:
+            border.frame = CGRect.init(x: 0, y: frame.height - thickness, width: frame.width, height: thickness)
+            break
+        case UIRectEdge.left:
+            border.frame = CGRect.init(x: 0, y: 0, width: thickness, height: frame.height)
+            break
+        case UIRectEdge.right:
+            border.frame = CGRect.init(x: frame.width - thickness, y: 0, width: thickness, height: frame.height)
+            break
+        default:
+            break
+        }
+        
+        border.backgroundColor = color.cgColor;
+        
+        self.addSublayer(border)
+    }
+}
+
+extension UIBarButtonItem {
+    
+    static func narrowButtonItem(image: UIImage?, target: AnyObject?, action: Selector) -> UIBarButtonItem {
+        let (item, _) = narrowButtonItem2(image: image, target: target, action: action)
+        return item
+    }
+    
+    static func narrowButtonItem2(image: UIImage?, target: AnyObject?, action: Selector) -> (UIBarButtonItem, UIButton) {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 30, height: 44))
+        button.setImage(image, for: UIControlState())
+        button.addTarget(target, action: action, for: .touchUpInside)
+        return (UIBarButtonItem(customView: button), button)
+    }
+    
+    static func fixNavigationSpacer() -> UIBarButtonItem {
+        let item = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil);
+        item.width = -20;
+        return item
+    }
+}
+
+extension Collection {
+    
+    /// Returns the element at the specified index if it is within bounds, otherwise nil.
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
+
+extension UnicodeScalar {
+    
+    var isEmoji: Bool {
+        
+        switch value {
+        case 0x1F600...0x1F64F, // Emoticons
+        0x1F300...0x1F5FF, // Misc Symbols and Pictographs
+        0x1F680...0x1F6FF, // Transport and Map
+        0x1F1E6...0x1F1FF, // Regional country flags
+        0x2600...0x26FF,   // Misc symbols
+        0x2700...0x27BF,   // Dingbats
+        0xFE00...0xFE0F,   // Variation Selectors
+        0x1F900...0x1F9FF,  // Supplemental Symbols and Pictographs
+        65024...65039, // Variation selector
+        8400...8447: // Combining Diacritical Marks for Symbols
+            return true
+            
+        default: return false
+        }
+    }
+    
+    var isZeroWidthJoiner: Bool {
+        
+        return value == 8205
+    }
+}
+
+extension String {
+    
+    var glyphCount: Int {
+        
+        let richText = NSAttributedString(string: self)
+        let line = CTLineCreateWithAttributedString(richText)
+        return CTLineGetGlyphCount(line)
+    }
+    
+    var isSingleEmoji: Bool {
+        
+        return glyphCount == 1 && containsEmoji
+    }
+    
+    var containsEmoji: Bool {
+        
+        return unicodeScalars.contains { $0.isEmoji }
+    }
+    
+    var containsOnlyEmoji: Bool {
+        
+        return !isEmpty
+            && !unicodeScalars.contains(where: {
+                !$0.isEmoji
+                    && !$0.isZeroWidthJoiner
+            })
+    }
+    
+    // The next tricks are mostly to demonstrate how tricky it can be to determine emoji's
+    // If anyone has suggestions how to improve this, please let me know
+    var emojiString: String {
+        
+        return emojiScalars.map { String($0) }.reduce("", +)
+    }
+    
+    var emojis: [String] {
+        
+        var scalars: [[UnicodeScalar]] = []
+        var currentScalarSet: [UnicodeScalar] = []
+        var previousScalar: UnicodeScalar?
+        
+        for scalar in emojiScalars {
+            
+            if let prev = previousScalar, !prev.isZeroWidthJoiner && !scalar.isZeroWidthJoiner {
+                
+                scalars.append(currentScalarSet)
+                currentScalarSet = []
+            }
+            currentScalarSet.append(scalar)
+            
+            previousScalar = scalar
+        }
+        
+        scalars.append(currentScalarSet)
+        
+        return scalars.map { $0.map{ String($0) } .reduce("", +) }
+    }
+    
+    fileprivate var emojiScalars: [UnicodeScalar] {
+        
+        var chars: [UnicodeScalar] = []
+        var previous: UnicodeScalar?
+        for cur in unicodeScalars {
+            
+            if let previous = previous, previous.isZeroWidthJoiner && cur.isEmoji {
+                chars.append(previous)
+                chars.append(cur)
+                
+            } else if cur.isEmoji {
+                chars.append(cur)
+            }
+            
+            previous = cur
+        }
+        
+        return chars
+    }
+}
 
 
 

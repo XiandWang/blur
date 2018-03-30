@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Foundation
 
 struct ControlItemInfo {
     let image: UIImage

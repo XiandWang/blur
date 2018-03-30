@@ -13,7 +13,7 @@ class NewRequestUserCell : UITableViewCell {
     var user: User? {
         didSet {
             if let user = user {
-                usernameLabel.text = user.username
+                usernameLabel.text = "@" + user.username
                 fullNameLabel.text = user.fullName
                 if let imgUrl = user.profileImgUrl {
                     userImageView.kf.setImage(with: URL(string: imgUrl))
@@ -28,16 +28,16 @@ class NewRequestUserCell : UITableViewCell {
     
     let usernameLabel : UILabel = {
         let lb = UILabel()
-        lb.font = BOLD_FONT
         lb.numberOfLines = 1
+        lb.font = TEXT_FONT
+        lb.textColor = .lightGray
         lb.text = ""
         return lb
     }()
     
     let fullNameLabel : UILabel = {
         let lb = UILabel()
-        lb.font = TEXT_FONT
-        lb.textColor = .lightGray
+        lb.font = BOLD_FONT
         lb.numberOfLines = 0
         lb.text = ""
         return lb
@@ -75,9 +75,9 @@ class NewRequestUserCell : UITableViewCell {
     
     func setupConstraints() {
         userImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
-        usernameLabel.anchor(top: nil, left: userImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 20)
-        usernameLabel.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor, constant: -10).isActive = true
-        fullNameLabel.anchor(top: usernameLabel.bottomAnchor, left: userImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 20)
+        fullNameLabel.anchor(top: nil, left: userImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 20)
+        fullNameLabel.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor, constant: -10).isActive = true
+        usernameLabel.anchor(top: fullNameLabel.bottomAnchor, left: userImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 5, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 20)
         acceptButton.anchor(top: nil, left: nil, bottom: nil, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 90, height: 38)
         acceptButton.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor).isActive = true
         

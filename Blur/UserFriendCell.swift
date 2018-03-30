@@ -13,7 +13,7 @@ class UserFriendCell : UITableViewCell {
     var user: User? {
         didSet {
             if let user = user {
-                usernameLabel.text = user.username
+                usernameLabel.text = user.fullName
                 if let imgUrl = user.profileImgUrl {
                     userImageView.kf.setImage(with: URL(string: imgUrl))
                 } else {
@@ -27,7 +27,7 @@ class UserFriendCell : UITableViewCell {
     
     let usernameLabel : UILabel = {
         let lb = UILabel()
-        lb.font = UIFont(name: APP_FONT_BOLD, size: 16)
+        lb.font = BOLD_FONT
         lb.numberOfLines = 1
         lb.text = ""
         return lb

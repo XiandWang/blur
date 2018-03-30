@@ -11,13 +11,16 @@ import Firebase
 import Kingfisher
 
 class SenderImageMessageController: UIViewController, UINavigationControllerDelegate {
+    fileprivate let controlPanelHeight: CGFloat = 96.0
+    fileprivate let controlSidePadding: CGFloat = UIScreen.main.bounds.width / 4.0 - 35
+    
     let fireStoreRef = Firestore.firestore()
     var listener: ListenerRegistration?
-    private let controlSidePadding: CGFloat = UIScreen.main.bounds.width / 4.0 - 35
-    let heartImg = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 44, height: 44))
     
-    private var isShowingEdited = true
-    private var isShowingControlPanel = true
+    fileprivate let heartImg = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 44, height: 44))
+    
+    fileprivate var isShowingEdited = true
+    fileprivate var isShowingControlPanel = true
     
     var likeType: String? {
         didSet {
@@ -28,30 +31,33 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
     var receiverUser: User? {
         didSet {
             if let receiverUser = receiverUser {
-                self.navigationItem.title = "Sent to \(receiverUser.username)"
+                var title = "Sent to \(receiverUser.username)"
+                if let message = self.message {
+                    title += " (\(message.createdTime.timeAgoDisplay()))"
+                }
+                self.navigationItem.title = title
             }
         }
     }
-    
+ 
     var message: Message? {
         didSet {
             if let message = message {
                 let editedUrl = URL(string: message.editedImageUrl)
                 editedImageView.kf.indicatorType = .activity
                 editedImageView.kf.setImage(with: editedUrl, placeholder:#imageLiteral(resourceName: "image_bg_512"), options: nil, progressBlock: nil, completionHandler: nil)
+                
                 let originalUrl = URL(string: message.originalImageUrl)
                 originalImageView.kf.indicatorType = .activity
                 originalImageView.kf.setImage(with: originalUrl, placeholder:#imageLiteral(resourceName: "image_bg_512"), options: nil, progressBlock: nil, completionHandler: nil)
               
                 setupControls()
-                
                 let receiverId = message.receiverId
                 getUserData(uid: receiverId)
                 
                 self.listener = FIRRef.getMessageLikes().document(message.messageId)
                     .addSnapshotListener({ (snap, error) in
                         if let snapData = snap?.data() {
-                            print(snapData)
                             if let type = snapData["type"] as? String {
                                 self.likeType = type
                             }
@@ -61,6 +67,8 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                 if !message.caption.trimmingCharacters(in: .whitespaces).isEmpty {
                     setupCaptionLabel()
                 }
+                
+                
             }
         }
     }
@@ -73,27 +81,44 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         guard let caption = message?.caption else { return }
         captionLabel.text = caption
         view.addSubview(captionLabel)
-        let rect = NSString(string: caption).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font:UIFont.systemFont(ofSize:CGFloat(14))], context: nil).size
-        print(rect)
+        let rect = NSString(string: caption).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font: TEXT_FONT], context: nil).size
+
         let height = max(rect.height + 16.0, 40)
         captionLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: height)
         captionLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
-    func setupLikeImage() {
-        print("************************debugging")
-        view.addSubview(likeButton)
+     fileprivate func setupLikeImage() {
+        controlPanel.addSubview(likeButton)
         likeButton.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 44, height: 44)
-        likeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        likeButton.centerXAnchor.constraint(equalTo: controlPanel.centerXAnchor).isActive = true
         likeButton.centerYAnchor.constraint(equalTo: viewImageControl.centerYAnchor).isActive = true
     }
     
     @objc func handleShowLikeType() {
-        print("like tapped", "😊")
         guard let likeType = self.likeType else { return }
         AppHUD.custom(likeType, img: heartImg)
         return
     }
+    
+    let editedImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.kf.indicatorType = .activity
+        return iv
+    }()
+    
+    let originalImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.kf.indicatorType = .activity
+        return iv
+    }()
+    
+    var originalScrollView: UIScrollView = {
+        let sv = UIScrollView()
+        return sv
+    }()
     
     let captionLabel: UILabel = {
         let lb = UILabel()
@@ -105,28 +130,19 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         return lb
     }()
     
+    lazy var controlPanel: UIView = {
+        let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight, width: UIScreen.main.bounds.width, height: self.controlPanelHeight)
+        let panel = UIView(frame: frame)
+        panel.backgroundColor = .clear
+        
+        return panel
+    }()
+    
     lazy var likeButton: UIButton = {
         let bt = UIButton()
         bt.setImage(heartImg, for: .normal)
         bt.addTarget(self, action: #selector(handleShowLikeType), for: .touchUpInside)
         return bt
-    }()
-    
-    let editedImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
-    
-    let originalImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
-    
-    var originalScrollView: UIScrollView = {
-        let sv = UIScrollView()
-        return sv
     }()
     
     lazy var allowAccessControl: ControlItemView = {
@@ -143,7 +159,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
     lazy var viewImageControl: ControlItemView = {
         let size = CGSize(width: 44, height: 44)
         let blue = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
-        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .eye, textColor: blue, size: size), backgroundColor: UIColor.rgb(red: 144, green: 202, blue: 249, alpha: 0.9), textColor: blue, itemText: "View")
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .eye, textColor: blue, size: size), backgroundColor: UIColor.rgb(red: 144, green: 202, blue: 249, alpha: 0.9), textColor: blue, itemText: "Reveal")
         let viewControl = ControlItemView(target: self, action: #selector(handleRotateImage))
         viewControl.itemInfo = info
         viewControl.alpha = 0
@@ -157,30 +173,180 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         
         self.view.backgroundColor = .black
         setupScrollView()
-        setupImageView()
+        setupEditedImageView()
         AnimationHelper.perspectiveTransform(for: view)
         setupGestures()
         setupControls()
     }
     
-    func setupControls() {
-        view.addSubview(allowAccessControl)
-        allowAccessControl.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: controlSidePadding, paddingBottom: 40, paddingRight: 0, width: 60, height: 60)
-        
-        view.addSubview(viewImageControl)
-        viewImageControl.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 40, paddingRight: controlSidePadding, width: 60, height: 60)
-        
-        UIView.animate(withDuration: 1, delay: 0.3, options: [.showHideTransitionViews], animations: {
-            self.showControlViews()
-        }, completion: nil)
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-        self.navigationController?.navigationBar.barTintColor = YELLOW_COLOR
-        self.navigationController?.navigationBar.isTranslucent = false
+//    override func viewWillDisappear(_ animated: Bool) {
+//        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+//        self.navigationController?.navigationBar.barTintColor = YELLOW_COLOR
+//        self.navigationController?.navigationBar.isTranslucent = false
+//        
+//        super.viewWillDisappear(animated)
+//    }
+    
+    override func willMove(toParentViewController parent: UIViewController?) {
+        if parent == nil {
+            self.navigationController?.navigationBar.alpha = 1
+            self.navigationController?.navigationBar.isTranslucent = false
+            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+        }
+    }
+    
+    fileprivate func setupGestures() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPanel))
+        view.addGestureRecognizer(tapRecognizer)
         
-        super.viewWillDisappear(animated)
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(navBack))
+        rightSwipe.direction = .right
+        
+        view.addGestureRecognizer(rightSwipe)
+    }
+    
+    fileprivate func setupEditedImageView() {
+        view.addSubview(editedImageView)
+        editedImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+    }
+    
+    fileprivate func setupControls() {
+        addControlsToControlPanel(leftControl: allowAccessControl, rightControl: viewImageControl)
+    }
+    
+    fileprivate func addControlsToControlPanel(leftControl: ControlItemView, rightControl: ControlItemView) {
+        view.addSubview(controlPanel)
+        controlPanel.addSubview(leftControl)
+        controlPanel.addSubview(rightControl)
+        
+        leftControl.anchor(top: controlPanel.topAnchor, left: controlPanel.leftAnchor, bottom: nil, right: nil, paddingTop: 4, paddingLeft: controlSidePadding, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+        rightControl.anchor(top: controlPanel.topAnchor, left: nil, bottom: nil, right: controlPanel.rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: 0, paddingRight: controlSidePadding, width: 50, height: 50)
+        
+        UIView.animate(withDuration: 0.5) {
+            leftControl.alpha = 1
+            rightControl.alpha = 1
+        }
+    }
+    
+    fileprivate func hideControlViews() {
+        for v in controlPanel.subviews {
+            v.alpha = 0
+        }
+        self.navigationController?.navigationBar.alpha = 0
+    }
+    
+    fileprivate func showControlViews() {
+        for v in controlPanel.subviews {
+            v.alpha = 1
+        }
+        self.navigationController?.navigationBar.alpha = 1
+    }
+
+    fileprivate func animateRotatingImage(toOriginal: Bool) {
+        if toOriginal {
+            isShowingEdited = false
+            UIView.animateKeyframes(
+                withDuration: 2.0, delay: 0, options: .calculationModeCubic,
+                animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/9) {
+                        self.hideControlViews()
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
+                        self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
+                        self.captionLabel.layer.transform = AnimationHelper.yRotation(-.pi / 2)
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
+                        self.originalScrollView.layer.transform = AnimationHelper.yRotation(0.0)
+                        self.refreshOriginalImageView()
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
+                        self.showControlViews()
+                    }
+            }, completion: nil)
+            
+        } else {
+            isShowingEdited = true
+            UIView.animateKeyframes(
+                withDuration: 2.0, delay: 0, options: .calculationModeCubic,
+                animations: {
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/9) {
+                        self.hideControlViews()
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
+                        self.originalScrollView.layer.transform = AnimationHelper.yRotation(.pi / 2)
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
+                        self.editedImageView.layer.transform = CATransform3DIdentity
+                        self.captionLabel.layer.transform = CATransform3DIdentity
+                    }
+                    UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
+                        self.showControlViews()
+                    }
+            }, completion: nil)
+        }
+    }
+}
+
+//MARK: database
+extension SenderImageMessageController {
+    fileprivate func allowAccess(messageId: String, receiverUser: User) {
+        FIRRef.getMessages().document(messageId).updateData([MessageSchema.ALLOW_ORIGINAL: true]) { (error) in
+            if let error = error {
+                AppHUD.progressHidden()
+                AppHUD.error(error.localizedDescription, isDarkTheme: false)
+                return
+            }
+            self.message?.allowOriginal = true
+            guard let message = self.message else { return }
+            CurrentUser.getUser(completion: { (senderUser, error) in
+                if let senderUser = senderUser {
+                    NotificationHelper.createMessageNotification(messageId: messageId, message: message,  receiverUserId: receiverUser.uid, type: .allowAccess, senderUser: senderUser, text: nil, completion: { (error) in
+                        if error == nil {
+                            AppHUD.progressHidden()
+                            AppHUD.success("Access allowed", isDarkTheme: false)
+                            FIRRef.getHasAllowedAccess().document(messageId).setData(["createdTime": Date()])
+                        } else  {
+                            AppHUD.progressHidden()
+                            AppHUD.error(error?.localizedDescription, isDarkTheme: false)
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
+    fileprivate func getUserData(uid senderId: String) {
+        Database.getUser(uid: senderId) { (user, error) in
+            if let error = error {
+                AppHUD.error(error.localizedDescription, isDarkTheme: false)
+                return
+            } else if let user = user {
+                self.receiverUser = user
+            }
+        }
+    }
+}
+
+//MARK: scroll view
+extension SenderImageMessageController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return originalImageView
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        let Ws = scrollView.frame.size.width - scrollView.contentInset.left - scrollView.contentInset.right
+        let Hs = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom
+        let W = originalImageView.frame.size.width
+        let H = originalImageView.frame.size.height
+        
+        var rct = originalImageView.frame
+        rct.origin.x = max((Ws - W) / 2, 0)
+        rct.origin.y = max((Hs - H) / 2, 0)
+        originalImageView.frame = rct
     }
     
     fileprivate func setupScrollView() {
@@ -235,29 +401,14 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         originalScrollView.setZoomScale(originalScrollView.minimumZoomScale, animated: animated)
     }
     
-    func refreshOriginalImageView() {   
+    func refreshOriginalImageView() {
         self.resetOriginalImageViewFrame()
         self.resetOriginalZoomScale(animated: false)
     }
-    
-    fileprivate func setupGestures() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPanel))
-        view.addGestureRecognizer(tapRecognizer)
-        
-        let rightSwipe = UISwipeGestureRecognizer(target: self, action: #selector(navBack))
-        rightSwipe.direction = .right
-        
-        view.addGestureRecognizer(rightSwipe)
-    }
-    
-    override func willMove(toParentViewController parent: UIViewController?) {
-        if parent == nil {
-            self.navigationController?.navigationBar.alpha = 1
-            self.navigationController?.navigationBar.isTranslucent = false
-            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-        }
-    }
-    
+}
+
+//MARK: actions
+extension SenderImageMessageController {
     @objc func navBack() {
         self.navigationController?.popViewController(animated: true)
     }
@@ -269,7 +420,6 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
             AppHUD.success("Already allowed", isDarkTheme: false)
             return
         }
-        AppHUD.progress(nil, isDarkTheme: false)
         self.allowAccessControl.itemButton.isEnabled = false
         
         FIRRef.getHasAllowedAccess().document(messageId).getDocument { (snap, error) in
@@ -283,49 +433,13 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                 AppHUD.success("Already allowed", isDarkTheme: false)
                 return
             } else {
-                print("_______________________________ allow access")
                 self.allowAccess(messageId: messageId, receiverUser: receiverUser)
             }
         }
     }
     
-    fileprivate func allowAccess(messageId: String, receiverUser: User) {
-        FIRRef.getMessages().document(messageId).updateData([MessageSchema.ALLOW_ORIGINAL: true]) { (error) in
-            if let error = error {
-                AppHUD.progressHidden()
-                AppHUD.error(error.localizedDescription, isDarkTheme: false)
-                return
-            }
-            print("_________________________________ before current user")
-            CurrentUser.getUser(completion: { (senderUser, error) in
-                if let senderUser = senderUser {
-                    NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: receiverUser.uid, type: .allowAccess, senderUser: senderUser, text: nil, completion: { (error) in
-                        if error == nil {
-                            AppHUD.progressHidden()
-                            AppHUD.success("Access allowed", isDarkTheme: false)
-                            FIRRef.getHasAllowedAccess().document(messageId).setData(["createdTime": Date()])
-                        } else  {
-                            AppHUD.progressHidden()
-                            AppHUD.error(error?.localizedDescription, isDarkTheme: false)
-                        }
-                    })
-                }
-            })
-        }
-    }
-    
-    fileprivate func hideControlViews() {
-        for v in [allowAccessControl, viewImageControl, likeButton] as [UIView] {
-            v.alpha = 0
-        }
-        self.navigationController?.navigationBar.alpha = 0
-    }
-    
-    fileprivate func showControlViews() {
-        for v in [allowAccessControl, viewImageControl, likeButton] as [UIView] {
-            v.alpha = 1
-        }
-        self.navigationController?.navigationBar.alpha = 1
+    @objc func handleRotateImage() {
+        animateRotatingImage(toOriginal: isShowingEdited)
     }
     
     @objc func toggleControlPanel() {
@@ -351,87 +465,5 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
                 }
             })
         }
-    }
-    
-    fileprivate func setupImageView() {
-        view.addSubview(editedImageView)
-        editedImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-    }
-    
-    @objc func handleRotateImage() {
-        animateRotatingImage(toOriginal: isShowingEdited)
-    }
-
-    fileprivate func animateRotatingImage(toOriginal: Bool) {
-        if toOriginal {
-            isShowingEdited = false
-            UIView.animateKeyframes(
-                withDuration: 2.0, delay: 0, options: .calculationModeCubic,
-                animations: {
-                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/9) {
-                        self.hideControlViews()
-                    }
-                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
-                        self.editedImageView.layer.transform = AnimationHelper.yRotation(-.pi / 2)
-                        self.captionLabel.layer.transform = AnimationHelper.yRotation(-.pi / 2)
-                    }
-                    UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
-                        self.originalScrollView.layer.transform = AnimationHelper.yRotation(0.0)
-                        self.refreshOriginalImageView()
-                    }
-                    UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
-                        self.showControlViews()
-                    }
-            }, completion: nil)
-            
-        } else {
-            isShowingEdited = true
-            UIView.animateKeyframes(
-                withDuration: 2.0, delay: 0, options: .calculationModeCubic,
-                animations: {
-                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/9) {
-                        self.hideControlViews()
-                    }
-                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1/2) {
-                        self.originalScrollView.layer.transform = AnimationHelper.yRotation(.pi / 2)
-                    }
-                    UIView.addKeyframe(withRelativeStartTime: 1/2, relativeDuration: 1/2) {
-                        self.editedImageView.layer.transform = CATransform3DIdentity
-                        self.captionLabel.layer.transform = CATransform3DIdentity
-                    }
-                    UIView.addKeyframe(withRelativeStartTime: 9/10, relativeDuration: 1/10) {
-                        self.showControlViews()
-                    }
-            }, completion: nil)
-        }
-    }
-    
-    func getUserData(uid senderId: String) {
-        Database.getUser(uid: senderId) { (user, error) in
-            if let error = error {
-                AppHUD.error(error.localizedDescription, isDarkTheme: false)
-                return
-            } else if let user = user {
-                self.receiverUser = user
-            }
-        }
-    }
-}
-
-extension SenderImageMessageController: UIScrollViewDelegate {
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return originalImageView
-    }
-    
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        let Ws = scrollView.frame.size.width - scrollView.contentInset.left - scrollView.contentInset.right
-        let Hs = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom
-        let W = originalImageView.frame.size.width
-        let H = originalImageView.frame.size.height
-        
-        var rct = originalImageView.frame
-        rct.origin.x = max((Ws - W) / 2, 0)
-        rct.origin.y = max((Hs - H) / 2, 0)
-        originalImageView.frame = rct
     }
 }

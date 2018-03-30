@@ -8,30 +8,44 @@
 
 import Firebase
 
-
 class CurrentUser {
     static var user: User?
+    static var hasShownInviteDialog = false
+    static var numInvites = 5
     
     static func getUser(completion: @escaping ((User?, Error?) -> ())) {
         if let user = self.user {
-            print("user is cached")
             completion(user, nil)
             return
         } else {
             guard let uid = Auth.auth().currentUser?.uid  else {
-                print("Error auth uid")
                 completion(nil, NSError())
                 return
             }
+            
             Database.getUser(uid: uid, completion: { (user, error) in
                 if let user = user {
-                    print("user is not cached")
                     self.user = user
                     completion(user, nil)
                 } else if let error = error {
                     completion(nil, error)
                 }
             })
+        }
+    }
+    
+    
+    static func getInvitesNum() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        Database.database().reference().child("invites").child(uid).observeSingleEvent(of: .value) { (snap) in
+            if snap.exists() {
+                guard let dict = snap.value as? [String: Any] else { return }
+                guard let num = dict["num"] as? Int else { return }
+                self.numInvites = num
+            } else {
+                self.numInvites = 0
+            }
         }
     }
 }

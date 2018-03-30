@@ -24,7 +24,6 @@ class SettingsController: TableViewController {
     var user: User?
 
     convenience init(user: User) {
-        print("))))))))))))))))))))))))))))))))))))((((((((((((((((((((((((__________________-")
         self.init(style: .grouped)
         self.user = user
     }
@@ -42,25 +41,42 @@ class SettingsController: TableViewController {
                 Row(text: "Profile Image", selection: { [unowned self] in
                     self.updateProfileImage()
                     }, accessory: .view(self.userImageView)),
-                Row(text: "Username", detailText: user.username,
+                Row(text: "Username", detailText: "@" + user.username,
                     cellClass: Value1Cell.self),
                 Row(text: "Full Name", detailText: user.fullName, selection: { [unowned self] in
                     let editFullnameController = EditFullNameController()
                     editFullnameController.user = self.user
                     self.navigationController?.pushViewController(editFullnameController, animated: true)
                     }, accessory: .disclosureIndicator, cellClass: Value1Cell.self),
-                ], footer: nil),
+                Row(text: "My Compliments", selection: { [unowned self] in
+                        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+                        self.navigationController?.pushViewController(ComplimentsController(), animated: true)
+                    }, accessory: .disclosureIndicator)
+                ],  footer: nil),
             Section(header: "Privacy", rows:[
                 Row(text: "Blocked", selection: { [unowned self] in
                     self.navigationController?.pushViewController(BlockedController(), animated: true)
                 }, accessory:.disclosureIndicator)
-            ], footer: nil)
+            ], footer: nil),
+            Section(header: "Contact", rows:[
+                Row(text: "Contact", selection: { [unowned self] in
+                    self.navigationController?.pushViewController(AppContactController(), animated: true)
+                    }, accessory:.disclosureIndicator)
+                ], footer: nil)
         ]
         if let url = user.profileImgUrl {
             userImageView.kf.setImage(with: URL(string: url))
         }
         
         setupNavigationItem()
+        
+        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(navback))
+        swipe.direction = .right
+        view.addGestureRecognizer(swipe)
+    }
+    
+    @objc func navback() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     fileprivate func setupNavigationItem() {
@@ -74,7 +90,6 @@ class SettingsController: TableViewController {
         alert.addAction(UIAlertAction(title: "Update", style: .default, handler: { (_) in
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
-            imagePicker.allowsEditing = true
             imagePicker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
             self.present(imagePicker, animated: true, completion: nil)
         }))
@@ -88,15 +103,38 @@ class SettingsController: TableViewController {
         alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
             do {
                 CurrentUser.user = nil
+                self.stopListeners()
                 try Auth.auth().signOut()
-                let navController = UINavigationController(rootViewController: LoginController())
+                let navController = UINavigationController(rootViewController: ChooseLoginSignupController())
                 self.present(navController, animated: true, completion: nil)
             } catch let signOutError {
-                AppHUD.error(signOutError.localizedDescription, isDarkTheme: true)
+                AppHUD.error("Signout error: " + signOutError.localizedDescription, isDarkTheme: true)
             }
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
+    }
+    
+    fileprivate func stopListeners() {
+        guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else {
+            return
+        }
+        
+        guard let controllers = mainTabBarController.viewControllers else { return }
+        guard let homeNavController = controllers[0] as? UINavigationController else { return }
+        guard let homeController = homeNavController.viewControllers[0] as? HomeController else { return }
+        guard let notiNavController = controllers[2] as? UINavigationController else { return }
+        guard let notiController = notiNavController.viewControllers[0] as? NotificationController else { return }
+        
+        notiController.notificationsListener?.remove()
+        homeController.messageListener?.remove()
+
+        guard let friendsNavController = controllers[1] as? UINavigationController else { return }
+        guard let friendsController = friendsNavController.viewControllers[0] as? FriendsController else { return }
+        friendsController.friendRequestsRef?.removeAllObservers()
+        friendsController.friendsRef?.removeAllObservers()
+        
+    
     }
 }
 
@@ -107,9 +145,9 @@ extension TableViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         // You can get UITableViewDelegate celfunctions forwarded, even though the `DataSource` instance is the true delegate
         // ..
-//        cell.textLabel?.font = UIFont(name: APP_FONT, size: 16)
-//        cell.textLabel?.textColor = .black
-//        cell.detailTextLabel?.font = TEXT_FONT
+        cell.textLabel?.font = UIFont(name: APP_FONT, size: 16)
+        cell.textLabel?.textColor = .black
+        cell.detailTextLabel?.font = TEXT_FONT
     }
 }
 

@@ -16,8 +16,14 @@ struct User {
     
     init(dictionary: [String: Any], uid: String) {
         self.uid = uid
-        self.username = dictionary["username"] as? String ?? "(NO_USERNAME)"
-        self.fullName = dictionary["fullName"] as? String ?? "(NO_FULL_NAME)"
-        self.profileImgUrl =  dictionary["profileImgUrl"] as? String
+        self.username = dictionary[UserSchema.USERNAME] as? String ?? "~NO_USERNAME~"
+        self.fullName = dictionary[UserSchema.FULL_NAME] as? String ?? "~NO_FULL_NAME~"
+        self.profileImgUrl =  dictionary[UserSchema.PROFILE_IMG_URL] as? String
     }
+}
+
+struct UserSchema {
+    static let USERNAME = "username"
+    static let FULL_NAME = "fullName"
+    static let PROFILE_IMG_URL = "profileImgUrl"
 }

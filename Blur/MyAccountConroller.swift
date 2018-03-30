@@ -23,7 +23,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         collectionView?.register(MyAccountImageCell.self, forCellWithReuseIdentifier: cellId)
         navigationItem.title = "Me"
         setupNavTitleAttr()
-        setupLogoutButton()
+        setupSettingsBarButton()
         getCurrentUser()
         getRecentMessages()
         
@@ -31,7 +31,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         NotificationCenter.default.addObserver(self, selector: #selector(changeFullName), name: USER_CHANGED, object: nil)
     }
     
-    fileprivate func setupLogoutButton() {
+    fileprivate func setupSettingsBarButton() {
         let settings = UIImage.fontAwesomeIcon(name: .cog, textColor: .black, size: CGSize(width: 30, height: 44))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: settings, style: .plain, target: self, action: #selector(handleShowSettings))
         navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
@@ -39,7 +39,9 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
     
     @objc func handleShowSettings() {
         guard let user = self.user else { return }
-        self.navigationController?.pushViewController( SettingsController(user: user), animated: true)
+
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationController?.pushViewController(SettingsController(user: user), animated: true)
     }
     
     @objc func changeFullName(notification: NSNotification) {
@@ -49,7 +51,6 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
     }
     
     @objc func addNewMessage(notification: NSNotification) {
-        print("hey notifications work")
         guard let message = notification.userInfo?["message"] as? Message else { return }
         self.messages.insert(message, at: 0)
         DispatchQueue.main.async {
@@ -64,14 +65,16 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         messages = messages.filter { (message) -> Bool in
             return message.createdTime >= yesterday
         }
-        collectionView?.reloadData()
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! MyAccountHeader
         header.user = user
         
-        header.userProfileImageView.heroID = "imageViewHeroId"
+        header.userProfileImageView.hero.id = "imageViewHeroId"
         header.userProfileImageView.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleShowImage))
         header.userProfileImageView.addGestureRecognizer(tap)
@@ -80,7 +83,6 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
     }
     
     @objc func handleShowImage() {
-        print("************************debugging")
         let imageController = SimpleImageController()
         guard let profileImg = self.user?.profileImgUrl else { return }
         self.present(imageController, animated: true) {
@@ -106,7 +108,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
             let label = UILabel()
             label.font = UIFont(name: APP_FONT_BOLD, size: 20)
             label.textColor = TEXT_GRAY
-            label.text = "No images sent yet~"
+            label.text = "No chats sent yet~"
             label.textAlignment = .center
             collectionView.backgroundView = label
             label.center = collectionView.center
@@ -147,8 +149,7 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
                     self.collectionView?.reloadData()
                 }
             } else if let error = error {
-                print(error)
-                AppHUD.error("Error retrieving user",  isDarkTheme: true)
+                AppHUD.error("Error retrieving user: \(error.localizedDescription)",  isDarkTheme: true)
             }
         }
     }
@@ -162,7 +163,6 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
         guard let currentUserId = Auth.auth().currentUser?.uid else { return }
         FIRRef.getMessages().whereField(MessageSchema.SENDER_ID, isEqualTo: currentUserId).whereField(MessageSchema.CREATED_TIME, isGreaterThan: yesterday).getDocuments { (messagesSnap, error) in
             if let error = error {
-                print(error.localizedDescription)
                 AppHUD.error(error.localizedDescription,  isDarkTheme: true)
                 return
             }
@@ -170,8 +170,8 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
             for doc in messageDocs {
                 let message = Message(dict: doc.data(), messageId: doc.documentID)
                 self.messages.insert(message, at: 0)
-                self.collectionView?.reloadData()
             }
+            self.collectionView?.reloadData()
         }
     }
 }

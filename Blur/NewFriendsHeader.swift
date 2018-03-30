@@ -28,7 +28,7 @@ class NewFriendsHeader : UITableViewCell {
     
     let newFriendsLabel : UILabel = {
         let lb = UILabel()
-        lb.font = UIFont(name: APP_FONT_BOLD, size: 16)
+        lb.font = BOLD_FONT
         lb.numberOfLines = 1
         lb.text = "New Friends"
         return lb

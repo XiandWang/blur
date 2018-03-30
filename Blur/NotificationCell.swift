@@ -10,34 +10,24 @@ import UIKit
 import Firebase
 import Kingfisher
 
-class NotificationCell: UICollectionViewCell {
-    
-    var message: Message? {
-        didSet {
-            if let message = message {
-                messageEditedImageView.kf.setImage(with: URL(string: message.editedImageUrl))
-            } else {
-                 messageEditedImageView.kf.setImage(with: nil)
-            }
-        }
-    }
-//    var user: User? {
-//        didSet {
-//            if let user = user, let profileImgUrl = user.profileImgUrl {
-//                userProfileImageView.kf.setImage(with: URL(string: profileImgUrl))
-//            } else {
-//                userProfileImageView.kf.setImage(with: nil)
-//            }
-//        }
-//    }
+class MessageNotificationCell: UICollectionViewCell {
     
     var notification: MessageNotification? {
         didSet {
             if let notification = notification {
-                getMessage()
                 if let profileImgUrl = notification.user.profileImgUrl {
                     userProfileImageView.kf.setImage(with: URL(string: profileImgUrl))
                 }
+                
+                
+                if notification.type == NotificationType.askForChat.rawValue || notification.type == NotificationType.compliment.rawValue {
+                    messageEditedImageView.isHidden = true
+                } else {
+                    if let url = notification.message?.editedImageUrl  {
+                        messageEditedImageView.kf.setImage(with: URL(string: url))
+                    }
+                }
+
                 
                 messageLabel.attributedText = buildText(notification: notification)
                 
@@ -46,26 +36,13 @@ class NotificationCell: UICollectionViewCell {
                 } else {
                     backgroundColor = .white
                 }
+                timestampLabel.text = notification.createdTime.timeAgoDisplay()
             } else {
                 userProfileImageView.kf.setImage(with: nil)
             }
         }
     }
-    
-    fileprivate func getMessage() {
-        guard let notification = notification else { return }
-        FIRRef.getMessages().document(notification.messageId).getDocument { (snap, error) in
-            if let error = error {
-                AppHUD.error(error.localizedDescription,  isDarkTheme: true)
-                return
-            }
-            
-            if let snap = snap, let snapData = snap.data() {
-                self.message = Message(dict: snapData, messageId: snap.documentID)
-            }
-        }
-    }
-    
+
     let userProfileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -91,6 +68,15 @@ class NotificationCell: UICollectionViewCell {
         return lb
     }()
     
+    let timestampLabel: UILabel = {
+        let lb = UILabel()
+        lb.textAlignment = .left
+        lb.textColor = .lightGray
+        lb.numberOfLines = 0
+        lb.font = SMALL_TEXT_FONT
+        return lb
+    }()
+    
     let divider: UIView = {
         let v = UIView()
         v.backgroundColor = .lightGray
@@ -103,14 +89,17 @@ class NotificationCell: UICollectionViewCell {
         addSubview(messageEditedImageView)
         addSubview(messageLabel)
         addSubview(userProfileImageView)
+        addSubview(timestampLabel)
+        addSubview(divider)
         
-        userProfileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 16, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
-        messageEditedImageView.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 16, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 40, height: 40)
+        userProfileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
+        messageEditedImageView.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 40, height: 40)
         messageLabel.anchor(top: nil, left: userProfileImageView.rightAnchor, bottom: nil, right: messageEditedImageView.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 2, width: 0, height: 66)
         messageLabel.centerYAnchor.constraint(equalTo: userProfileImageView.centerYAnchor).isActive = true
         
-        addSubview(divider)
         divider.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
+        
+        timestampLabel.anchor(top: nil, left: userProfileImageView.rightAnchor, bottom: bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 1, paddingRight: 0, width: 0, height: 0)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -119,7 +108,7 @@ class NotificationCell: UICollectionViewCell {
     
     fileprivate func buildText(notification: MessageNotification) -> NSMutableAttributedString {
         let type = notification.type
-        let attributedText = NSMutableAttributedString(string: notification.user.username, attributes: [NSAttributedStringKey.font: TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.black])
+        let attributedText = NSMutableAttributedString(string: notification.user.username, attributes: [NSAttributedStringKey.font: BOLD_FONT, NSAttributedStringKey.foregroundColor: UIColor.black])
         var text = " "
         if type == NotificationType.allowAccess.rawValue {
             text = " allows you to access the image. "
@@ -135,9 +124,12 @@ class NotificationCell: UICollectionViewCell {
             }
         } else if type == NotificationType.likeMessage.rawValue {
             text = " likes your image. "
+        } else if type == NotificationType.compliment.rawValue {
+            text = " compliments you. "
+        } else if type == NotificationType.askForChat.rawValue {
+            text = " asks you for a chat. "
         }
         attributedText.append(NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.black]))
-        attributedText.append(NSAttributedString(string: notification.createdTime.timeAgoDisplay(), attributes: [NSAttributedStringKey.font: SMALL_TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
         return attributedText
     }
 }

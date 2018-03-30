@@ -48,5 +48,4 @@ class BadgeHelper {
 
             return badgeImage
         }
-    
 }

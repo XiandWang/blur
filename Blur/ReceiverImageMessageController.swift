@@ -11,17 +11,18 @@ import Kingfisher
 import Firebase
 import FaveButton
 import AZDialogView
+import JSSAlertView
+import SCLAlertView
 
 class ReceiverImageMessageController : UIViewController {
-    private let controlPanelHeight: CGFloat = 80.0
+    private let controlPanelHeight: CGFloat = 96.0
     private let controlPanelAlpha: CGFloat = 1.0
     private let controlSidePadding: CGFloat = UIScreen.main.bounds.width / 4.0 - 35
     
-    let placeholder = UIImage.fontAwesomeIcon(name: .image, textColor: .white, size: CGSize(width: 30, height: 30))
-
-    let fireStoreRef = Firestore.firestore()
+    private let fireStoreRef = Firestore.firestore()
     private var isShowingEdited = true
     private var isShowingControlPanel = true
+    
     var senderUser: User?
     var photoIndex : Int?
     
@@ -29,7 +30,7 @@ class ReceiverImageMessageController : UIViewController {
         didSet {
             guard let message = message else { return }
             guard let sender = senderUser else { return }
-            pageController?.navigationItem.title = "\(sender.username)(\(message.createdTime.timeAgoDisplay()))"
+            pageController?.navigationItem.title = "@\(sender.username) • \(message.createdTime.timeAgoDisplay())"
         }
     }
     
@@ -38,8 +39,6 @@ class ReceiverImageMessageController : UIViewController {
             if let message = message {
                 let editedUrl = URL(string: message.editedImageUrl)
                 editedImageView.kf.indicatorType = .activity
-                
-                
                 editedImageView.kf.setImage(with: editedUrl, placeholder:#imageLiteral(resourceName: "image_bg_512"), options: nil, progressBlock: nil, completionHandler: nil)
                 
                 let originalUrl = URL(string: message.originalImageUrl)
@@ -55,20 +54,9 @@ class ReceiverImageMessageController : UIViewController {
         }
     }
     
-    fileprivate func setupCaptionLabel() {
-        guard let caption = message?.caption else { return }
-        captionLabel.text = caption
-        view.addSubview(captionLabel)
-        let rect = NSString(string: caption).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font:UIFont.systemFont(ofSize:CGFloat(14))], context: nil).size
-        let height = max(rect.height + 16.0, 40)
-        captionLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: height)
-        captionLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-    }
-    
-    lazy var editedImageView : UIImageView = {
+    let editedImageView : UIImageView = {
         let iv = UIImageView()
         iv.kf.indicatorType = .activity
-        iv.image = self.placeholder
         iv.contentMode = .scaleAspectFit
         return iv
     }()
@@ -89,80 +77,83 @@ class ReceiverImageMessageController : UIViewController {
     let captionLabel: UILabel = {
         let lb = UILabel()
         lb.textAlignment = .center
-        lb.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        lb.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         lb.textColor = .white
         lb.numberOfLines = 0
-        lb.font = UIFont.systemFont(ofSize:CGFloat(14))
+        lb.font = SMALL_TEXT_FONT
         return lb
     }()
     
     lazy var controlPanel: UIView = {
-        let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight, width: UIScreen.main.bounds.width, height: self.controlPanelHeight)
+        let padding = 0.0
+        let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight , width: UIScreen.main.bounds.width, height: self.controlPanelHeight)
         let panel = UIView(frame: frame)
         panel.backgroundColor = .clear
 
         return panel
     }()
     
+    private func getSafePadding() -> CGFloat {
+        if #available(iOS 11.0, *) {
+            if let bottomPadding = UIApplication.shared.keyWindow?.safeAreaInsets.bottom,
+                bottomPadding > 0 {
+                return 20
+            }
+        }
+        
+        return 0
+    }
+    
     let showOriginalControl: ControlItemView = {
-        let size = CGSize(width: 44, height: 44)
-        let green = UIColor.rgb(red: 56, green: 142, blue: 60, alpha: 1)
-        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .thumbsUp, textColor: green, size: size), backgroundColor: UIColor.rgb(red: 165, green: 214, blue: 167, alpha: 0.9), textColor: green, itemText: "Yes, show")
+        let size = ControlItemView.IMAGE_SIZE
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .thumbsUp, textColor: GREEN_COLOR, size: size), backgroundColor: GREEN_COLOR_LIGHT, textColor: GREEN_COLOR, itemText: "Reveal")
         let control = ControlItemView(target: self, action: #selector(handleShowOriginalImage))
         control.itemInfo = info
         control.alpha = 0
-        
         return control
     }()
     
     let rejectControl: ControlItemView = {
-        let size = CGSize(width: 44, height: 44)
-        let red = UIColor.rgb(red: 211, green: 47, blue: 47, alpha: 1)
-        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .thumbsDown, textColor: red, size: size), backgroundColor: UIColor.rgb(red: 239, green: 154, blue: 154, alpha: 0.9), textColor: red, itemText: "No, reject")
+        let size = ControlItemView.IMAGE_SIZE
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .thumbsDown, textColor: RED_COLOR, size: size), backgroundColor: RED_COLOR_LIGHT, textColor: RED_COLOR, itemText: "Reject")
         let control = ControlItemView(target: self, action: #selector(handleRejectImage))
         control.itemInfo = info
         control.alpha = 0
-        
         return control
     }()
     
     let requestControl: ControlItemView = {
-        let size = CGSize(width: 44, height: 44)
-        let purple = UIColor.rgb(red: 81, green: 45, blue: 168, alpha: 1)
-        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .user, textColor: purple, size: size), backgroundColor:  UIColor.rgb(red: 179, green: 157, blue: 219, alpha: 0.9), textColor: purple, itemText: "Request Access")
+        let size = ControlItemView.IMAGE_SIZE
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .unlockAlt, textColor: BLUE_COLOR, size: size), backgroundColor:  BLUE_COLOR_LIGHT.withAlphaComponent(0.9), textColor: BLUE_COLOR, itemText: "Request Access")
         let control = ControlItemView(target: self, action: #selector(handleRequestAccess))
         control.itemInfo = info
         control.alpha = 0
-        
         return control
     }()
     
     let viewImageControl: ControlItemView = {
-        let size = CGSize(width: 44, height: 44)
-        let blue = UIColor.rgb(red: 25, green: 118, blue: 210, alpha: 1)
-        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .eye, textColor: blue, size: size), backgroundColor: UIColor.rgb(red: 144, green: 202, blue: 249, alpha: 0.9), textColor: blue, itemText: "View")
+        let size = ControlItemView.IMAGE_SIZE
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .eye, textColor: BLUE_COLOR, size: size), backgroundColor: BLUE_COLOR_LIGHT, textColor: BLUE_COLOR, itemText: "Reveal")
         let viewControl = ControlItemView(target: self, action: #selector(handleRotateImage))
         viewControl.itemInfo = info
         viewControl.alpha = 0
-        
         return viewControl
     }()
     
     lazy var likeControl: ControlItemView = {
         let size = CGSize(width: 38, height: 38)
-        let pink = UIColor.rgb(red: 194, green: 24, blue: 91, alpha: 1)
-        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .heart, textColor: pink, size: size), backgroundColor: UIColor.rgb(red: 244, green: 143, blue: 177, alpha: 0.9), textColor: pink, itemText: "Like")
+        let info = ControlItemInfo(image: UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: size), backgroundColor: PINK_COLOR_LIGHT, textColor: PINK_COLOR, itemText: "Like")
         let viewControl = ControlItemView(target: self, action: #selector(handleLikeImage))
-        let likeBtn = FaveButton(frame:  CGRect(x: 0, y: 0, width: 50, height: 50), faveIconNormal: UIImage.fontAwesomeIcon(name: .heart, textColor: pink, size: size))
+        let likeBtn = FaveButton(frame:  CGRect(x: 0, y: 0, width: 50, height: 50), faveIconNormal: UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: size))
         likeBtn.dotSecondColor = RED_COLOR
         likeBtn.dotFirstColor = YELLOW_COLOR
-        likeBtn.selectedColor = pink
+        likeBtn.selectedColor = PINK_COLOR
         viewControl.itemButton = likeBtn
         viewControl.addSubview(viewControl.itemButton)
         viewControl.itemButton.isSelected  = self.message?.isLiked ?? false
     
         viewControl.itemButton.addTarget(self, action: #selector(handleLikeImage), for: .touchUpInside)
-        viewControl.itemButton.layer.cornerRadius = 25
+        viewControl.itemButton.layer.cornerRadius = ControlItemView.BUTTON_WIDTH / 2
         viewControl.itemButton.layer.masksToBounds = true
         
         viewControl.itemInfo = info
@@ -170,78 +161,12 @@ class ReceiverImageMessageController : UIViewController {
         viewControl.setupConstraints()
         if let liked = self.message?.isLiked {
             viewControl.itemButton.isSelected  = liked
-            if liked {
-                viewControl.isUserInteractionEnabled = false
-            }
+            viewControl.isUserInteractionEnabled = !liked
         } else {
             viewControl.itemButton.isSelected = false
         }
        return viewControl
     }()
-    
-    @objc func handleLikeImage() {
-        guard let messageId = message?.messageId else { return }
-        guard let receiverUid = self.senderUser?.uid else { return }
-        guard let senderId = Auth.auth().currentUser?.uid else { return }
-        if let liked = message?.isLiked, liked {
-            AppHUD.success("Already liked", isDarkTheme: false)
-            return
-        }
-        self.likeControl.itemButton.isEnabled = false
-        let dialog = AZDialogViewController(title: "Like type?", message: nil, verticalSpacing: -1, buttonSpacing: 10, sideSpacing: 20, titleFontSize: 22, messageFontSize: 0, buttonsHeight: 50, cancelButtonHeight: 0, fontName: "AvenirNext-Medium", boldFontName: "AvenirNext-DemiBold")
-        dialog.dismissWithOutsideTouch = false
-        dialog.blurBackground = false
-        dialog.imageHandler = { (imageView) in
-            imageView.image = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 50, height: 50))
-            imageView.backgroundColor = PINK_COLOR_LIGHT
-            imageView.contentMode = .center
-            return true //must return true, otherwise image won't show.
-        }
-        
-        dialog.buttonStyle = { (button,height,position) in
-            button.setTitleColor(PURPLE_COLOR, for: .normal)
-            button.titleLabel?.font = TEXT_FONT
-            button.layer.masksToBounds = true
-            button.layer.borderColor = PURPLE_COLOR.cgColor
-        }
-        dialog.addAction(AZDialogAction(title: "😍Nice") { (dialog) -> (Void) in
-            self.likeImage(messageId: messageId, senderId: senderId, receiverId: receiverUid, likeType: "😍Nice")
-            dialog.dismiss()
-        })
-        dialog.addAction(AZDialogAction(title: "😂Creative") { (dialog) -> (Void) in
-            self.likeImage(messageId: messageId,  senderId: senderId, receiverId: receiverUid, likeType: "😂Creative")
-            dialog.dismiss()
-        })
-        dialog.addAction(AZDialogAction(title: "😐Underwhelmed") { (dialog) -> (Void) in
-            self.likeImage(messageId: messageId,  senderId: senderId, receiverId: receiverUid, likeType: "😐Underwhelmed")
-            dialog.dismiss()
-        })
-        dialog.show(in: self)
-    }
-    
-    fileprivate func likeImage(messageId: String, senderId: String, receiverId: String, likeType: String) {
-        let batch = fireStoreRef.batch()
-        let likeDoc = FIRRef.getMessageLikes().document(messageId)
-        batch.setData(["type": likeType, "createdTime": Date(), "senderId": senderId, "receiverId": receiverId], forDocument: likeDoc)
-        
-        let messageDoc = FIRRef.getMessages().document(messageId)
-        batch.updateData([MessageSchema.IS_LIKED: true], forDocument: messageDoc)
-        
-        batch.commit { error in
-            if let error = error {
-                AppHUD.error(error.localizedDescription, isDarkTheme: false)
-                return
-            }
-            self.message?.isLiked = true
-            AppHUD.success("Liked", isDarkTheme: false)
-            CurrentUser.getUser(completion: { (curUser, error) in
-                if let curUser = curUser {
-                    NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: receiverId, type: .likeMessage, senderUser: curUser, text: nil, completion: { (_) in
-                    })
-                }
-            })
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -255,9 +180,7 @@ class ReceiverImageMessageController : UIViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPanel))
         view.addGestureRecognizer(tapRecognizer)
         
-        let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(navBack))
-        swipeRecognizer.direction = .down
-        view.addGestureRecognizer(swipeRecognizer)
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -272,7 +195,7 @@ class ReceiverImageMessageController : UIViewController {
                 .document(message.messageId).updateData([MessageSchema.IS_DELETED: true], completion: { (error) in
                     if let err = error {
                         AppHUD.progressHidden()
-                        AppHUD.error(err.localizedDescription, isDarkTheme: false)
+                        AppHUD.error("Deleting Chat error: " + err.localizedDescription, isDarkTheme: false)
                         return
                     }
                     AppHUD.progressHidden()
@@ -281,23 +204,42 @@ class ReceiverImageMessageController : UIViewController {
         }
     }
     
-    @objc func navBack() {
-        if let nav = navigationController {
-            nav.isNavigationBarHidden = false
-            nav.popViewController(animated: true)
-        } else {
-            self.dismiss(animated: true, completion: nil)
-        }
-        
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
-//    override func willMove(toParentViewController parent: UIViewController?) {
-//        if parent == nil {
-//            self.navigationController?.navigationBar.alpha = 1
-//            self.navigationController?.navigationBar.isTranslucent = false
-//            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-//        }
-//    }
+    fileprivate func setupCaptionLabel() {
+        guard let caption = message?.caption else { return }
+        captionLabel.text = caption
+        view.addSubview(captionLabel)
+        let rect = NSString(string: caption).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font: SMALL_TEXT_FONT], context: nil).size
+        let height = max(rect.height + 16.0, 40)
+//        captionLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: height)
+//        captionLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        captionLabel.frame = CGRect(x: 0, y: view.frame.height / 2.0, width: view.frame.width, height: height)
+        
+        captionLabel.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handleCaptionPan(sender:))))
+        captionLabel.isUserInteractionEnabled = true
+    }
+    
+    var captionLabelPoint: CGPoint?
+    
+    @objc func handleCaptionPan(sender: UIPanGestureRecognizer) {
+    
+        let p = sender.translation(in: self.view)
+        if sender.state == .began {
+            self.captionLabelPoint = self.captionLabel.center
+            
+        }
+        guard let point = self.captionLabelPoint else { return }
+        
+        self.captionLabel.center = CGPoint(x: point.x, y: point.y + p.y)
+        
+        UIView.animate(withDuration: 0.33, delay: 0, options: .curveEaseOut, animations: {
+            self.captionLabel.center.x -= self.view.frame.width
+        }, completion: nil)
+    }
     
     fileprivate func setupScrollView() {
         originalScrollView = UIScrollView(frame: view.bounds)
@@ -312,6 +254,8 @@ class ReceiverImageMessageController : UIViewController {
         } else {
             self.automaticallyAdjustsScrollViewInsets = false
         }
+        
+        self.automaticallyAdjustsScrollViewInsets = false
         originalScrollView.addSubview(originalImageView)
         view.addSubview(originalScrollView)
         originalScrollView.delegate = self
@@ -321,41 +265,18 @@ class ReceiverImageMessageController : UIViewController {
         refreshOriginalImageView()
     }
     
-    @objc func toggleControlPanel() {
-        view.isUserInteractionEnabled = false
-        if isShowingControlPanel {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
-                self.hideControlViews()
-                self.hideCaptionLabel()
-            }) { (bool) in
-                self.view.isUserInteractionEnabled = true
-                if bool {
-                    self.isShowingControlPanel = false
-                }
-            }
-        } else {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
-                self.showControlViews()
-                self.showCaptionLabel()
-            }, completion: { (bool) in
-                self.view.isUserInteractionEnabled = true
-                if bool {
-                    self.isShowingControlPanel = true
-                }
-            })
-        }
-    }
-    
     fileprivate func setupControlPanel(message: Message) {
         view.addSubview(controlPanel)
     
         if !message.isAcknowledged {
-            addControlsToControlPanel(leftControl: showOriginalControl, rightControl: rejectControl)
+            addControlsToControlPanel(leftControl: rejectControl, rightControl: showOriginalControl)
         } else {
-            if message.allowOriginal {
+            if message.allowOriginal && message.isOriginalViewed {
                 addControlsToControlPanel(leftControl: likeControl, rightControl: viewImageControl)
+            } else if message.allowOriginal && !message.isOriginalViewed {
+                addControlsToControlPanel(leftControl: rejectControl, rightControl: showOriginalControl)
             } else {
-                addControlsToControlPanel(leftControl: requestControl, rightControl: rejectControl)
+                addControlsToControlPanel(leftControl: rejectControl, rightControl: requestControl)
             }
         }
     }
@@ -409,8 +330,8 @@ class ReceiverImageMessageController : UIViewController {
     
     fileprivate func rotateToOriginalFirstTime() {
         view.isUserInteractionEnabled = false
-        self.likeControl.frame = self.showOriginalControl.frame
-        self.viewImageControl.frame = self.rejectControl.frame
+        self.likeControl.frame = self.rejectControl.frame
+        self.viewImageControl.frame = self.showOriginalControl.frame
         UIView.animateKeyframes(
             withDuration: 2.0, delay: 0, options: .calculationModeCubic,
             animations: {
@@ -493,24 +414,58 @@ class ReceiverImageMessageController : UIViewController {
             })
         }
     }
+    
+    fileprivate func showRejectMoodDialog() {
+        let dialog = AZDialogViewController(title: "Rejection mood?", message: nil,  titleFontSize: 22, buttonsHeight: 50)
+        dialog.dismissWithOutsideTouch = false
+        dialog.blurBackground = false
+        dialog.buttonStyle = { (button,height,position) in
+            button.setTitleColor(PINK_COLOR, for: .normal)
+            button.titleLabel?.font = TEXT_FONT
+            button.layer.masksToBounds = true
+            button.layer.borderColor = PINK_COLOR.cgColor
+        }
+        
+        for mood in ["😔😔😔", "😤😤😤", "😜😜😜", "😎😎😎"] {
+            dialog.addAction(AZDialogAction(title: mood) { (dialog) -> (Void) in
+                self.rejectImageMessage(shouldSendNotification: true, additionalText: mood)
+                dialog.dismiss()
+            })
+        }
+        dialog.addAction(AZDialogAction(title: "No mood") { (dialog) -> (Void) in
+            self.rejectImageMessage(shouldSendNotification: true, additionalText: "")
+            dialog.dismiss()
+        })
+        dialog.show(in: self)
+    }
 }
 
 extension ReceiverImageMessageController {
-    @objc func handleShowOriginalImage() {
-        guard let allowOriginal = message?.allowOriginal else { return }
-        if allowOriginal {
-            self.originalImageView.isHidden = false
-            self.acceptImageMessage(isOriginalViewed: true)
-            self.rotateToOriginalFirstTime()
-        } else {
-            AppHUD.custom("Not Allowed at current time. Try requesting access.", img: #imageLiteral(resourceName: "tongue"))
-            self.acceptImageMessage(isOriginalViewed: false)
-            self.controlPanel.addSubview(requestControl)
-            requestControl.alpha = 1
-            requestControl.frame = showOriginalControl.frame
-            UIView.transition(from: showOriginalControl, to: requestControl, duration: 0.5, options: .transitionFlipFromTop, completion: nil)
-            
+    fileprivate func likeImage(messageId: String, senderId: String, receiverId: String, likeType: String) {
+        let batch = fireStoreRef.batch()
+        let likeDoc = FIRRef.getMessageLikes().document(messageId)
+        batch.setData(["type": likeType, "createdTime": Date(), "senderId": senderId, "receiverId": receiverId], forDocument: likeDoc)
+        
+        let messageDoc = FIRRef.getMessages().document(messageId)
+        batch.updateData([MessageSchema.IS_LIKED: true], forDocument: messageDoc)
+        
+        batch.commit { error in
+            if let error = error {
+                AppHUD.error("Like error: " + error.localizedDescription, isDarkTheme: false)
+                return
+            }
+            self.message?.isLiked = true
+            AppHUD.success("Liked", isDarkTheme: false)
         }
+        guard let message = self.message else { return }
+        CurrentUser.getUser(completion: { (curUser, error) in
+            if let curUser = curUser {
+                NotificationHelper.createMessageNotification(messageId: messageId, message: message, receiverUserId: receiverId, type: .likeMessage, senderUser: curUser, text: nil, completion: { (_) in
+                })
+            }
+        })
+        
+        Analytics.logEvent(LIKE_TYPE, parameters: ["type": likeType])
     }
     
     func rejectImageMessage(shouldSendNotification: Bool, additionalText: String?) {
@@ -521,33 +476,33 @@ extension ReceiverImageMessageController {
             .document(messageId).updateData([MessageSchema.IS_DELETED: true, MessageSchema.IS_ACKNOWLEDGED: true, MessageSchema.ACKNOWLEDGE_TYPE: "Reject"]) { (error) in
                 self.view.isUserInteractionEnabled = true
                 if let error = error {
-                    AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                    AppHUD.error("Failed to reject: " + error.localizedDescription, isDarkTheme: true)
                     return
                 }
-    
-                if shouldSendNotification {
-                    guard let notificationUser = self.senderUser else { return }
-                    CurrentUser.getUser(completion: { (curUser, error) in
-                        if let curUser = curUser {
-                            NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: notificationUser.uid, type: .rejectMessage, senderUser: curUser, text: additionalText, completion: { (error) in
-                                if let error = error {
-                                    print(error.localizedDescription)
-                                }
-                            })
+                
+              
+        }
+        if shouldSendNotification {
+            guard let message = self.message else { return }
+            guard let notificationUser = self.senderUser else { return }
+            CurrentUser.getUser(completion: { (curUser, error) in
+                if let curUser = curUser {
+                    NotificationHelper.createMessageNotification(messageId: messageId, message: message, receiverUserId: notificationUser.uid, type: .rejectMessage, senderUser: curUser, text: additionalText, completion: { (error) in
+                        if let error = error {
+                            AppHUD.error("Failed to send rejection: " + error.localizedDescription, isDarkTheme: true)
                         }
                     })
-                    
                 }
-                self.navigationController?.popToRootViewController(animated: true)
+            })
         }
+        
+        Analytics.logEvent(REJECT_MOOD, parameters: ["mood": additionalText ?? ""])
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
-    func acceptImageMessage(isOriginalViewed: Bool) {
+    func updateAllowOriginalTime( allowOriginalTime: Date) {
         guard let messageId = message?.messageId  else { return }
-        message?.isAcknowledged = true
-        let data = [MessageSchema.IS_ACKNOWLEDGED: true,
-                    MessageSchema.ACKNOWLEDGE_TYPE: "Accept",
-                    MessageSchema.IS_ORIGINAL_VIEWED: isOriginalViewed] as [String : Any]
+        let data = [MessageSchema.ALLOW_ORIGINAL_TIME: allowOriginalTime]
         FIRRef.getMessages()
             .document(messageId).updateData(data) { (error) in
                 if let error = error {
@@ -557,9 +512,147 @@ extension ReceiverImageMessageController {
         }
     }
     
-    @objc func handleRejectImage() {
-        let dialog = AZDialogViewController(title: "Reject", message: "Do you want to send your rejection back?",  titleFontSize: 22, messageFontSize: 15, buttonsHeight: 50)
+    func acceptImageMessage(isOriginalViewed: Bool, allowOriginalTime: Date?=nil) {
+        guard let messageId = message?.messageId  else { return }
+        self.message?.isAcknowledged = true
+        self.message?.isOriginalViewed = isOriginalViewed
+        var data = [MessageSchema.IS_ACKNOWLEDGED: true,
+                    MessageSchema.ACKNOWLEDGE_TYPE: "Accept",
+                    MessageSchema.IS_ORIGINAL_VIEWED: isOriginalViewed] as [String : Any]
+        if let time =  allowOriginalTime {
+            data[MessageSchema.ALLOW_ORIGINAL_TIME] = time
+        }
+        FIRRef.getMessages()
+            .document(messageId).updateData(data) { (error) in
+                if let error = error {
+                    AppHUD.error("Error connecting database: " + error.localizedDescription,  isDarkTheme: false)
+                    return
+                }
+        }
+    }
+    
+    fileprivate func requestAccess(messageId: String, receiverUserId: String, mood: String) {
+        guard let message = self.message else { return }
+        CurrentUser.getUser { (curUser, error) in
+            if let curUser = curUser {
+                NotificationHelper.createMessageNotification(messageId: messageId, message: message, receiverUserId: receiverUserId, type: .requestAccess, senderUser: curUser, text: mood, completion: { (error) in
+                    if let error = error {
+                        AppHUD.error("Error sending request: \(error.localizedDescription). Please try again.", isDarkTheme: false)
+                        return
+                    }
+                })
+                FIRRef.getHasSentRequest().document(messageId).setData(["createdTime": Date()])
+                AppHUD.success("Request sent", isDarkTheme: false)
+            } else if let error = error {
+                AppHUD.error("Error retrieving current user \(error.localizedDescription).", isDarkTheme: false)
+            }
+        }
         
+        Analytics.logEvent(REQUEST_MOOD, parameters: ["mood": mood])
+    }
+}
+
+// MARK: actions
+extension ReceiverImageMessageController {
+    @objc func handleShowOriginalImage() {
+        guard let message = self.message else {
+            return
+        }
+
+        let allowOriginal = message.allowOriginal
+        let countDownInterval = message.countDown
+        
+        let now = Date()
+        let allowOriginalTime: Date
+        if let time = message.allowOriginalTime {
+            allowOriginalTime = time
+        } else {
+            allowOriginalTime = now.addingTimeInterval(TimeInterval(countDownInterval))
+            self.message?.allowOriginalTime = allowOriginalTime
+        }
+        let timeInterval = allowOriginalTime.timeIntervalSince(now)
+        // less than one minute show it directly
+        if (allowOriginal && timeInterval <= 0)  {
+            if !message.isAcknowledged || !message.isOriginalViewed {
+                self.acceptImageMessage(isOriginalViewed: true)
+            }
+            self.originalImageView.isHidden = false
+            self.rotateToOriginalFirstTime()
+            self.message?.isOriginalViewed = true
+        } else if allowOriginal && timeInterval > 0 {
+            if !message.isAcknowledged {
+                self.acceptImageMessage(isOriginalViewed: false, allowOriginalTime: allowOriginalTime)
+            }
+            
+            let view = JSSAlertView().show(self, title: "Counting down...", text: "HidingChat will reveal after:",
+                                           buttonText: "I'll wait",color: DEEP_PURPLE_COLOR_LIGHT, timeLeft: UInt(timeInterval))
+            view.setTextFont(APP_FONT)
+            view.setTimerFont(APP_FONT)
+            view.setTitleFont(APP_FONT_BOLD)
+            view.setTextTheme(.light)
+        } else if !allowOriginal {
+            AppHUD.custom("Not allowed at current time. Try requesting access.", img: #imageLiteral(resourceName: "tongue"))
+            self.acceptImageMessage(isOriginalViewed: false)
+            self.controlPanel.addSubview(requestControl)
+            requestControl.alpha = 1
+            requestControl.frame = showOriginalControl.frame
+            UIView.transition(from: showOriginalControl, to: requestControl, duration: 0.5, options: .transitionFlipFromTop, completion: nil)
+        }
+        
+        Analytics.logEvent(ACCEPT_TAPPED, parameters: nil)
+    }
+    
+    @objc func navBack() {
+        if let nav = navigationController {
+            nav.isNavigationBarHidden = false
+            nav.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    @objc func handleLikeImage() {
+        guard let messageId = message?.messageId else { return }
+        guard let receiverUid = self.senderUser?.uid else { return }
+        guard let senderId = Auth.auth().currentUser?.uid else { return }
+        if let liked = message?.isLiked, liked {
+            AppHUD.success("Already liked", isDarkTheme: false)
+            return
+        }
+        self.likeControl.itemButton.isEnabled = false
+        let dialog = AZDialogViewController(title: "Like type?", message: nil, verticalSpacing: -1, buttonSpacing: 10, sideSpacing: 20, titleFontSize: 22, messageFontSize: 0, buttonsHeight: 50)
+        dialog.dismissWithOutsideTouch = false
+        dialog.blurBackground = false
+        dialog.imageHandler = { (imageView) in
+            imageView.image = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 50, height: 50))
+            imageView.backgroundColor = PINK_COLOR_LIGHT
+            imageView.contentMode = .center
+            return true //must return true, otherwise image won't show.
+        }
+        dialog.buttonStyle = { (button,height,position) in
+            button.setTitleColor(PURPLE_COLOR, for: .normal)
+            button.titleLabel?.font = TEXT_FONT
+            button.layer.masksToBounds = true
+            button.layer.borderColor = PURPLE_COLOR.cgColor
+        }
+        for liketype in ["♥️♥️♥️","😍😍😍", "😂😂😂", "😐😐😐"] {
+            dialog.addAction(AZDialogAction(title: liketype) { (dialog) -> (Void) in
+                self.likeImage(messageId: messageId,  senderId: senderId, receiverId: receiverUid, likeType: liketype)
+                dialog.dismiss()
+            })
+        }
+        dialog.show(in: self)
+    }
+    
+    @objc func handleRejectImage() {
+        let dialog = AZDialogViewController(title: "Reject", message: "Do you want to send your rejection back?",  titleFontSize: 22, messageFontSize: 15, buttonsHeight: 50, cancelButtonHeight: 50)
+        dialog.cancelTitle = "Cancel"
+        dialog.cancelEnabled = true
+        dialog.cancelButtonStyle = { (button,height) in
+            button.setTitleColor(PINK_COLOR, for: .normal)
+            button.titleLabel?.font = TEXT_FONT
+            return true
+        }
         dialog.buttonStyle = { (button,height,position) in
             button.setTitleColor(PINK_COLOR, for: .normal)
             button.titleLabel?.font = TEXT_FONT
@@ -568,76 +661,28 @@ extension ReceiverImageMessageController {
         }
         dialog.dismissWithOutsideTouch = false
         dialog.blurBackground = false
-        dialog.addAction(AZDialogAction(title: "Yes") { (dialog) -> (Void) in
-            
-            dialog.dismiss(animated: true, completion: {
-                self.showRejectMoodDialog()
+        dialog.addAction(AZDialogAction(title: "Yes, send") { (dialog) -> (Void) in
+            dialog.removeAllActions()
+            dialog.title = "Rejection Mood?"
+            dialog.message = nil
+            for mood in ["😔😔😔", "😤😤😤", "😜😜😜", "😎😎😎"] {
+                dialog.addAction(AZDialogAction(title: mood) { (dialog) -> (Void) in
+                    self.rejectImageMessage(shouldSendNotification: true, additionalText: mood)
+                    dialog.dismiss()
+                })
+            }
+            dialog.addAction(AZDialogAction(title: "No mood") { (dialog) -> (Void) in
+                self.rejectImageMessage(shouldSendNotification: true, additionalText: "")
+                dialog.dismiss()
             })
         })
         dialog.addAction(AZDialogAction(title: "No, don't send") { (dialog) -> (Void) in
             self.rejectImageMessage(shouldSendNotification: false, additionalText: nil)
             dialog.dismiss()
         })
-        dialog.addAction(AZDialogAction(title: "Cancel") { (dialog) -> (Void) in
-            dialog.dismiss()
-        })
         dialog.show(in: self)
-    }
-    
-    fileprivate func showRejectMoodDialog() {
-        let dialog = AZDialogViewController(title: "Reject mood?", message: nil,  titleFontSize: 22, buttonsHeight: 50)
-        dialog.dismissWithOutsideTouch = false
-        dialog.blurBackground = false
-        dialog.buttonStyle = { (button,height,position) in
-            button.setTitleColor(PINK_COLOR, for: .normal)
-            button.titleLabel?.font = TEXT_FONT
-            button.layer.masksToBounds = true
-            button.layer.borderColor = PINK_COLOR.cgColor
-        }
         
-        dialog.addAction(AZDialogAction(title: "😔") { (dialog) -> (Void) in
-            self.rejectImageMessage(shouldSendNotification: true, additionalText: "😔😔😔")
-            dialog.dismiss()
-        })
-        dialog.addAction(AZDialogAction(title: "😤") { (dialog) -> (Void) in
-            self.rejectImageMessage(shouldSendNotification: true, additionalText: "😤😤😤")
-            dialog.dismiss()
-        })
-        dialog.addAction(AZDialogAction(title: "😜") { (dialog) -> (Void) in
-            self.rejectImageMessage(shouldSendNotification: true, additionalText: "😜😜😜")
-            dialog.dismiss()
-        })
-        dialog.addAction(AZDialogAction(title: "😎") { (dialog) -> (Void) in
-            self.rejectImageMessage(shouldSendNotification: true, additionalText: "😎😎😎")
-            dialog.dismiss()
-        })
-        dialog.addAction(AZDialogAction(title: "No mood") { (dialog) -> (Void) in
-            self.rejectImageMessage(shouldSendNotification: true, additionalText: "")
-            dialog.dismiss()
-        })
-        dialog.show(in: self)
-    }
-    
-    fileprivate func requestAccess(messageId: String, receiverUserId: String, mood: String) {
-        AppHUD.progress(nil, isDarkTheme: false)
-        CurrentUser.getUser { (curUser, error) in
-            if let curUser = curUser {
-                NotificationHelper.createMessageNotification(messageId: messageId, receiverUserId: receiverUserId, type: .requestAccess, senderUser: curUser, text: mood, completion: { (error) in
-                    if let error = error {
-                        AppHUD.progressHidden()
-                        AppHUD.error(error.localizedDescription, isDarkTheme: false)
-                        return
-                    } else {
-                        AppHUD.progressHidden()
-                        AppHUD.success("Request sent", isDarkTheme: false)
-                        FIRRef.getHasSentRequest().document(messageId).setData(["createdTime": Date()])
-                    }
-                })
-            } else if let _ = error {
-                AppHUD.progressHidden()
-                AppHUD.error("Error retrieving current user \(error?.localizedDescription ?? "")", isDarkTheme: false)
-            }
-        }
+        Analytics.logEvent(REJECT_TAPPED, parameters: nil)
     }
     
     @objc func handleRequestAccess() {
@@ -646,45 +691,84 @@ extension ReceiverImageMessageController {
         self.requestControl.itemButton.isEnabled = false
         FIRRef.getHasSentRequest().document(messageId).getDocument { (snap, error) in
             if let error = error {
-                AppHUD.error(error.localizedDescription, isDarkTheme: false)
+                AppHUD.error("Error retrieving request: " + error.localizedDescription, isDarkTheme: false)
                 return
             }
-            if let _ = snap?.data() {
-                AppHUD.success("Request already sent", isDarkTheme: false)
+            if let data = snap?.data(),
+               let time = data["createdTime"] as? Date,
+               Date().timeIntervalSince1970 - time.timeIntervalSince1970 < 600 {
+                AppHUD.success("Request already sent. Please wait 10 minutes.", isDarkTheme: false)
                 return
             } else {
                 let dialog = AZDialogViewController(title: "Request mood?", titleFontSize: 22, messageFontSize: 14, buttonsHeight: 50)
                 dialog.dismissWithOutsideTouch = false
                 dialog.blurBackground = false
                 dialog.buttonStyle = { (button,height,position) in
-                    button.setTitleColor(DEEP_PURPLE_COLOR, for: .normal)
+                    button.setTitleColor(BLUE_COLOR, for: .normal)
                     button.titleLabel?.font = TEXT_FONT
                     button.layer.masksToBounds = true
-                    button.layer.borderColor = DEEP_PURPLE_COLOR.cgColor
+                    button.layer.borderColor = BLUE_COLOR.cgColor
                 }
-                dialog.addAction(AZDialogAction(title: "☹️") { (dialog) -> (Void) in
-                    self.requestAccess(messageId: messageId, receiverUserId: notificationUser.uid, mood: "☹️")
-                    dialog.dismiss()
-                })
-                dialog.addAction(AZDialogAction(title: "😔") { (dialog) -> (Void) in
-                    self.requestAccess(messageId: messageId, receiverUserId: notificationUser.uid, mood: "😔")
-                    dialog.dismiss()
-                })
-                dialog.addAction(AZDialogAction(title: "😎") { (dialog) -> (Void) in
-                    self.requestAccess(messageId: messageId, receiverUserId: notificationUser.uid, mood: "😎")
-                    dialog.dismiss()
-                })
-                dialog.addAction(AZDialogAction(title: "😍") { (dialog) -> (Void) in
-                     self.requestAccess(messageId: messageId, receiverUserId: notificationUser.uid, mood: "😍")
-                    dialog.dismiss()
+                
+                for title in [ "😔😔😔", "☹️☹️☹️", "😎😎😎", "😍😍😍"] {
+                    dialog.addAction(AZDialogAction(title: title) { (dialog) -> (Void) in
+                        self.requestAccess(messageId: messageId, receiverUserId: notificationUser.uid, mood: title)
+                        dialog.dismiss()
+                    })
+                }
+                dialog.addAction(AZDialogAction(title: "Custom") { (dialog) -> (Void) in
+                    dialog.dismiss(animated: true, completion: {
+                        let alert = SCLAlertView(appearance: SCLAlertView.getAppearance())
+                        let textView = alert.addTextView()
+                        textView.layer.cornerRadius = 5.0
+                        alert.addButton("Send", backgroundColor: BLUE_COLOR, textColor: UIColor.white) {
+                            textView.resignFirstResponder()
+                            let mood = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if mood.count > 100  {
+                                AppHUD.error("Please keep it under 100 emojis.", isDarkTheme: true)
+                            } else if !mood.containsOnlyEmoji {
+                                AppHUD.error("Please only use emojis.", isDarkTheme: true)
+                            } else {
+                                self.requestAccess(messageId: messageId, receiverUserId: notificationUser.uid, mood: mood)
+                                alert.hideView()
+                            }
+                        }
+                        let image = UIImage.fontAwesomeIcon(name: .pencil, textColor: .white, size: CGSize(width: 40, height: 40))
+                        alert.showCustom("Request mood", subTitle: "(please only use emojis)", color: BLUE_COLOR, icon: image)
+                    })
                 })
                 dialog.show(in: self)
             }
         }
     }
+    
+    @objc func toggleControlPanel() {
+        view.isUserInteractionEnabled = false
+        if isShowingControlPanel {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
+                self.hideControlViews()
+                self.hideCaptionLabel()
+            }) { (bool) in
+                self.view.isUserInteractionEnabled = true
+                if bool {
+                    self.isShowingControlPanel = false
+                }
+            }
+        } else {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
+                self.showControlViews()
+                self.showCaptionLabel()
+            }, completion: { (bool) in
+                self.view.isUserInteractionEnabled = true
+                if bool {
+                    self.isShowingControlPanel = true
+                }
+            })
+        }
+    }
 }
 
-//MARK: scroll view funcs
+//MARK: scroll view delegate
 extension ReceiverImageMessageController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return originalImageView

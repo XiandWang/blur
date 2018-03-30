@@ -13,9 +13,10 @@ class MainTabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         if Auth.auth().currentUser == nil {
             DispatchQueue.main.async {
-                let navController = UINavigationController(rootViewController: LoginController())
+                let navController = UINavigationController(rootViewController: ChooseLoginSignupController())
                 self.present(navController, animated: true, completion: nil)
             }
             return
@@ -40,6 +41,7 @@ class MainTabBarController: UITabBarController {
         
         CurrentUser.getUser { (_, _) in
         }
+        CurrentUser.getInvitesNum()
         
         setupViewControllers()
     }

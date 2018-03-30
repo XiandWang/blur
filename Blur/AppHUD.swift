@@ -71,7 +71,6 @@ class AppHUD {
         hud.contentColor = .black
         hud.label.text = message
         hud.label.numberOfLines = 0
-
         hud.hide(animated: true, afterDelay: 3)
     }
 
@@ -92,7 +91,7 @@ class AppHUD {
             hud?.contentColor = .black
         }
         hud?.label.text = message
-        hud?.minShowTime = 1.5
+        hud?.minShowTime = 1.0
     }
     
     static func progressHidden() {

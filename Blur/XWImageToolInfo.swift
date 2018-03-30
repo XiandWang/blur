@@ -27,6 +27,11 @@ struct XWImageToolInfo {
         let cutImage = UIImage.fontAwesomeIcon(name: .scissors, textColor: YELLOW_COLOR, size: CGSize(width: 44, height: 44))
         let mosaicToolInfo = XWImageToolInfo(toolName: "mosaic", title: "Mosaic to hide", iconImage: mosaicImage, orderNum: 1)
         let cutToolInfo = XWImageToolInfo(toolName: "cut", title: "Cut to hide", iconImage: cutImage, orderNum: 2)
-        return [mosaicToolInfo, cutToolInfo]
+        
+        let emojiImage = UIImage.fontAwesomeIcon(name: .smileO, textColor: YELLOW_COLOR, size: CGSize(width: 44, height: 44))
+        
+        let emojiToolInfo = XWImageToolInfo(toolName: "emoji", title: "Emoji to hide", iconImage: emojiImage, orderNum: 3)
+        
+        return [mosaicToolInfo, cutToolInfo, emojiToolInfo]
     }
 }

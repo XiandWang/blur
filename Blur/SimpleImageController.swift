@@ -11,7 +11,6 @@ import Hero
 
 class SimpleImageController: UIViewController {
     
-    
     let imageView : UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .black
@@ -23,8 +22,8 @@ class SimpleImageController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .black
-        self.isHeroEnabled = true
-        imageView.heroID = "imageViewHeroId"
+        self.hero.isEnabled = true
+        imageView.hero.id = IMAGE_VIEW_HERO_ID
         
         view.addSubview(imageView)
         imageView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: bottomLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
