@@ -456,6 +456,7 @@
 				A99445D595A7CF79D7C5A913 /* [CP] Embed Pods Frameworks */,
 				34EEE74BE7B8F6B0A9323364 /* [CP] Copy Pods Resources */,
 				EE5508FD20550A070073A549 /* ShellScript */,
+				EE9B3CCC2073159B00347388 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -673,6 +674,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n";
+		};
+		EE9B3CCC2073159B00347388 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/upload-symbols\" -gsp \"${PROJECT_DIR}/Blur/GoogleService-Info-prod.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
 		};
 		F0ACD46D990D43506E8AC90E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
