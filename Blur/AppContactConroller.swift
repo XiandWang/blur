@@ -13,7 +13,7 @@ class AppContactController: UIViewController {
     let contactLabel : UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.text = "HidingChat is created with ♥️ by Xiandong Wang. For contact or feedback, please send a email to hidingchat.contact@gmail.com. Thank you! "
+        label.text = "HidingChat is created with ♥️ by Xiandong Wang. For contact or feedback, please send a email to contact@hidingchat.com. Thank you! "
         
         label.font = UIFont(name: APP_FONT, size: 17)
         label.textColor = TEXT_GRAY

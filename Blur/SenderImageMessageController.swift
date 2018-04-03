@@ -31,9 +31,9 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
     var receiverUser: User? {
         didSet {
             if let receiverUser = receiverUser {
-                var title = "Sent to \(receiverUser.username)"
+                var title = "\(receiverUser.fullName)"
                 if let message = self.message {
-                    title += " (\(message.createdTime.timeAgoDisplay()))"
+                    title += " • \(message.createdTime.timeAgoDisplay())"
                 }
                 self.navigationItem.title = title
             }
@@ -131,12 +131,24 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
     }()
     
     lazy var controlPanel: UIView = {
-        let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight, width: UIScreen.main.bounds.width, height: self.controlPanelHeight)
+        let padding = getSafePadding()
+        let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight - padding, width: UIScreen.main.bounds.width, height: self.controlPanelHeight + padding)
         let panel = UIView(frame: frame)
         panel.backgroundColor = .clear
         
         return panel
     }()
+    
+    func getSafePadding() -> CGFloat {
+        if #available(iOS 11.0, *) {
+            if let bottomPadding = UIApplication.shared.keyWindow?.safeAreaInsets.bottom,
+                bottomPadding > 0 {
+                return 20.0
+            }
+        }
+        return 0.0
+    }
+    
     
     lazy var likeButton: UIButton = {
         let bt = UIButton()
@@ -195,7 +207,8 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         if parent == nil {
             self.navigationController?.navigationBar.alpha = 1
             self.navigationController?.navigationBar.isTranslucent = false
-            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+            self.setupNavTitleAttr()
+            self.navigationController?.navigationBar.tintColor = UIColor.black
         }
     }
     

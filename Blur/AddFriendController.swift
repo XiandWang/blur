@@ -162,22 +162,24 @@ extension AddFriendController : UISearchBarDelegate {
                     }
                 }
                 
-                Database.database().reference().child(USERS_NODE).queryOrdered(byChild: "username").queryEqual(toValue: term).observeSingleEvent(of: .value, with: { (usernap) in
-                    AppHUD.progressHidden()
-                    if usernap.exists() {
-                        for c in usernap.children {
-                            let child = c as? DataSnapshot
-                            guard let userDict = child?.value as? [String: Any] else { return }
-                            guard let uid = child?.key else { return }
-                            let user = User(dictionary: userDict, uid: uid)
-                            self.users.append(user)
+                if self.users.isEmpty {
+                    Database.database().reference().child(USERS_NODE).queryOrdered(byChild: "username").queryEqual(toValue: term).observeSingleEvent(of: .value, with: { (usernap) in
+                        AppHUD.progressHidden()
+                        if usernap.exists() {
+                            for c in usernap.children {
+                                let child = c as? DataSnapshot
+                                guard let userDict = child?.value as? [String: Any] else { return }
+                                guard let uid = child?.key else { return }
+                                let user = User(dictionary: userDict, uid: uid)
+                                self.users.append(user)
+                            }
                         }
-                    }
-                    
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                })
+                        
+                        DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                        }
+                    })
+                }
                     
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -247,9 +249,6 @@ class SimpleUserCell: UITableViewCell {
         fullNameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor, constant: -10).isActive = true
         fullNameLabel.anchor(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 0)
         usernameLabel.anchor(top: fullNameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: contentView.rightAnchor, paddingTop: 2, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 0)
-        
-//        usernameLabel.backgroundColor = .red
-//        fullNameLabel.backgroundColor = .purple
     }
     
     required init?(coder aDecoder: NSCoder) {

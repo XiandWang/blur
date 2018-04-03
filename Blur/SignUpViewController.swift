@@ -2,22 +2,6 @@ import UIKit
 import Firebase
 import FontAwesome_swift
 
-//extension SignUpViewController: YYKeyboardObserver {
-//    func keyboardChanged(with transition: YYKeyboardTransition) {
-//        UIView.animate(withDuration: transition.animationDuration, delay: 0, options: transition.animationOption, animations: {
-//            print(transition.toFrame)
-////            print(self.formContainer.bottom)
-////            if transition.toVisible.boolValue {
-////                self.formTopAnchor?.constant = -70
-////            } else {
-////                self.formTopAnchor?.constant = 10
-////            }
-//
-//            self.view.layoutIfNeeded()
-//        }, completion: nil)
-//    }
-//}
-
 class SignUpViewController: UIViewController {
     
     let emailTextField: AppTextField = {

@@ -18,8 +18,8 @@ class PreviewPhotoController: UIViewController {
     
     var user: User? {
         didSet {
-            guard let username = user?.username else { return }
-            self.questionlabel.text = "Do you allow @\(username) to view the original image?"
+            guard let fullName = user?.fullName else { return }
+            self.questionlabel.text = "Do you allow \(fullName) to view the original image?"
         }
     }
     
@@ -223,22 +223,21 @@ class PreviewPhotoController: UIViewController {
         meta.customMetadata = ["senderId": senderId, "receiverId": receiverId]
         meta.contentType = "image/jpeg"
         
-        guard let originalJpeg = UIImageJPEGRepresentation(originalImage, 0.7) else {
+        guard let originalJpeg = UIImageJPEGRepresentation(originalImage, 0.5) else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
         
-        guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.7) else {
+        guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.3) else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
         
         let originalTask = FIRRef.getImageMessages().child(senderId).child(UUID().uuidString).putData(originalJpeg, metadata: meta)
-        
        
         let editedTask = FIRRef.getImageMessages().child(senderId).child(UUID().uuidString).putData(editedJpeg, metadata: meta)
-        print(editedJpeg.count)
-        print(originalJpeg.count)
+        //print(editedJpeg.count, "5")
+        print(originalJpeg.count, "5")
         
         
         Analytics.logEvent(COUNT_DOWN_TIMER, parameters: ["timerValue": self.picker.selectedRow(inComponent: 0)])
@@ -264,8 +263,8 @@ class PreviewPhotoController: UIViewController {
                     self.showError(self.UPLOADING_IMAGE_ERR)
                     return
                 }
-                print(editedImageUrl, "edited")
-                print(originalImageUrl, "original")
+                //print(editedImageUrl, "edited")
+                //print(originalImageUrl, "original")
                 let countDown = self.timerValues[safe: self.picker.selectedRow(inComponent: 0)]
                 let data = [MessageSchema.SENDER_ID: senderId, MessageSchema.RECEIVER_ID: receiverId,
                             MessageSchema.SENDER_USER: ["username": senderUser.username, "profileImgUrl": senderUser.profileImgUrl ?? "", "fullName": senderUser.fullName],
@@ -346,11 +345,14 @@ extension PreviewPhotoController: UIPickerViewDelegate, UIPickerViewDataSource {
             return "none"
         }
         if num < 60 {
-            return "\(num) sec"
+            return "\(num) seconds"
         } else if num < 3600 {
-            return "\(num / 60) min"
+            let min = num / 60
+            let suffix = min == 1 ? "" : "s"
+            return "\(min) minute\(suffix)"
         } else if num >= 3600 {
-            return "\(num / 3600) hour"
+            let hr = num / 3600
+            return "\(hr) hour"
         }
         return ""
     }
@@ -358,8 +360,5 @@ extension PreviewPhotoController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return 40
     }
-    
-    
-
 }
 

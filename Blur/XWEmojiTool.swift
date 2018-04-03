@@ -83,8 +83,6 @@ class XWEmojiTool: XWImageToolBase {
         image.draw(at: CGPoint.zero)
         
         let scale = image.size.width / workingView.width
-        print(scale, "scale")
-        print(image.scale, "img_scale")
         if let context = UIGraphicsGetCurrentContext() {
             context.scaleBy(x: scale, y: scale)
             workingView.layer.render(in: context)

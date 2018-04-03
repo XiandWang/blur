@@ -236,7 +236,7 @@ extension UIBarButtonItem {
     
     static func fixNavigationSpacer() -> UIBarButtonItem {
         let item = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil);
-        item.width = -20;
+        item.width = -10;
         return item
     }
 }

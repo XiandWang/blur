@@ -52,7 +52,7 @@ class MyAccountHeader: UICollectionViewCell {
     
     let fullNameLabel: UILabel = {
         let label = UILabel()
-        label.font = BOLD_FONT
+        label.font = UIFont(name: APP_FONT_BOLD, size: 17)
         label.numberOfLines = 0
         label.text = ""
         return label
@@ -60,7 +60,7 @@ class MyAccountHeader: UICollectionViewCell {
     
     let usernameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: APP_FONT_BOLD, size: 16)
+        label.font = UIFont(name: APP_FONT_BOLD, size: 17)
         label.textColor = .lightGray
         label.numberOfLines = 0
         label.text = ""
@@ -75,14 +75,6 @@ class MyAccountHeader: UICollectionViewCell {
         iv.contentMode = .scaleAspectFill
 
         return iv
-    }()
-    
-    let editProfileImageButton: UIButton = {
-        let bt = UIButton(type: .system)
-        bt.titleLabel?.font = TEXT_FONT
-        bt.setTitle("Edit profile image", for: .normal)
-        bt.setTitleColor(.purple, for: .normal)
-        return bt
     }()
     
     let bannerLabel: UILabel = {

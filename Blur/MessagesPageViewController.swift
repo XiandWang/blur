@@ -34,6 +34,7 @@ class MessagesPageViewController: UIPageViewController {
         super.viewDidLoad()
         self.navigationItem.title = senderUser?.username ?? ""
         self.dataSource = self
+        self.automaticallyAdjustsScrollViewInsets = false
         if let imageMessageController = configureImageMessageController(index: currentIndex ?? 0) {
             let controllers = [imageMessageController]
             
@@ -65,9 +66,12 @@ class MessagesPageViewController: UIPageViewController {
             UIApplication.shared.isStatusBarHidden = false
             self.navigationController?.navigationBar.alpha = 1
             self.navigationController?.navigationBar.isTranslucent = false
-            self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
+            self.setupNavTitleAttr()
+            self.navigationController?.navigationBar.tintColor = UIColor.black
+            //self.navigationItem.backBarButtonItem?.tintColor = UIColor.black
         }
     }
+    
 }
 
 extension MessagesPageViewController: UIPageViewControllerDataSource {
@@ -91,4 +95,5 @@ extension MessagesPageViewController: UIPageViewControllerDataSource {
         
         return nil
     }
+    
 }

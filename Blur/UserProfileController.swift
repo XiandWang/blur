@@ -141,7 +141,7 @@ class UserProfileController: UIViewController {
     
     @objc func handleShowAdvanced() {
         let color = UIColor.hexStringToUIColor(hex: "#BA68C8")
-        let dialog = AZDialogViewController(title: "Advanced", message: nil, titleFontSize: 22, messageFontSize: 14, buttonsHeight: 50, cancelButtonHeight: 50)
+        let dialog = AZDialogViewController(title: "More", message: nil, titleFontSize: 22, messageFontSize: 14, buttonsHeight: 50, cancelButtonHeight: 50)
         dialog.blurBackground = false
         dialog.buttonStyle = { (button,height,position) in
             button.setTitleColor(color, for: .normal)
@@ -178,8 +178,8 @@ class UserProfileController: UIViewController {
                     alert.addButton("Send", backgroundColor: color, textColor: UIColor.white) {
                         textView.resignFirstResponder()
                         let text = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-                        if text.count > 32  {
-                            AppHUD.error("Please keep it under 32 characters.", isDarkTheme: true)
+                        if text.count > 120  {
+                            AppHUD.error("Please keep it under 120 characters. Current: \(text.count)", isDarkTheme: true)
                         } else if text.isEmpty {
                             AppHUD.error("Compliment is empty.", isDarkTheme: true)
                         } else {
@@ -457,10 +457,14 @@ class UserProfileController: UIViewController {
         
         
         
-        let v = UIView()
-        v.backgroundColor = UIColor.hexStringToUIColor(hex: "#fafafa")
-        view.insertSubview(v, at: 0)
-        v.anchor(top: divider.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+//        let v = UIView()
+//        v.backgroundColor = UIColor.hexStringToUIColor(hex: "#fafafa")
+//        view.insertSubview(v, at: 0)
+//        v.anchor(top: divider.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+    }
+    
+    @objc func dismissNav() {
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
 }
 

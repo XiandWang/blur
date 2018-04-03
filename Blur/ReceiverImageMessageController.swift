@@ -26,13 +26,7 @@ class ReceiverImageMessageController : UIViewController {
     var senderUser: User?
     var photoIndex : Int?
     
-    var pageController: UIPageViewController? {
-        didSet {
-            guard let message = message else { return }
-            guard let sender = senderUser else { return }
-            pageController?.navigationItem.title = "@\(sender.username) • \(message.createdTime.timeAgoDisplay())"
-        }
-    }
+    var pageController: UIPageViewController?
     
     var message: Message? {
         didSet {
@@ -85,8 +79,8 @@ class ReceiverImageMessageController : UIViewController {
     }()
     
     lazy var controlPanel: UIView = {
-        let padding = 0.0
-        let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight , width: UIScreen.main.bounds.width, height: self.controlPanelHeight)
+        let padding = getSafePadding()
+        let frame = CGRect(x: 0, y: UIScreen.main.bounds.height - self.controlPanelHeight - padding , width: UIScreen.main.bounds.width, height: self.controlPanelHeight + padding)
         let panel = UIView(frame: frame)
         panel.backgroundColor = .clear
 
@@ -171,6 +165,8 @@ class ReceiverImageMessageController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.automaticallyAdjustsScrollViewInsets = false
+
         self.view.backgroundColor = .black
         setupScrollView()
         setupImageView()
@@ -179,8 +175,7 @@ class ReceiverImageMessageController : UIViewController {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPanel))
         view.addGestureRecognizer(tapRecognizer)
-        
-        
+        addSwipeDown()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -202,6 +197,9 @@ class ReceiverImageMessageController : UIViewController {
                     self.navigationController?.popToRootViewController(animated: true)
                 })
         }
+        
+        guard let sender = senderUser else { return }
+        pageController?.navigationItem.title = "\(sender.fullName) • \(message.createdTime.timeAgoDisplay())"
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -214,8 +212,7 @@ class ReceiverImageMessageController : UIViewController {
         view.addSubview(captionLabel)
         let rect = NSString(string: caption).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font: SMALL_TEXT_FONT], context: nil).size
         let height = max(rect.height + 16.0, 40)
-//        captionLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: height)
-//        captionLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+
         
         captionLabel.frame = CGRect(x: 0, y: view.frame.height / 2.0, width: view.frame.width, height: height)
         
@@ -255,7 +252,6 @@ class ReceiverImageMessageController : UIViewController {
             self.automaticallyAdjustsScrollViewInsets = false
         }
         
-        self.automaticallyAdjustsScrollViewInsets = false
         originalScrollView.addSubview(originalImageView)
         view.addSubview(originalScrollView)
         originalScrollView.delegate = self
@@ -600,6 +596,12 @@ extension ReceiverImageMessageController {
         }
         
         Analytics.logEvent(ACCEPT_TAPPED, parameters: nil)
+    }
+    
+    func addSwipeDown() {
+        let down = UISwipeGestureRecognizer(target: self, action: #selector(navBack))
+        down.direction = .down
+        view.addGestureRecognizer(down)
     }
     
     @objc func navBack() {

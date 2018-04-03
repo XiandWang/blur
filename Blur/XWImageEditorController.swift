@@ -52,6 +52,7 @@ class XWImageEditorController: UIViewController {
         super.viewDidLoad()
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
+        self.automaticallyAdjustsScrollViewInsets = false
         self.view.backgroundColor = XWImageEditorTheme.backgroundColor
         self.navigationItem.title = "Hide" //###
         self.initMenuView()
@@ -94,7 +95,6 @@ class XWImageEditorController: UIViewController {
     
     func initMenuView() {
         if menuView == nil {
-            
             let height = 80 + getBottomPadding()
             menuView = UIView(frame: CGRect(x: 0, y: view.height - height, width: self.view.width, height: height))
             self.view.addSubview(menuView)

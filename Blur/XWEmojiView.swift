@@ -115,12 +115,10 @@ class XWEmojiView: UIView {
         self.frame = rct
     
         imageView.center = CGPoint(x: rct.size.width / 2, y: rct.size.height / 2)
-        self.transform = CGAffineTransform(rotationAngle: self.arg)
+        //self.transform = CGAffineTransform(rotationAngle: self.arg)
         
-//        imageView.layer.borderWidth = 1 / self.scale
-//        imageView.layer.cornerRadius = 3 / self.scale
-
-        
+        imageView.layer.borderWidth = 1 / self.scale
+        imageView.layer.cornerRadius = 3 / self.scale
     }
 
     @objc func initGestures() {
@@ -169,8 +167,9 @@ class XWEmojiView: UIView {
             p = CGPoint(x: initPoint.x + p.x - self.center.x, y: initPoint.y + p.y - self.center.y)
             let R = sqrt(p.x*p.x + p.y*p.y)
             let arg = atan2(p.y, p.x)
-            self.arg = initialArg + arg - XWEmojiView.tempA
-            
+            self.arg = initialArg + arg + XWEmojiView.tempA
+            //self.arg = initialArg + arg
+
             self.setScale(max(initialScale * R / XWEmojiView.tempR, 0.2))
         }
     }

@@ -22,13 +22,13 @@ class HomeController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "HidingChat Inbox"
+        self.setupNavTitleAttr()
         view.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.register(HomeChatCell.self, forCellReuseIdentifier: cellId)
-        setupNavigationItems()
         
         listenForMessages()
- 
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -36,12 +36,6 @@ class HomeController: UITableViewController {
         
         // Reload data to refresh timestamps
         tableView.reloadData()
-    }
-
-    func setupNavigationItems() {
-        self.navigationItem.title = "HidingChat Inbox"
-        self.setupNavTitleAttr()
-
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -80,7 +74,9 @@ class HomeController: UITableViewController {
         guard let userId = userIdsSorted[safe: tag], let user = usersDict[userId] else { return }
         let userProfile = UserProfileController()
         userProfile.user = user
-        self.navigationController?.pushViewController(userProfile, animated: true)
+        let nav = UINavigationController(rootViewController: userProfile)
+        userProfile.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: userProfile, action: #selector(userProfile.dismissNav))
+        self.present(nav, animated: true) 
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -112,9 +108,8 @@ class HomeController: UITableViewController {
             messagesPageViewController.hidesBottomBarWhenPushed = true
             self.configureTransparentNav()
             
-            DispatchQueue.main.async {
-                self.navigationController?.pushViewController(messagesPageViewController, animated: true)
-            }
+            self.navigationController?.pushViewController(messagesPageViewController, animated: true)
+            
         }
     }
     

@@ -35,10 +35,21 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
         
         collectionView?.register(MessageNotificationCell.self, forCellWithReuseIdentifier: messageCellId)
         collectionView?.register(OtherNotificationCell.self, forCellWithReuseIdentifier: otherCellId)
-        let trashImg = UIImage.fontAwesomeIcon(name: .trash, textColor: .black, size: CGSize(width: 30, height: 44))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: trashImg, style: .plain, target: self, action: #selector(deleteNotifications))
-        navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
+        setupRightBarItem()
         listenForNotifications()
+
+    }
+    
+    
+    func setupRightBarItem() {
+        let trashImg = UIImage.fontAwesomeIcon(name: .trash, textColor: .black, size: CGSize(width: 30, height: 44))
+        let barItem = UIBarButtonItem(image: trashImg, style: .plain, target: self, action: #selector(deleteNotifications))
+        if #available(iOS 11.0, *) {
+           navigationItem.rightBarButtonItem = barItem
+            navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
+        } else {
+            navigationItem.rightBarButtonItems = [UIBarButtonItem.fixNavigationSpacer(),  barItem]
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -50,18 +61,30 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
     @objc fileprivate func deleteNotifications() {
         guard let curUserId = Auth.auth().currentUser?.uid else { return }
         AppHUD.progress(nil, isDarkTheme: true)
+//        for notif in notifications {
+//            FIRRef.getNotifications().document(curUserId)
+//                    .collection("messageNotifications").document(notif.notificationId).delete(completion: { (error) in
+//                        if let error = error  {
+//                            AppHUD.error(error.localizedDescription, isDarkTheme: true)
+//                            return
+//                        }
+//                    })
+//        }
+        
+        let batch = Firestore.firestore().batch()
         for notif in notifications {
-            FIRRef.getNotifications().document(curUserId)
-                    .collection("messageNotifications").document(notif.notificationId).delete(completion: { (error) in
-                        if let error = error  {
-                            AppHUD.error(error.localizedDescription, isDarkTheme: true)
-                            return
-                        }
-                    })
+            batch.deleteDocument(FIRRef.getNotifications().document(curUserId)
+                .collection("messageNotifications").document(notif.notificationId))
         }
-        self.notifications = []
-        collectionView?.reloadData()
-        AppHUD.progressHidden()
+        batch.commit { (error) in
+            AppHUD.progressHidden()
+            if let error = error {
+                AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                return
+            }
+            AppHUD.success("Deleted", isDarkTheme: true)
+        }
+        
         if let app = UIApplication.shared.delegate as? AppDelegate {
             app.setBadge(tabBarIndex: 2, num: 0)
         }
@@ -173,7 +196,7 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
     
         let notification = self.notifications[indexPath.row]
         if receiverTypes.contains(notification.type) {
-            guard let yesterday = Calendar.current.date(byAdding: .second, value: -1, to: Date()) else { return }
+            guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) else { return }
             if notification.createdTime >= yesterday {
                 let receiverController = ReceiverImageMessageController()
                 receiverController.message = notification.message
@@ -185,7 +208,7 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
                 return
             }
         } else if senderTypes.contains(notification.type) {
-            guard let yesterday = Calendar.current.date(byAdding: .second, value: -1, to: Date()) else { return }
+            guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) else { return }
             if notification.createdTime >= yesterday {
                 let senderController = SenderImageMessageController()
                 senderController.receiverUser = notification.user
@@ -198,10 +221,11 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
                 return
             }
         } else if notification.type == NotificationType.askForChat.rawValue {
-            let user = notification.user
-            let userController = UserProfileController()
-            userController.user = user
-            self.navigationController?.pushViewController(userController, animated: true)
+            let userProfile = UserProfileController()
+            userProfile.user = notification.user
+            let nav = UINavigationController(rootViewController: userProfile)
+            userProfile.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: userProfile, action: #selector(userProfile.dismissNav))
+            self.present(nav, animated: true)
         } else if notification.type == NotificationType.compliment.rawValue {
             guard let complimentText = notification.text else { return }
             showComplimentDialog(compliment: complimentText, user: notification.user.fullName)
@@ -228,11 +252,7 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
                     AppHUD.error(e.localizedDescription, isDarkTheme: true)
                     return
                 }
-                //if row >= 0 && row < self.notifications.count {
-                    self.notifications.remove(at: row)
-                //}
                 AppHUD.progressHidden()
-                self.collectionView?.reloadData()
         }
         
     }
@@ -264,21 +284,25 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
     @objc func handleShowUserProfile(sender: UITapGestureRecognizer) {
         guard let tag = sender.view?.tag else { return }
         guard let user = self.notifications[safe: tag]?.user else { return }
+        
         let userProfile = UserProfileController()
         userProfile.user = user
-        self.navigationController?.pushViewController(userProfile, animated: true)
+        let nav = UINavigationController(rootViewController: userProfile)
+        userProfile.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: userProfile, action: #selector(userProfile.dismissNav))
+        self.present(nav, animated: true)
     }
 }
 
 extension UIViewController {
      public func configureTransparentNav() {
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.view.backgroundColor = .clear
         
-        navigationItem.backBarButtonItem?.tintColor = UIColor.white
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = TINT_COLOR
+        navigationItem.backBarButtonItem?.tintColor = TINT_COLOR
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: TINT_COLOR]
     }
     

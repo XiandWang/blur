@@ -80,9 +80,7 @@ class SettingsController: TableViewController {
     }
     
     fileprivate func setupNavigationItem() {
-        let logOut = UIImage.fontAwesomeIcon(name: .signOut, textColor: .black, size: CGSize(width: 30, height: 44))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: logOut, style: .plain, target: self, action: #selector(handleLogout))
-        navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
     }
     
     func updateProfileImage() {
@@ -133,8 +131,6 @@ class SettingsController: TableViewController {
         guard let friendsController = friendsNavController.viewControllers[0] as? FriendsController else { return }
         friendsController.friendRequestsRef?.removeAllObservers()
         friendsController.friendsRef?.removeAllObservers()
-        
-    
     }
 }
 
@@ -164,7 +160,7 @@ extension SettingsController: UIImagePickerControllerDelegate, UINavigationContr
     }
     
     func uploadProfileImage(image: UIImage) {
-        guard let data = UIImageJPEGRepresentation(image, 0.3) else { return }
+        guard let data = UIImageJPEGRepresentation(image, 0.5) else { return }
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let metaData = StorageMetadata()
         metaData.contentType = "image/jpeg"

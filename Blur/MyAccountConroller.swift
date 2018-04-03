@@ -33,8 +33,14 @@ class MyAccountController: UICollectionViewController, UICollectionViewDelegateF
     
     fileprivate func setupSettingsBarButton() {
         let settings = UIImage.fontAwesomeIcon(name: .cog, textColor: .black, size: CGSize(width: 30, height: 44))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: settings, style: .plain, target: self, action: #selector(handleShowSettings))
-        navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
+        let barItem =  UIBarButtonItem(image: settings, style: .plain, target: self, action: #selector(handleShowSettings))
+        
+        if #available(iOS 11.0, *) {
+            navigationItem.rightBarButtonItem = barItem
+            navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
+        } else {
+            navigationItem.rightBarButtonItems = [UIBarButtonItem.fixNavigationSpacer(), barItem]
+        }
     }
     
     @objc func handleShowSettings() {

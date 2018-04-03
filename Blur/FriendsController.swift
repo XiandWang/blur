@@ -35,11 +35,23 @@ class FriendsController: UITableViewController {
         observeFriends()
         observeFriendRequests()
 
-        let userPlus = UIImage.fontAwesomeIcon(name: .userPlus, textColor: .black, size: CGSize(width: 30, height: 44))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: userPlus, style: .plain, target: self, action: #selector(handleAddFriends))
-        navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
+        setupBarItems()
         
+        Crashlytics.sharedInstance().crash()
+    }
+    
+    
+    func setupBarItems() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Invite", style: .plain, target: self, action: #selector(handleInvite))
+        
+        let userPlus = UIImage.fontAwesomeIcon(name: .userPlus, textColor: .black, size: CGSize(width: 30, height: 44))
+        let barItem = UIBarButtonItem(image: userPlus, style: .plain, target: self, action: #selector(handleAddFriends))
+        if #available(iOS 11.0, *) {
+            navigationItem.rightBarButtonItem = barItem
+            navigationItem.rightBarButtonItem?.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
+        } else {
+            navigationItem.rightBarButtonItems = [UIBarButtonItem.fixNavigationSpacer(),  barItem]
+        }
     }
     
     @objc func handleInvite() {

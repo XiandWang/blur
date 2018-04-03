@@ -69,7 +69,7 @@ class ComplimentCell: UITableViewCell {
         
         attributedText.append(NSAttributedString(string: compliment.complimentText, attributes: [NSAttributedStringKey.font: TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.black]))
         
-        attributedText.append(NSAttributedString(string: "  " + compliment.createdTime.timeAgoDisplay(), attributes: [NSAttributedStringKey.font: UIFont(name: APP_FONT, size: 13) ?? TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
+        attributedText.append(NSAttributedString(string: " • " + compliment.createdTime.timeAgoDisplay(), attributes: [NSAttributedStringKey.font: UIFont(name: APP_FONT, size: 13) ?? TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
         return attributedText
     }
 }
