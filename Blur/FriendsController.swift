@@ -36,8 +36,6 @@ class FriendsController: UITableViewController {
         observeFriendRequests()
 
         setupBarItems()
-        
-        Crashlytics.sharedInstance().crash()
     }
     
     

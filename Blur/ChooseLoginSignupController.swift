@@ -45,7 +45,7 @@ class ChooseLoginSignupController: UIViewController {
     
     let signUpButton : UIButton = {
         let bt = UIButton(type: .system)
-        bt.setTitle("Sign up for FREE", for: .normal)
+        bt.setTitle("Sign up for free", for: .normal)
         bt.setTitleColor(.black, for: .normal)
         bt.titleLabel?.font = BOLD_FONT
         bt.backgroundColor = YELLOW_COLOR
