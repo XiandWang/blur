@@ -11,7 +11,7 @@ import Firebase
 import AZDialogView
 
 class NotificationController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    let maxString = "zzzzzzzzzzzzzzzz requests access to your image. Mood: ♥️♥️♥️♥️♥️♥️♥️♥️♥️♥️. 13 mins."
+    let maxString = "zzzzzzzzzzzzzzzz requests access to your photo. Mood: ♥️♥️♥️♥️♥️♥️♥️♥️♥️♥️. 13 mins."
     
     
     var notifications = [MessageNotification]()

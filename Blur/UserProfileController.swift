@@ -334,13 +334,13 @@ class UserProfileController: UIViewController {
             picker.delegate = self
             picker.allowsEditing = false
             
-            let actionSheet = UIAlertController(title: "HidingChat Image Source", message: nil, preferredStyle: .actionSheet)
+            let actionSheet = UIAlertController(title: "HidingChat photo source", message: nil, preferredStyle: .actionSheet)
             actionSheet.addAction(UIAlertAction(title: "From Camera", style: .default, handler: { (action) in
                 picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
                 picker.sourceType = .camera
                 self.present(picker, animated: true, completion: nil)
             }))
-            actionSheet.addAction(UIAlertAction(title: "From Image Library", style: .default, handler: { (action) in
+            actionSheet.addAction(UIAlertAction(title: "From Photo Library", style: .default, handler: { (action) in
                 picker.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
                 picker.sourceType = .photoLibrary
                 self.present(picker, animated: true, completion: nil)

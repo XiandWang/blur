@@ -108,19 +108,19 @@ class MessageNotificationCell: UICollectionViewCell {
         let attributedText = NSMutableAttributedString(string: notification.user.fullName, attributes: [NSAttributedStringKey.font: BOLD_FONT, NSAttributedStringKey.foregroundColor: UIColor.black])
         var text = " "
         if type == NotificationType.allowAccess.rawValue {
-            text = " allows you to access the image"
+            text = " allows you to access the photo"
         } else if type == NotificationType.rejectMessage.rawValue {
-            text = " rejects your image "
+            text = " rejects your photo. "
             if let moodText = notification.text, !moodText.isEmpty {
                 text.append("Mood: \(moodText)")
             }
         } else if type == NotificationType.requestAccess.rawValue {
-            text = " wants to access your image "
+            text = " wants to access your photo. "
             if let moodText = notification.text, !moodText.isEmpty {
                 text.append("Mood: \(moodText)")
             }
         } else if type == NotificationType.likeMessage.rawValue {
-            text = " likes your image"
+            text = " likes your photo"
         }
         attributedText.append(NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: TEXT_FONT, NSAttributedStringKey.foregroundColor: UIColor.black]))
         let timeFont = UIFont(name: APP_FONT, size: 14)

@@ -12,19 +12,11 @@ class FIRRef {
     static let fireStore = Firestore.firestore()
     
     static func getMessages() -> CollectionReference {
- //       #if DEBUG
             return fireStore.collection("messages")
-//        #else
-//            return fireStore.collection("prod_messages")
-//        #endif
     }
     
     static func getMessageLikes() -> CollectionReference {
-//        #if DEBUG
             return fireStore.collection("messageLikes")
-//        #else
-//            return fireStore.collection("prod_messageLikes")
-//        #endif
     }
     
     static func getNotifications() -> CollectionReference {

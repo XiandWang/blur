@@ -19,7 +19,7 @@ class PreviewPhotoController: UIViewController {
     var user: User? {
         didSet {
             guard let fullName = user?.fullName else { return }
-            self.questionlabel.text = "Do you allow \(fullName) to view the original image?"
+            self.questionlabel.text = "Do you allow \(fullName) to view the original photo?"
         }
     }
     
@@ -237,7 +237,7 @@ class PreviewPhotoController: UIViewController {
        
         let editedTask = FIRRef.getImageMessages().child(senderId).child(UUID().uuidString).putData(editedJpeg, metadata: meta)
         //print(editedJpeg.count, "5")
-        print(originalJpeg.count, "5")
+        //print(originalJpeg.count, "5")
         
         
         Analytics.logEvent(COUNT_DOWN_TIMER, parameters: ["timerValue": self.picker.selectedRow(inComponent: 0)])

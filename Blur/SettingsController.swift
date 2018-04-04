@@ -38,7 +38,7 @@ class SettingsController: TableViewController {
         self.dataSource = DataSource(tableViewDelegate: self)
         dataSource.sections = [
             Section(header: "User Info", rows: [
-                Row(text: "Profile Image", selection: { [unowned self] in
+                Row(text: "Profile Photo", selection: { [unowned self] in
                     self.updateProfileImage()
                     }, accessory: .view(self.userImageView)),
                 Row(text: "Username", detailText: "@" + user.username,

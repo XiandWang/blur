@@ -40,19 +40,19 @@ class MessageNotification {
         let type = self.type
         var text = self.user.fullName
         if type == NotificationType.allowAccess.rawValue {
-            text.append(" allows you to access the image")
+            text.append(" allows you to access the photo")
         } else if type == NotificationType.rejectMessage.rawValue {
-            text.append(" rejects your image. ")
+            text.append(" rejects your photo. ")
             if let moodText = self.text, !moodText.isEmpty {
                 text.append("Mood: \(moodText)")
             }
         } else if type == NotificationType.requestAccess.rawValue {
-            text.append(" wants to access your image. ")
+            text.append(" wants to access your photo. ")
             if let moodText = self.text, !moodText.isEmpty {
                 text.append("Mood: \(moodText)")
             }
         } else if type == NotificationType.likeMessage.rawValue {
-            text.append(" likes your image")
+            text.append(" likes your photo")
         }
         text.append("  •  \(self.createdTime.timeAgoDisplay())")
         return text
