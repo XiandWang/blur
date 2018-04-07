@@ -42,7 +42,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>FacebookAppID</key>
 	<string>424319251337302</string>
 	<key>FacebookDisplayName</key>
@@ -57,11 +57,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>We'd like to use your camera.</string>
+	<string>HidingChat uses your camera to take photos and send to your friends. Your photos won&apos;t be shared without your permission.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>We need your contacts to invite friends. You can invite verbally, too. So the permission is optional.</string>
+	<string>HidingChat needs your contacts to invite friends. You can invite verbally, too. So the permission is optional.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We'd like to use your photos.</string>
+	<string>HidingChat uses your photos to send to your friends. Your photos won&apos;t be shared without your permission.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Lato-Bold.ttf</string>

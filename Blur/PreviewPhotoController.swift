@@ -239,9 +239,9 @@ class PreviewPhotoController: UIViewController {
         //print(editedJpeg.count, "5")
         //print(originalJpeg.count, "5")
         
-        
-        Analytics.logEvent(COUNT_DOWN_TIMER, parameters: ["timerValue": self.picker.selectedRow(inComponent: 0)])
-        Analytics.logEvent(ALLOW, parameters: ["allowValue": self.allowSwitch.isOn])
+
+        Analytics.logEvent(COUNT_DOWN_TIMER, parameters: ["timerValue": self.timerValues[safe: self.picker.selectedRow(inComponent: 0)] ?? -1])
+        Analytics.logEvent(ALLOW, parameters: ["allowValue": String(self.allowSwitch.isOn)])
 
         originalTask.observe(.failure) { (snap) in
             self.showError(self.UPLOADING_IMAGE_ERR )

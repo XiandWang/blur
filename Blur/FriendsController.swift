@@ -121,9 +121,13 @@ class FriendsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let blockAction  = UITableViewRowAction(style: .normal, title: "Block") { (action, indexPath) in
+        let blockAction  = UITableViewRowAction(style: .destructive, title: "Block") { (action, indexPath) in
             let user = self.getUser(from: indexPath)
             guard let curUid = Auth.auth().currentUser?.uid else { return }
+            if curUid == user.uid {
+                AppHUD.error("You can't block your self...", isDarkTheme: true)
+                return
+            }
             let alert = UIAlertController(title: "Confirm Block?", message: nil, preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Block", style: .default, handler: { (_) in
                 let updates = ["/\(FRIENDS_NODE)/\(curUid)/\(user.uid)/status": FriendStatus.blocked.rawValue,

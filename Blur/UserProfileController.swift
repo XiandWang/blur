@@ -307,7 +307,7 @@ class UserProfileController: UIViewController {
 
     @objc func handleSendImage() {
         if checkImagePermission() == .denied || checkCameraPermission() == .denied {
-            let dialog = AZDialogViewController(title: "Camera and image permission", message: "Most people use HidingChat to send images. Do you want to grant permission?", titleFontSize: 22, messageFontSize: 14, buttonsHeight: 50, cancelButtonHeight: 50)
+            let dialog = AZDialogViewController(title: "Camera and photo permission", message: "Most people use HidingChat to send photos. Do you want to grant permission?", titleFontSize: 22, messageFontSize: 16, buttonsHeight: 50, cancelButtonHeight: 50)
             dialog.blurBackground = false
             dialog.buttonStyle = { (button,height,position) in
                 button.setTitleColor(.white, for: .normal)
@@ -324,7 +324,7 @@ class UserProfileController: UIViewController {
                 return true
             }
             dialog.dismissWithOutsideTouch = false
-            dialog.addAction(AZDialogAction(title: "Go to permisions", handler: { (dialog) -> (Void) in
+            dialog.addAction(AZDialogAction(title: "Grant permisions", handler: { (dialog) -> (Void) in
                 self.openSettings()
                 dialog.dismiss()
             }))

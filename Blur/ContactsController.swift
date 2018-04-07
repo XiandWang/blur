@@ -33,9 +33,9 @@ class ContactsController: UITableViewController, MFMessageComposeViewControllerD
         setupNav()
         let store = CNContactStore()
         store.requestAccess(for: .contacts) { (granted, error) in
-            if let error = error {
+            if let _ = error {
                 DispatchQueue.main.async {
-                    AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                    self.showDialog()
                 }
                 return
             }
@@ -142,6 +142,43 @@ class ContactsController: UITableViewController, MFMessageComposeViewControllerD
             dialog.show(in: self)
             return
         }
+    }
+    
+    func showDialog() {
+        let dialog = AZDialogViewController(title: "Invite to unlock", message: "3 invites unlock complimenting. 5 invites unlock asking for chats!", verticalSpacing: -1, buttonSpacing: 10, sideSpacing: 20, titleFontSize: 20, messageFontSize: 15, buttonsHeight: 44)
+        dialog.dismissWithOutsideTouch = true
+        dialog.blurBackground = false
+        dialog.imageHandler = { (imageView) in
+            imageView.image = UIImage.fontAwesomeIcon(name: .unlockAlt, textColor: BLUE_COLOR, size: CGSize(width: 50, height: 50))
+            imageView.backgroundColor = BLUE_COLOR_LIGHT
+            imageView.contentMode = .center
+            return true //must return true, otherwise image won't show.
+        }
+        dialog.cancelEnabled = true
+        
+        dialog.buttonStyle = { (button,height,position) in
+            button.setTitleColor(BLUE_COLOR, for: .normal)
+            button.titleLabel?.font = TEXT_FONT
+            button.layer.masksToBounds = true
+            button.layer.borderColor = BLUE_COLOR.cgColor
+        }
+        dialog.addAction(AZDialogAction(title: "Sure", handler: { (dialog) -> (Void) in
+            if CNContactStore.authorizationStatus(for: .contacts) == .denied {
+                dialog.removeAllActions()
+                dialog.title = "Grant contacts permission?"
+                dialog.message = nil
+                dialog.addAction(AZDialogAction(title: "Grant permission", handler: { (dialog) -> (Void) in
+                    self.openPermissions()
+                    dialog.dismiss()
+                }))
+                dialog.addAction(AZDialogAction(title: "Later", handler: { (dialog) -> (Void) in
+                    dialog.dismiss()
+                }))
+            } else {
+                dialog.dismiss()
+            }
+        }))
+        dialog.show(in: self)
     }
     
     fileprivate func openPermissions() {

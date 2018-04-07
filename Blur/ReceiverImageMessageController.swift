@@ -210,7 +210,7 @@ class ReceiverImageMessageController : UIViewController {
         guard let caption = message?.caption else { return }
         captionLabel.text = caption
         view.addSubview(captionLabel)
-        let rect = NSString(string: caption).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font: SMALL_TEXT_FONT], context: nil).size
+        let rect = NSString(string: caption.trimmingCharacters(in: .whitespacesAndNewlines)).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font: SMALL_TEXT_FONT], context: nil).size
         let height = max(rect.height + 16.0, 40)
 
         
@@ -232,10 +232,6 @@ class ReceiverImageMessageController : UIViewController {
         guard let point = self.captionLabelPoint else { return }
         
         self.captionLabel.center = CGPoint(x: point.x, y: point.y + p.y)
-        
-        UIView.animate(withDuration: 0.33, delay: 0, options: .curveEaseOut, animations: {
-            self.captionLabel.center.x -= self.view.frame.width
-        }, completion: nil)
     }
     
     fileprivate func setupScrollView() {

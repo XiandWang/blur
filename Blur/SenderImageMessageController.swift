@@ -81,11 +81,27 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         guard let caption = message?.caption else { return }
         captionLabel.text = caption
         view.addSubview(captionLabel)
-        let rect = NSString(string: caption).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font: TEXT_FONT], context: nil).size
+        let rect = NSString(string: caption.trimmingCharacters(in: .whitespacesAndNewlines)).boundingRect(with: CGSize(width:view.width, height:999), options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: [NSAttributedStringKey.font: TEXT_FONT], context: nil).size
 
         let height = max(rect.height + 16.0, 40)
-        captionLabel.anchor(top: nil, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: height)
-        captionLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        captionLabel.frame = CGRect(x: 0, y: view.frame.height / 2.0, width: view.frame.width, height: height)
+
+        
+        captionLabel.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handleCaptionPan(sender:))))
+        captionLabel.isUserInteractionEnabled = true
+    }
+    
+    var captionLabelPoint: CGPoint?
+    
+    @objc func handleCaptionPan(sender: UIPanGestureRecognizer) {
+        let p = sender.translation(in: self.view)
+        if sender.state == .began {
+            self.captionLabelPoint = self.captionLabel.center
+            
+        }
+        guard let point = self.captionLabelPoint else { return }
+        
+        self.captionLabel.center = CGPoint(x: point.x, y: point.y + p.y)
     }
     
      fileprivate func setupLikeImage() {
