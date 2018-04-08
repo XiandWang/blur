@@ -30,7 +30,7 @@ class AppHUD {
         hud.bezelView.style = .solidColor
         hud.label.text = message
         hud.label.numberOfLines = 0
-        hud.hide(animated: true, afterDelay: 1.5)
+        hud.hide(animated: true, afterDelay: 2)
     }
     
     static func error(_ message: String?, isDarkTheme: Bool) {

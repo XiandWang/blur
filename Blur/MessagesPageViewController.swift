@@ -41,8 +41,9 @@ class MessagesPageViewController: UIPageViewController {
             self.setViewControllers(controllers, direction: .forward, animated: false, completion: nil)
         }
         
-        UIApplication.shared.isStatusBarHidden = true
+        UIApplication.shared.isStatusBarHidden = true    
     }
+
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -68,7 +69,6 @@ class MessagesPageViewController: UIPageViewController {
             self.navigationController?.navigationBar.isTranslucent = false
             self.setupNavTitleAttr()
             self.navigationController?.navigationBar.tintColor = UIColor.black
-            //self.navigationItem.backBarButtonItem?.tintColor = UIColor.black
         }
     }
     

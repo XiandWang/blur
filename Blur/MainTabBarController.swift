@@ -69,6 +69,6 @@ class MainTabBarController: UITabBarController {
         homeNavController.tabBarItem.image = #imageLiteral(resourceName: "speech_buble")
         homeNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "speech_buble")
         
-        viewControllers = [homeNavController, friendsNavController, notificationNavController, myAccountNavController]
+        viewControllers = [EULAController(),homeNavController, friendsNavController, notificationNavController, myAccountNavController]
     }
 }

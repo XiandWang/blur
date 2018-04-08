@@ -415,52 +415,110 @@ class UserProfileController: UIViewController {
         }
     }
     
+    
     func configureViews() {
-        view.backgroundColor = .white
-        
-        view.addSubview(userProfileImageView)
-        userProfileImageView.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: imageWidth, height: imageWidth)
-        userProfileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        view.addSubview(fullNameLabel)
-        fullNameLabel.anchor(top: userProfileImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
-        
-        view.addSubview(userNameLabel)
-        userNameLabel.anchor(top: fullNameLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 2, paddingLeft: 8, paddingBottom: 0, paddingRight: 9, width: 0, height: 0)
-        
-        let divider = UIView()
-        view.addSubview(divider)
-        divider.backgroundColor = .clear
-        divider.anchor(top: userNameLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.8)
-        
-        view.addSubview(statsTitleLabel)
-        statsTitleLabel.anchor(top: divider.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
-        view.addSubview(chatStatsLabel)
-        view.addSubview(likeStatsLabel)
-        
-        chatStatsLabel.anchor(top: statsTitleLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 60, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        likeStatsLabel.anchor(top: statsTitleLabel.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 60, width: 0, height: 0)
-        
-        let bottomdivider = UIView()
-        view.addSubview(bottomdivider)
-        bottomdivider.backgroundColor = BACKGROUND_GRAY
-        bottomdivider.anchor(top: chatStatsLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0.8)
-        
-        view.addSubview(sendChatButton)
-        sendChatButton.anchor(top: bottomdivider.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
-        UIView.addShadow(for: sendChatButton)
-        
-        view.addSubview(showMoreButton)
-        showMoreButton.anchor(top: sendChatButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
-        UIView.addShadow(for: showMoreButton)
+//        view.backgroundColor = .white
+//
+//        view.addSubview(userProfileImageView)
+//        userProfileImageView.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: imageWidth, height: imageWidth)
+//        userProfileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//
+//        view.addSubview(fullNameLabel)
+//        fullNameLabel.anchor(top: userProfileImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
+//
+//        view.addSubview(userNameLabel)
+//        userNameLabel.anchor(top: fullNameLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 2, paddingLeft: 8, paddingBottom: 0, paddingRight: 9, width: 0, height: 0)
+//
+//        let divider = UIView()
+//        view.addSubview(divider)
+//        divider.backgroundColor = .clear
+//        divider.anchor(top: userNameLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.8)
+//
+//        view.addSubview(statsTitleLabel)
+//        statsTitleLabel.anchor(top: divider.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+//
+//        view.addSubview(chatStatsLabel)
+//        view.addSubview(likeStatsLabel)
+//
+//        chatStatsLabel.anchor(top: statsTitleLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 60, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+//        likeStatsLabel.anchor(top: statsTitleLabel.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 60, width: 0, height: 0)
+//
+//        let bottomdivider = UIView()
+//        view.addSubview(bottomdivider)
+//        bottomdivider.backgroundColor = BACKGROUND_GRAY
+//        bottomdivider.anchor(top: chatStatsLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0.8)
+//
+//        view.addSubview(sendChatButton)
+//        sendChatButton.anchor(top: bottomdivider.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
+//        UIView.addShadow(for: sendChatButton)
+//
+//        view.addSubview(showMoreButton)
+//        showMoreButton.anchor(top: sendChatButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
+//        UIView.addShadow(for: showMoreButton)
         
         
         
 //        let v = UIView()
 //        v.backgroundColor = UIColor.hexStringToUIColor(hex: "#fafafa")
 //        view.insertSubview(v, at: 0)
-//        v.anchor(top: divider.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+//        v.anchor(top: divider.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)n
+        
+//        print(NSString(string: chatStatsLabel.text!).size(withAttributes: [NSAttributedStringKey.font : TEXT_FONT]).height)
+//        print(NSString(string: statsTitleLabel.text!).size(withAttributes: [NSAttributedStringKey.font : UIFont(name: APP_FONT_BOLD, size: 17)]).height)
+//        print(NSString(string: userNameLabel.text!).size(withAttributes: [NSAttributedStringKey.font : UIFont(name: APP_FONT_BOLD, size: 18)]).height)
+
+        self.automaticallyAdjustsScrollViewInsets = false
+
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .white
+        scrollView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: -35, right: 0)
+
+        view.addSubview(scrollView)
+        scrollView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: bottomLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+       
+        let container = UIView()
+        scrollView.addSubview(container)
+        container.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height)
+        
+        
+        container.addSubview(userProfileImageView)
+        userProfileImageView.anchor(top: container.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: imageWidth, height: imageWidth)
+        userProfileImageView.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
+        
+        container.addSubview(fullNameLabel)
+        fullNameLabel.anchor(top: userProfileImageView.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
+        
+        container.addSubview(userNameLabel)
+        userNameLabel.anchor(top: fullNameLabel.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 2, paddingLeft: 8, paddingBottom: 0, paddingRight: 9, width: 0, height: 0)
+        
+        let divider = UIView()
+        container.addSubview(divider)
+        divider.backgroundColor = .clear
+        divider.anchor(top: userNameLabel.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.8)
+        
+        container.addSubview(statsTitleLabel)
+        statsTitleLabel.anchor(top: divider.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        container.addSubview(chatStatsLabel)
+        container.addSubview(likeStatsLabel)
+        
+        chatStatsLabel.anchor(top: statsTitleLabel.bottomAnchor, left: container.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 60, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        likeStatsLabel.anchor(top: statsTitleLabel.bottomAnchor, left: nil, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 60, width: 0, height: 0)
+        
+        let bottomdivider = UIView()
+        container.addSubview(bottomdivider)
+        bottomdivider.backgroundColor = BACKGROUND_GRAY
+        bottomdivider.anchor(top: chatStatsLabel.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 12, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0.8)
+        
+        container.addSubview(sendChatButton)
+        sendChatButton.anchor(top: bottomdivider.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
+        UIView.addShadow(for: sendChatButton)
+        
+        container.addSubview(showMoreButton)
+        showMoreButton.anchor(top: sendChatButton.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
+        UIView.addShadow(for: showMoreButton)
+    
     }
     
     @objc func dismissNav() {

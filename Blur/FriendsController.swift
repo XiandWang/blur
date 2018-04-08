@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import Kingfisher
 import Foundation
-
+import AudioToolbox
 
 class FriendsController: UITableViewController {
     private let cellId = "userFriendCellId"
@@ -208,6 +208,7 @@ extension FriendsController {
                 Database.getUser(uid: child.key, completion: { (user, error) in
                     if let user = user {
                         self.newRequestUids.append(user)
+                        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                     }
                 })
             }

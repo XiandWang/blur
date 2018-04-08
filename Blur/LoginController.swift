@@ -93,9 +93,9 @@ extension LoginController {
         AppHUD.progress(nil,  isDarkTheme: true)
         self.loginButton.isEnabled = false
         Auth.auth().signIn(withEmail: email, password: password, completion: { (user, err) in
-            if let _ = err {
+            if let err = err {
                 AppHUD.progressHidden()
-                AppHUD.error("Login failed. Please check your email and password.",  isDarkTheme: true)
+                AppHUD.error("Login failed. Please try again. Error: \(err.localizedDescription)",  isDarkTheme: true)
                 self.loginButton.isEnabled = true
                 return
             }

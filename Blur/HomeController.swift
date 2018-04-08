@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import Kingfisher
+import AudioToolbox
 
 class HomeController: UITableViewController {
     private let cellId = "chatCellId"
@@ -178,6 +179,8 @@ extension HomeController {
             self.imageMessages[senderId] = [message]
         }
         self.sortUserIdsByMessageCreatedTime()
+        
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
     }
     
     fileprivate func prefetchImages(message: Message) {

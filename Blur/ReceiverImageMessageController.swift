@@ -178,8 +178,35 @@ class ReceiverImageMessageController : UIViewController {
         addSwipeDown()
     }
     
+    @objc func handleReportAbuse() {
+        guard let message = self.message, let senderUser = self.senderUser else { return }
+        let alert = UIAlertController(title: "Flag objectionable content", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Flag", style: .destructive, handler: { (action) in
+            AppHUD.progress(nil, isDarkTheme: false)
+            Firestore.firestore().collection("flagReports").addDocument(data: ["messageId": message.messageId, "senderId": senderUser.uid, "editedImgUrl": message.editedImageUrl, "originalImgUrl": message.originalImageUrl], completion: { (error) in
+                if let error = error {
+                    AppHUD.progressHidden()
+                    AppHUD.error(error.localizedDescription, isDarkTheme: false)
+                    return
+                }
+                FIRRef.getMessages()
+                    .document(message.messageId).updateData([MessageSchema.IS_DELETED: true, MessageSchema.IS_ACKNOWLEDGED: true, MessageSchema.ACKNOWLEDGE_TYPE: "Reject"])
+                AppHUD.progressHidden()
+                AppHUD.success("Your flag is acknowledged. You won't see the photo again", isDarkTheme: false)
+                self.navigationController?.popToRootViewController(animated: true)
+            })
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        let flag = UIImage.fontAwesomeIcon(name: .flag, textColor: .black, size: CGSize(width: 30, height: 38))
+        let barItem = UIBarButtonItem(image: flag, style: .plain, target: self, action: #selector(self.handleReportAbuse))
+        self.pageController?.navigationItem.rightBarButtonItem = barItem
         
         guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) else { return }
         guard let message = message else { return }

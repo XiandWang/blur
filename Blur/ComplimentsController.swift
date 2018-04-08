@@ -104,6 +104,28 @@ class ComplimentsController: UITableViewController {
         dialog.show(in: self)
     }
     
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let flagAction  = UITableViewRowAction(style: .destructive, title: "Flag") { (action, indexPath) in
+            guard let compliment = self.compliments[safe: indexPath.row] else { return }
+            let alert = UIAlertController(title: "Flag objectionalbe content?", message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Flag", style: .default, handler: { (_) in
+                Firestore.firestore().collection("complimentFlagReports").addDocument(data: ["complimentId": compliment.complimentId, "senderId": compliment.sender?.uid ?? ""], completion: { (error) in
+                    if let error = error {
+                        AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                        return
+                    }
+                    AppHUD.success("Your flag has been reported.", isDarkTheme: true)
+                    self.compliments.remove(at: indexPath.row)
+                    self.tableView.reloadData()
+                })
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        return [flagAction]
+    }
+    
     override func didReceiveMemoryWarning() {
         self.compliments = Array(self.compliments.dropLast(200))
     }

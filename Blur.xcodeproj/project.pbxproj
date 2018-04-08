@@ -82,6 +82,7 @@
 		EEE38EC82001B45600C80F7A /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE38EC72001B45600C80F7A /* CurrentUser.swift */; };
 		EEE57DFC204C19FA002CB81C /* XWEmojiTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE57DFB204C19FA002CB81C /* XWEmojiTool.swift */; };
 		EEECC407204FD9F000D520F8 /* GSTimeIntervalPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = EEECC406204FD9F000D520F8 /* GSTimeIntervalPicker.m */; };
+		EEEDB8602079E8E3009A9D27 /* EULAController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEDB85F2079E8E3009A9D27 /* EULAController.swift */; };
 		EEFE52891F9981C000F7C1D7 /* TableViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFE52881F9981C000F7C1D7 /* TableViewHelper.swift */; };
 		EEFE528B1F99B61A00F7C1D7 /* NewFriendsRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFE528A1F99B61A00F7C1D7 /* NewFriendsRequestController.swift */; };
 /* End PBXBuildFile section */
@@ -190,6 +191,7 @@
 		EEE57DFB204C19FA002CB81C /* XWEmojiTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XWEmojiTool.swift; sourceTree = "<group>"; };
 		EEECC405204FD9EF00D520F8 /* GSTimeIntervalPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSTimeIntervalPicker.h; sourceTree = "<group>"; };
 		EEECC406204FD9F000D520F8 /* GSTimeIntervalPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSTimeIntervalPicker.m; sourceTree = "<group>"; };
+		EEEDB85F2079E8E3009A9D27 /* EULAController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EULAController.swift; sourceTree = "<group>"; };
 		EEFE52881F9981C000F7C1D7 /* TableViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewHelper.swift; sourceTree = "<group>"; };
 		EEFE528A1F99B61A00F7C1D7 /* NewFriendsRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFriendsRequestController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -236,6 +238,7 @@
 				EE78EEF91F0D52C0008662C0 /* SignUpViewController.swift */,
 				EE1FF2E31F144BEB00340F65 /* LoginController.swift */,
 				EE33B3E71FD2430C000816D0 /* ChooseUserNameController.swift */,
+				EEEDB85F2079E8E3009A9D27 /* EULAController.swift */,
 			);
 			name = "Login+SignUp";
 			sourceTree = "<group>";
@@ -723,6 +726,7 @@
 				EEE38EC420006BF200C80F7A /* Notification.swift in Sources */,
 				EE22F8D120462BD1007F516D /* AnimationHelper.swift in Sources */,
 				EE1FF2E01F14303A00340F65 /* MainTabBarController.swift in Sources */,
+				EEEDB8602079E8E3009A9D27 /* EULAController.swift in Sources */,
 				EEE38EC21FFF68B000C80F7A /* NotificationController.swift in Sources */,
 				EE3C2D8E1F91B5DD00DE609F /* AddFriendController.swift in Sources */,
 				EEE38EBE1FFB45AB00C80F7A /* SenderImageMessageController.swift in Sources */,
