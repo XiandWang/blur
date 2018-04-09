@@ -197,7 +197,7 @@ class ContactsController: UITableViewController, MFMessageComposeViewControllerD
         let controller = MFMessageComposeViewController()
         controller.messageComposeDelegate = self
 
-        controller.body = "Hi I am using HidingChat to tease with my friends. You should join me too. Get it on App Store."
+        controller.body = "Hi I am using HidingChat to tease with my friends. You should join me too. Get it on App Store!"
         controller.recipients  = Array(contactsToSend)
         self.present(controller, animated: true, completion: nil)
     }

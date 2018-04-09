@@ -125,6 +125,7 @@ class SettingsController: TableViewController {
         guard let notiController = notiNavController.viewControllers[0] as? NotificationController else { return }
         
         notiController.notificationsListener?.remove()
+        print(notiController.notificationsListener?.debugDescription)
         homeController.messageListener?.remove()
 
         guard let friendsNavController = controllers[1] as? UINavigationController else { return }

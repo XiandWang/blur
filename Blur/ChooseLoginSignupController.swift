@@ -35,7 +35,7 @@ class ChooseLoginSignupController: UIViewController {
     let loginButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.backgroundColor = YELLOW_COLOR
-        bt.setTitle("Login", for: .normal)
+        bt.setTitle("Log in", for: .normal)
         bt.titleLabel?.font = BOLD_FONT
         bt.setTitleColor(.black, for: .normal)
         bt.layer.cornerRadius = 22

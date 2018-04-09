@@ -28,7 +28,7 @@ class SignUpViewController: UIViewController {
     
     let signUpButton : UIButton = {
         let bt = UIButton(type: .system)
-        bt.setTitle("Sign up", for: .normal)
+        bt.setTitle("Sign up & Accept", for: .normal)
         bt.setTitleColor(.white, for: .normal)
         bt.titleLabel?.font = BOLD_FONT
         bt.backgroundColor = .lightGray
@@ -37,6 +37,27 @@ class SignUpViewController: UIViewController {
         bt.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
         return bt
     }()
+    
+    
+    let acceptTermsButton : UIButton = {
+        let button = UIButton(type: .system)
+        
+        let attributedTitle = NSMutableAttributedString(string: "By tapping Sign up & Accept, you agree to the ", attributes: [NSAttributedStringKey.font: UIFont(name: APP_FONT, size: 12), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+        
+        attributedTitle.append(NSAttributedString(string: "Terms of service", attributes: [NSAttributedStringKey.font: UIFont(name: APP_FONT, size: 12), NSAttributedStringKey.foregroundColor: BLUE_COLOR]))
+        
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.textAlignment = .left
+        button.titleLabel?.lineBreakMode = .byWordWrapping
+        
+        button.addTarget(self, action: #selector(handleShowTerms), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func handleShowTerms() {
+        self.navigationController?.pushViewController(EULAController(), animated: true)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,9 +87,15 @@ class SignUpViewController: UIViewController {
         passwordTextField.layoutIfNeeded()
         passwordTextField.setupView()
         
-        signUpButton.anchor(top: passwordTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
+//        signUpButton.anchor(top: passwordTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
 
         let _ = UIView.createShadow(for: signUpButton, superview: view)
+        
+        
+        view.addSubview(acceptTermsButton)
+        acceptTermsButton.anchor(top: passwordTextField.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
+        
+        signUpButton.anchor(top: acceptTermsButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
     }
 }
 

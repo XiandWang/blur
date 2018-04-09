@@ -30,7 +30,7 @@ class NewFriendsHeader : UITableViewCell {
         let lb = UILabel()
         lb.font = BOLD_FONT
         lb.numberOfLines = 1
-        lb.text = "New Friends"
+        lb.text = "New Requests"
         return lb
     }()
     

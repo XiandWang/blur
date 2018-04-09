@@ -39,7 +39,7 @@ class LoginController: UIViewController {
     let loginButton: UIButton = {
         let bt = UIButton(type: .system)
         bt.backgroundColor = .lightGray
-        bt.setTitle("Login", for: .normal)
+        bt.setTitle("Log in", for: .normal)
         bt.titleLabel?.font = BOLD_FONT
         bt.setTitleColor(.white, for: .normal)
         bt.isEnabled = false
@@ -54,7 +54,7 @@ class LoginController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Login"
+        self.navigationItem.title = "Log in"
 
         view.backgroundColor = .white
         setupInputView()

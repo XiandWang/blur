@@ -301,9 +301,10 @@ extension UIViewController {
         navigationController?.view.backgroundColor = .clear
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.navigationBar.tintColor = PURPLE_COLOR_LIGHT
-        navigationItem.backBarButtonItem?.tintColor = PURPLE_COLOR_LIGHT
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: PURPLE_COLOR_LIGHT]
+        let color = PURPLE_COLOR_LIGHT
+        navigationController?.navigationBar.tintColor = color
+        navigationItem.backBarButtonItem?.tintColor = color
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: color]
     }
     
     public func setupNavTitleAttr() {

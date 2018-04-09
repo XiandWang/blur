@@ -124,7 +124,7 @@ class PreviewPhotoController: UIViewController {
     
     fileprivate func setupAllow() {
         view.addSubview(self.questionlabel)
-        questionlabel.anchor(top: imageContainer.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        questionlabel.anchor(top: imageContainer.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
         
         let allowContainer = UIView()
         allowContainer.backgroundColor = .white

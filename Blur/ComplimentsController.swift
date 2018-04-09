@@ -108,7 +108,7 @@ class ComplimentsController: UITableViewController {
         let flagAction  = UITableViewRowAction(style: .destructive, title: "Flag") { (action, indexPath) in
             guard let compliment = self.compliments[safe: indexPath.row] else { return }
             let alert = UIAlertController(title: "Flag objectionalbe content?", message: nil, preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Flag", style: .default, handler: { (_) in
+            alert.addAction(UIAlertAction(title: "Flag", style: .destructive, handler: { (_) in
                 Firestore.firestore().collection("complimentFlagReports").addDocument(data: ["complimentId": compliment.complimentId, "senderId": compliment.sender?.uid ?? ""], completion: { (error) in
                     if let error = error {
                         AppHUD.error(error.localizedDescription, isDarkTheme: true)
