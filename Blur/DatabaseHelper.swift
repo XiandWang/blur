@@ -31,6 +31,23 @@ extension Database {
             completion(true, error)
         }
     }
+    
+    static func hasAcceptedTerms(uid: String, completion: @escaping (Bool, Error?) -> ()) {
+        Database.database().reference().child(USERS_NODE).child(uid).observeSingleEvent(of: .value, with: { (snap) in
+            let dict = snap.value as? [String: Any]
+            if dict == nil || dict?["hasAcceptedTerms"] == nil  {
+                completion(false, nil)
+            } else {
+                if let bool = dict!["hasAcceptedTerms"] as? Bool, bool {
+                    completion(true, nil)
+                } else {
+                    completion(false, nil)
+                }
+            }
+        }) { (error) in
+            completion(true, error)
+        }
+    }
 }
 
 

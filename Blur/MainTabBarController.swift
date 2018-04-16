@@ -46,6 +46,32 @@ class MainTabBarController: UITabBarController {
         setupViewControllers()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        if let isGoogleSignIn = Auth.auth().currentUser?.providerData[safe: 0]?.providerID.starts(with: "google"), isGoogleSignIn {
+            Database.hasAcceptedTerms(uid: uid) { (hasAccepted, error) in
+                if let error = error {
+                    AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                    return
+                }
+                if !hasAccepted {
+                    let terms = EULAController()
+                    terms.uid = uid
+                    terms.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: terms, action: #selector(terms.handleReject))
+                    terms.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Accept", style: .plain, target: terms, action: #selector(terms.handleAccept))
+                    DispatchQueue.main.async {
+                        let navController = UINavigationController(rootViewController: terms)
+                        self.present(navController, animated: true, completion: {
+                            AppHUD.success("Please accept the Terms of Service first", isDarkTheme: true)
+                        })
+                    }
+                }
+            }
+        }
+    }
+    
      func setupViewControllers() {
         tabBar.tintColor = YELLOW_COLOR
         tabBar.barTintColor = UIColor.hexStringToUIColor(hex: "#141e33")
@@ -69,6 +95,6 @@ class MainTabBarController: UITabBarController {
         homeNavController.tabBarItem.image = #imageLiteral(resourceName: "speech_buble")
         homeNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "speech_buble")
         
-        viewControllers = [EULAController(),homeNavController, friendsNavController, notificationNavController, myAccountNavController]
+        viewControllers = [homeNavController, friendsNavController, notificationNavController, myAccountNavController]
     }
 }

@@ -55,6 +55,8 @@ let GOOGLE_LOGIN_SUCCESS = NSNotification.Name(rawValue: "GOOGLE_LOGIN_SUCCESS")
 
 let IMAGE_VIEW_HERO_ID = "imageViewHeroId"
 
+let ITUNES_URL = "https://itunes.apple.com/us/app/hidingchat/id1366697857?ls=1&mt=8"
+
 enum FriendStatus: String {
     case pending
     case added

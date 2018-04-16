@@ -42,7 +42,7 @@ class EditFullNameController: UIViewController {
     }
     
     @objc func handleInputChange() {
-        if let fullName = editTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), fullName.count < 32 && fullName.count > 2 {
+        if let fullName = editTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), fullName.count < 32 && fullName.count > 0 {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
         } else {
             self.navigationItem.rightBarButtonItem?.isEnabled = false

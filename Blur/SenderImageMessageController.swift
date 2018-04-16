@@ -205,6 +205,22 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         AnimationHelper.perspectiveTransform(for: view)
         setupGestures()
         setupControls()
+        
+        setupShare()
+    }
+    
+    func setupShare() {
+        let shareImg = UIImage.fontAwesomeIcon(name: .share, textColor: TINT_COLOR, size: CGSize(width: 30, height: 44))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: shareImg, style: .plain, target: self, action: #selector(handleShare(_:)))
+    }
+    
+    @objc func handleShare(_ sender: AnyObject) {
+        guard let image = self.editedImageView.image else { return }
+        let activityViewController = UIActivityViewController(activityItems: [image, "I sent a photo in HidingChat"], applicationActivities: nil)
+        if let popoverPresentationController = activityViewController.popoverPresentationController {
+            popoverPresentationController.barButtonItem = (sender as! UIBarButtonItem)
+        }
+        present(activityViewController, animated: true, completion: nil)
     }
     
     override var prefersStatusBarHidden: Bool {

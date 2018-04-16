@@ -112,8 +112,10 @@ class SettingsController: TableViewController {
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
-    
-    fileprivate func stopListeners() {
+}
+
+extension UIViewController {
+    func stopListeners() {
         guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else {
             return
         }
@@ -125,14 +127,14 @@ class SettingsController: TableViewController {
         guard let notiController = notiNavController.viewControllers[0] as? NotificationController else { return }
         
         notiController.notificationsListener?.remove()
-        print(notiController.notificationsListener?.debugDescription)
         homeController.messageListener?.remove()
-
+        
         guard let friendsNavController = controllers[1] as? UINavigationController else { return }
         guard let friendsController = friendsNavController.viewControllers[0] as? FriendsController else { return }
         friendsController.friendRequestsRef?.removeAllObservers()
         friendsController.friendsRef?.removeAllObservers()
     }
+
 }
 
 

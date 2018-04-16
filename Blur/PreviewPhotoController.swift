@@ -1,4 +1,4 @@
-//
+
 //  PreviewPhotoController.swift
 //  Blur
 //
@@ -19,7 +19,7 @@ class PreviewPhotoController: UIViewController {
     var user: User? {
         didSet {
             guard let fullName = user?.fullName else { return }
-            self.questionlabel.text = "Do you allow \(fullName) to view the original photo?"
+            self.questionlabel.text = "Do you allow \(fullName) to view the original image?"
         }
     }
     
@@ -72,13 +72,13 @@ class PreviewPhotoController: UIViewController {
         s.addTarget(self, action: #selector(handleAllowSwitchChanged), for: .valueChanged)
         return s
     }()
-
+    
     let captionTextView: UITextView = {
         let tv = UITextView()
         tv.font = TEXT_FONT
         return tv
     }()
-
+    
     let imageContainer = UIView()
     
     let allowNoteLabel : UILabel = {
@@ -88,6 +88,9 @@ class PreviewPhotoController: UIViewController {
         lb.textColor = .lightGray
         return lb
     }()
+    
+    var editedTask: StorageUploadTask?
+    var originalTask: StorageUploadTask?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,6 +106,40 @@ class PreviewPhotoController: UIViewController {
         picker.selectRow(0, inComponent: 0, animated: true)
         picker.showsSelectionIndicator = true
         setupPicker()
+        
+        initTasks()
+    }
+    
+    func initTasks() {
+        guard let senderId = Auth.auth().currentUser?.uid else {
+            return
+        }
+        guard let receiverId = self.user?.uid else {
+            return
+        }
+        
+        guard let originalImage = originalImage, let editedImage = editedImage else {
+            return
+        }
+        
+        // uploading images to Firebase Storage
+        let meta = StorageMetadata()
+        meta.customMetadata = ["senderId": senderId, "receiverId": receiverId]
+        meta.contentType = "image/jpeg"
+        
+        guard let originalJpeg = UIImageJPEGRepresentation(originalImage, 0.5) else {
+            showError(PROCESSING_IMAGE_ERR)
+            return
+        }
+        
+        guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.3) else {
+            showError(PROCESSING_IMAGE_ERR)
+            return
+        }
+        
+        self.originalTask = FIRRef.getImageMessages().child(senderId).child(UUID().uuidString).putData(originalJpeg, metadata: meta)
+        
+        self.editedTask = FIRRef.getImageMessages().child(senderId).child(UUID().uuidString).putData(editedJpeg, metadata: meta)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -124,7 +161,7 @@ class PreviewPhotoController: UIViewController {
     
     fileprivate func setupAllow() {
         view.addSubview(self.questionlabel)
-        questionlabel.anchor(top: imageContainer.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
+        questionlabel.anchor(top: imageContainer.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 16, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         let allowContainer = UIView()
         allowContainer.backgroundColor = .white
@@ -146,7 +183,7 @@ class PreviewPhotoController: UIViewController {
     func setupPicker() {
         view.addSubview(countdownlabel)
         countdownlabel.anchor(top: allowNoteLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 0)
-
+        
         view.addSubview(picker)
         picker.anchor(top: countdownlabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 150)
     }
@@ -203,7 +240,7 @@ class PreviewPhotoController: UIViewController {
     }
     
     fileprivate func send() {
-        AppHUD.progress("Uploading...", isDarkTheme: true)
+        AppHUD.progress(nil, isDarkTheme: true)
         guard let senderId = Auth.auth().currentUser?.uid, let senderUser = currentUser else {
             showError("Cannot retrieve current user. Please try again.")
             return
@@ -212,49 +249,51 @@ class PreviewPhotoController: UIViewController {
             showError("cannot retrieve receiver id")
             return
         }
-        
         guard let originalImage = originalImage, let editedImage = editedImage else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
         
-        // uploading images to Firebase Storage
-        let meta = StorageMetadata()
-        meta.customMetadata = ["senderId": senderId, "receiverId": receiverId]
-        meta.contentType = "image/jpeg"
-        
-        guard let originalJpeg = UIImageJPEGRepresentation(originalImage, 0.5) else {
-            showError(PROCESSING_IMAGE_ERR)
-            return
+        if self.originalTask == nil || self.editedTask == nil {
+            // uploading images to Firebase Storage
+            let meta = StorageMetadata()
+            meta.customMetadata = ["senderId": senderId, "receiverId": receiverId]
+            meta.contentType = "image/jpeg"
+            
+            guard let originalJpeg = UIImageJPEGRepresentation(originalImage, 0.5) else {
+                showError(PROCESSING_IMAGE_ERR)
+                return
+            }
+            
+            guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.3) else {
+                showError(PROCESSING_IMAGE_ERR)
+                return
+            }
+            
+            self.originalTask = FIRRef.getImageMessages().child(senderId).child(UUID().uuidString).putData(originalJpeg, metadata: meta)
+            
+            self.editedTask = FIRRef.getImageMessages().child(senderId).child(UUID().uuidString).putData(editedJpeg, metadata: meta)
         }
         
-        guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.3) else {
-            showError(PROCESSING_IMAGE_ERR)
-            return
-        }
-        
-        let originalTask = FIRRef.getImageMessages().child(senderId).child(UUID().uuidString).putData(originalJpeg, metadata: meta)
-       
-        let editedTask = FIRRef.getImageMessages().child(senderId).child(UUID().uuidString).putData(editedJpeg, metadata: meta)
         //print(editedJpeg.count, "5")
         //print(originalJpeg.count, "5")
         
-
-        Analytics.logEvent(COUNT_DOWN_TIMER, parameters: ["timerValue": self.timerValues[safe: self.picker.selectedRow(inComponent: 0)] ?? -1])
-        Analytics.logEvent(ALLOW, parameters: ["allowValue": String(self.allowSwitch.isOn)])
-
-        originalTask.observe(.failure) { (snap) in
+        Analytics.logEvent(COUNT_DOWN_TIMER, parameters:
+            ["timerValue": self.timerValues[safe: self.picker.selectedRow(inComponent: 0)] ?? -1])
+        Analytics.logEvent(ALLOW, parameters: ["allowValue": self.allowSwitch.isOn])
+        
+        self.originalTask?.observe(.failure) { (snap) in
             self.showError(self.UPLOADING_IMAGE_ERR )
             return
         }
         
-        editedTask.observe(.failure) { (snap) in
+        self.editedTask?.observe(.failure) { (snap) in
             self.showError(self.UPLOADING_IMAGE_ERR)
             return
         }
         
-        originalTask.observe(.success) { (originalSnap) in
-            editedTask.observe(.success, handler: { (editedSnap) in
+        self.originalTask?.observe(.success) { (originalSnap) in
+            self.editedTask?.observe(.success, handler: { (editedSnap) in
                 guard let editedImageUrl = editedSnap.metadata?.downloadURL()?.absoluteString else {
                     self.showError(self.UPLOADING_IMAGE_ERR)
                     return
@@ -274,8 +313,6 @@ class PreviewPhotoController: UIViewController {
                             MessageSchema.IS_LIKED: false,  MessageSchema.CAPTION: self.captionTextView.text ?? "",
                             MessageSchema.IS_DELETED: false, MessageSchema.CREATED_TIME: Date()] as [String : Any]
                 let messageId = UUID().uuidString
-                AppHUD.progressHidden()
-                AppHUD.progress("Finalizing...", isDarkTheme: true)
                 FIRRef.getMessages().document(messageId).setData(data, completion: { (error) in
                     if let _ = error {
                         self.showError("Sorry, we experienced an issue. Please try again.")
@@ -340,7 +377,7 @@ extension PreviewPhotoController: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         let num = timerValues[row]
-
+        
         if num == 0 {
             return "none"
         }

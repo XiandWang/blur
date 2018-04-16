@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import Firebase
 
 class EULAController: UIViewController {
 
+    weak var delegate: termsOfServiceDelegate?
     
     let generalLabel: UILabel = {
         let lb = UILabel()
@@ -58,7 +60,7 @@ class EULAController: UIViewController {
         lb.font = TEXT_FONT
         lb.sizeToFit()
         lb.numberOfLines = 0
-        lb.text = "4. Age Restrictions\n\nBy using the HidingChat App, you represent and warrant that (a) you are 17 years of age or older and you agree to be bound by this Agreement; (b) if you are under 17 years of age, you have obtained verifiable consent from a parent or legal guardian; and (c) your use of the HidingChat App does not violate any applicable law or regulation. Your access to the HidingChat App may be terminated without warning if HidingChat believes, in its sole discretion, that you are under the age of 17 years and have not obtained verifiable consent from a parent or legal guardian. If you are a parent or legal guardian and you provide your consent to your child’s use of the HidingChat App, you agree to be bound by this Agreement in respect to your child’s use of the HidingChat App."
+        lb.text = "4. Age Restrictions\n\nBy using the HidingChat App, you represent and warrant that (a) you are 13 years of age or older and you agree to be bound by this Agreement; (b) if you are under 13 years of age, you have obtained verifiable consent from a parent or legal guardian; and (c) your use of the HidingChat App does not violate any applicable law or regulation. Your access to the HidingChat App may be terminated without warning if HidingChat believes, in its sole discretion, that you are under the age of 13 years and have not obtained verifiable consent from a parent or legal guardian. If you are a parent or legal guardian and you provide your consent to your child’s use of the HidingChat App, you agree to be bound by this Agreement in respect to your child’s use of the HidingChat App."
         return lb
     }()
     
@@ -143,39 +145,38 @@ class EULAController: UIViewController {
         return lb
     }()
     
-
+    var uid: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Terms of service"
+        navigationItem.title = "Terms of Service"
         
         view.backgroundColor = .white
         setupView()
+        
+    }
+    
+    @objc func handleAccept() {
+        guard let uid = self.uid else { return }
+        Database.database().reference().child("users/\(uid)/hasAcceptedTerms").setValue(true)
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func handleReject() {
+        do {
+            CurrentUser.user = nil
+            self.stopListeners()
+            try Auth.auth().signOut()
+            let navController = UINavigationController(rootViewController: ChooseLoginSignupController())
+            self.present(navController, animated: true) {
+                AppHUD.error("Logging you out becasue you didn't accept the Terms of Service", isDarkTheme: true)
+            }
+        } catch let signOutError {
+            AppHUD.error("Signout error: " + signOutError.localizedDescription, isDarkTheme: true)
+        }
     }
     
     func setupView() {
-        
-//        let scrollView = UIScrollView()
-//
-//        scrollView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-//        view.addSubview(scrollView)
-//        scrollView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: bottomLayoutGuide.topAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height)
-//        let container = UIView()
-//        scrollView.addSubview(container)
-//        container.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, bottom: scrollView.bottomAnchor, right: scrollView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: view.frame.width, height: view.frame.height)
-//
-//
-//
-//        container.addSubview(partiesLabel)
-//        partiesLabel.anchor(top: container.topAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
-//
-//        var lastView = partiesLabel
-//        for v in [privacyLabel, licenseeLabel, ageLabel, objectionableLabel, restrictionsOnUseLabel, liabilityLabel, warrantiesLabel, terminationLabel, supportLabel, thirdPartyLabel] {
-//            container.addSubview(v)
-//            v.anchor(top: lastView.bottomAnchor, left: container.leftAnchor, bottom: nil, right: container.rightAnchor, paddingTop: 10, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
-//            lastView = v
-//        }
-        
         let scrollView = UIScrollView(frame: view.frame)
         
         scrollView.autoresizingMask = [.flexibleHeight, .flexibleWidth]

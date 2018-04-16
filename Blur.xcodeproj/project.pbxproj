@@ -22,6 +22,7 @@
 		EE334802206B2F3600B18E54 /* AppContactConroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE334801206B2F3600B18E54 /* AppContactConroller.swift */; };
 		EE33B3E81FD2430C000816D0 /* ChooseUserNameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE33B3E71FD2430C000816D0 /* ChooseUserNameController.swift */; };
 		EE33EF50204CD8D90074B2BD /* XWEmojiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE33EF4F204CD8D90074B2BD /* XWEmojiView.swift */; };
+		EE3791F6207C4052006AD8D5 /* TermsOfServiceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3791F5207C4052006AD8D5 /* TermsOfServiceDelegate.swift */; };
 		EE3C2D8E1F91B5DD00DE609F /* AddFriendController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3C2D8D1F91B5DD00DE609F /* AddFriendController.swift */; };
 		EE4C0D682047C7C700740CFE /* ChooseLoginSignupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4C0D672047C7C700740CFE /* ChooseLoginSignupController.swift */; };
 		EE4F33D31F73BB2300BFC6AF /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4F33D21F73BB2300BFC6AF /* TestController.swift */; };
@@ -122,6 +123,7 @@
 		EE334801206B2F3600B18E54 /* AppContactConroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContactConroller.swift; sourceTree = "<group>"; };
 		EE33B3E71FD2430C000816D0 /* ChooseUserNameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseUserNameController.swift; sourceTree = "<group>"; };
 		EE33EF4F204CD8D90074B2BD /* XWEmojiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XWEmojiView.swift; sourceTree = "<group>"; };
+		EE3791F5207C4052006AD8D5 /* TermsOfServiceDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceDelegate.swift; sourceTree = "<group>"; };
 		EE3C2D8D1F91B5DD00DE609F /* AddFriendController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFriendController.swift; sourceTree = "<group>"; };
 		EE4C0D672047C7C700740CFE /* ChooseLoginSignupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseLoginSignupController.swift; sourceTree = "<group>"; };
 		EE4F33D21F73BB2300BFC6AF /* TestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestController.swift; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				EE1FF2E31F144BEB00340F65 /* LoginController.swift */,
 				EE33B3E71FD2430C000816D0 /* ChooseUserNameController.swift */,
 				EEEDB85F2079E8E3009A9D27 /* EULAController.swift */,
+				EE3791F5207C4052006AD8D5 /* TermsOfServiceDelegate.swift */,
 			);
 			name = "Login+SignUp";
 			sourceTree = "<group>";
@@ -786,6 +789,7 @@
 				EE8FC5291FAEE0B00097936E /* MessagesPageViewController.swift in Sources */,
 				EE1FF2E61F14633800340F65 /* Constants.swift in Sources */,
 				EE9E0FB11FBE89930034E44C /* XWCutGridLayer.swift in Sources */,
+				EE3791F6207C4052006AD8D5 /* TermsOfServiceDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

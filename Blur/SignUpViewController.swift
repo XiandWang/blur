@@ -42,9 +42,9 @@ class SignUpViewController: UIViewController {
     let acceptTermsButton : UIButton = {
         let button = UIButton(type: .system)
         
-        let attributedTitle = NSMutableAttributedString(string: "By tapping Sign up & Accept, you agree to the ", attributes: [NSAttributedStringKey.font: UIFont(name: APP_FONT, size: 12), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+        let attributedTitle = NSMutableAttributedString(string: "By tapping Sign up & Accept, you agree to the ", attributes: [NSAttributedStringKey.font: UIFont(name: APP_FONT, size: 12) ?? UIFont.systemFont(ofSize: 12), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
         
-        attributedTitle.append(NSAttributedString(string: "Terms of service", attributes: [NSAttributedStringKey.font: UIFont(name: APP_FONT, size: 12), NSAttributedStringKey.foregroundColor: BLUE_COLOR]))
+        attributedTitle.append(NSAttributedString(string: "Terms of service", attributes: [NSAttributedStringKey.font: UIFont(name: APP_FONT, size: 12) ?? UIFont.systemFont(ofSize: 12), NSAttributedStringKey.foregroundColor: BLUE_COLOR]))
         
         button.setAttributedTitle(attributedTitle, for: .normal)
         button.titleLabel?.numberOfLines = 0
@@ -56,6 +56,7 @@ class SignUpViewController: UIViewController {
     }()
     
     @objc func handleShowTerms() {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         self.navigationController?.pushViewController(EULAController(), animated: true)
     }
 
@@ -119,8 +120,9 @@ extension SignUpViewController {
             guard let uid = user?.uid else { return }
             let fcmToken = Messaging.messaging().fcmToken
             let time = Date().timeIntervalSince1970
-            let childUpdates = ["/\(FRIENDS_NODE)/\(uid)/\(uid)": ["status": FriendStatus.added.rawValue, "updatedTime": time],
-                                "/\(USERS_NODE)/\(uid)": ["createdTime": time, "fcmToken": fcmToken ?? ""]] as [String : Any]
+            let childUpdates = ["/\(FRIENDS_NODE)/\(uid)/\(uid)": ["status": FriendStatus.added.rawValue,
+                                                                   "updatedTime": time],
+                                "/\(USERS_NODE)/\(uid)": ["hasAcceptedTerms": true, "createdTime": time, "fcmToken": fcmToken ?? ""]] as [String : Any]
             Database.database().reference().updateChildValues(childUpdates, withCompletionBlock: { (error, ref) in
                 if let error = error  {
                     self.processSignUpError(error: error)
