@@ -10,7 +10,10 @@ import UIKit
 import Firebase
 import Kingfisher
 
+import FBSDKShareKit
+
 class SenderImageMessageController: UIViewController, UINavigationControllerDelegate {
+    
     fileprivate let controlPanelHeight: CGFloat = 96.0
     fileprivate let controlSidePadding: CGFloat = UIScreen.main.bounds.width / 4.0 - 35
     
@@ -210,30 +213,38 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
     }
     
     func setupShare() {
-        let shareImg = UIImage.fontAwesomeIcon(name: .share, textColor: TINT_COLOR, size: CGSize(width: 30, height: 44))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: shareImg, style: .plain, target: self, action: #selector(handleShare(_:)))
+        let shareImg = UIImage.fontAwesomeIcon(name: .facebook, textColor: TINT_COLOR, size: CGSize(width: 30, height: 30))
+        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(image: shareImg, style: .plain, target: self, action: #selector(handleShare(_:)))]
     }
     
     @objc func handleShare(_ sender: AnyObject) {
-        guard let image = self.editedImageView.image else { return }
-        let activityViewController = UIActivityViewController(activityItems: [image, "I sent a photo in HidingChat"], applicationActivities: nil)
-        if let popoverPresentationController = activityViewController.popoverPresentationController {
-            popoverPresentationController.barButtonItem = (sender as! UIBarButtonItem)
-        }
-        present(activityViewController, animated: true, completion: nil)
+        guard let editedImage = self.editedImageView.image, let originalImage = self.originalImageView.image else { return }
+        
+        
+        let alert = UIAlertController(title: "Share on Facebook", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Share hiding photo", style: .default, handler: { (_) in
+            self.shareOnFacebook(editedImage)
+        }))
+        alert.addAction(UIAlertAction(title: "Share original photo", style: .default, handler: { (_) in
+            self.shareOnFacebook(originalImage)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    fileprivate func shareOnFacebook(_ image: UIImage) {
+        let photo = FBSDKSharePhoto(image: image, userGenerated: true)
+        let content = FBSDKSharePhotoContent()
+        content.photos = [photo as Any]
+        content.contentURL = URL(string: ITUNES_URL)
+        FBSDKShareDialog.show(from: self, with: content, delegate: nil)
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
-//    override func viewWillDisappear(_ animated: Bool) {
-//        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black]
-//        self.navigationController?.navigationBar.barTintColor = YELLOW_COLOR
-//        self.navigationController?.navigationBar.isTranslucent = false
-//        
-//        super.viewWillDisappear(animated)
-//    }
     
     override func willMove(toParentViewController parent: UIViewController?) {
         if parent == nil {

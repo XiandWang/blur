@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import UserNotifications
 import GoogleSignIn
+import FBSDKCoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate, GIDSignInDelegate {
@@ -50,6 +51,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         window?.tintColor = TINT_COLOR
 
         registerNotifications(app: application)
+        
+        
+        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
         
         return true
     }
@@ -148,7 +152,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         -> Bool {
             let googleHandled = GIDSignIn.sharedInstance().handle(url, sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
                                                      annotation: [:])
-            return googleHandled
+            
+            let fbHandled = FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+            
+            print(fbHandled, "fbhandled")
+            print(googleHandled, "googleHandled")
+            if googleHandled || fbHandled {
+                return true
+            } else {
+                return false
+            }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
