@@ -81,7 +81,7 @@ class OtherNotificationCell: UICollectionViewCell {
         let attributedText = NSMutableAttributedString(string: notification.user.fullName, attributes: [NSAttributedStringKey.font: BOLD_FONT, NSAttributedStringKey.foregroundColor: UIColor.black])
         var text = ""
         if type == NotificationType.compliment.rawValue {
-            text = " compliments you ♥️"
+            text = " compliments you 💙"
         } else if type == NotificationType.askForChat.rawValue {
             text = " asks you for a chat 🙈💬"
         }

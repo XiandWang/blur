@@ -87,16 +87,16 @@ class ComplimentsController: UITableViewController {
         dialog.dismissWithOutsideTouch = true
         dialog.blurBackground = true
         dialog.imageHandler = { (imageView) in
-            imageView.image = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 50, height: 50))
-            imageView.backgroundColor = PINK_COLOR_LIGHT
+            imageView.image = UIImage.fontAwesomeIcon(name: .heart, textColor: UIColor.white, size: CGSize(width: 50, height: 50))
+            imageView.backgroundColor = LIGHT_BLUE
             imageView.contentMode = .center
             return true //must return true, otherwise image won't show.
         }
         dialog.buttonStyle = { (button,height,position) in
-            button.setTitleColor(PINK_COLOR, for: .normal)
+            button.setTitleColor(LIGHT_BLUE, for: .normal)
             button.titleLabel?.font = TEXT_FONT
             button.layer.masksToBounds = true
-            button.layer.borderColor = PINK_COLOR.cgColor
+            button.layer.borderColor = LIGHT_BLUE.cgColor
         }
         dialog.addAction(AZDialogAction(title: "close", handler: { (dialog) -> (Void) in
             dialog.dismiss()

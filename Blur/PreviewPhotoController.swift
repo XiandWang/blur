@@ -127,7 +127,7 @@ class PreviewPhotoController: UIViewController {
         meta.customMetadata = ["senderId": senderId, "receiverId": receiverId]
         meta.contentType = "image/jpeg"
         
-        guard let originalJpeg = UIImageJPEGRepresentation(originalImage, 0.5) else {
+        guard let originalJpeg = UIImageJPEGRepresentation(originalImage, 0.4) else {
             showError(PROCESSING_IMAGE_ERR)
             return
         }
@@ -265,7 +265,7 @@ class PreviewPhotoController: UIViewController {
                 return
             }
             
-            guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.3) else {
+            guard let editedJpeg = UIImageJPEGRepresentation(editedImage, 0.5) else {
                 showError(PROCESSING_IMAGE_ERR)
                 return
             }
@@ -302,8 +302,9 @@ class PreviewPhotoController: UIViewController {
                     self.showError(self.UPLOADING_IMAGE_ERR)
                     return
                 }
-                //print(editedImageUrl, "edited")
-                //print(originalImageUrl, "original")
+                
+                print(editedImageUrl, "edited")
+                print(originalImageUrl, "original")
                 let countDown = self.timerValues[safe: self.picker.selectedRow(inComponent: 0)]
                 let data = [MessageSchema.SENDER_ID: senderId, MessageSchema.RECEIVER_ID: receiverId,
                             MessageSchema.SENDER_USER: ["username": senderUser.username, "profileImgUrl": senderUser.profileImgUrl ?? "", "fullName": senderUser.fullName],

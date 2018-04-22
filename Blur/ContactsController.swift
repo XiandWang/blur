@@ -193,10 +193,9 @@ class ContactsController: UITableViewController, MFMessageComposeViewControllerD
             AppHUD.error("Please select at least one contact.", isDarkTheme: true)
             return
         }
-        
+    
         let controller = MFMessageComposeViewController()
         controller.messageComposeDelegate = self
-
         controller.body = "Hi I am using HidingChat to tease with my friends. You should join me too. Get it on App Store! Link: https://itunes.apple.com/us/app/hidingchat/id1366697857?ls=1&mt=8"
         controller.recipients  = Array(contactsToSend)
         self.present(controller, animated: true, completion: nil)

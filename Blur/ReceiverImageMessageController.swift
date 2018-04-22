@@ -162,6 +162,120 @@ class ReceiverImageMessageController : UIViewController {
        return viewControl
     }()
     
+    lazy var complimentButton: UIButton = {
+        let bt = UIButton()
+        let heartImg = UIImage.fontAwesomeIcon(name: .heart, textColor: LIGHT_BLUE, size: CGSize(width: 44, height: 44))
+        bt.setImage(heartImg, for: .normal)
+        bt.addTarget(self, action: #selector(handleCompliment), for: .touchUpInside)
+        return bt
+    }()
+    
+    @objc func handleCompliment() {
+        let color = LIGHT_BLUE
+        let dialog = AZDialogViewController(title: "Compliment", message: "Say something nice to your friend", titleFontSize: 22, messageFontSize: 16, buttonsHeight: 50, cancelButtonHeight: 50)
+        dialog.imageHandler = { (imageView) in
+            imageView.image = UIImage.fontAwesomeIcon(name: .heart, textColor: UIColor.white, size: CGSize(width: 50, height: 50))
+            imageView.backgroundColor = color
+            imageView.contentMode = .center
+            return true //must return true, otherwise image won't show.
+        }
+        dialog.blurBackground = false
+        dialog.buttonStyle = { (button,height,position) in
+            button.setTitleColor(color, for: .normal)
+            button.titleLabel?.font = TEXT_FONT
+            button.layer.masksToBounds = true
+            button.layer.borderColor = color.cgColor
+            button.layer.borderWidth = 1.0
+            button.backgroundColor = .white
+        }
+        dialog.cancelEnabled = true
+        dialog.cancelTitle = "Cancel"
+        dialog.cancelButtonStyle = { (button,height) in
+            button.setTitleColor(color, for: .normal)
+            button.titleLabel?.font = TEXT_FONT
+            return true
+        }
+        dialog.addAction(AZDialogAction(title: "Compliment", handler: { (dialog) -> (Void) in
+            let currentInvites = CurrentUser.numInvites
+            if currentInvites < 3 {
+                dialog.removeAllActions()
+                dialog.title = "Invites to unlock"
+                let message = "3 total invites to unlock. Currently: \(currentInvites)/3"
+                dialog.message = message
+                dialog.addAction(AZDialogAction(title: "Invite", handler: { (dialog) -> (Void) in
+                    let contactController = ContactsController()
+                    self.navigationController?.pushViewController(contactController, animated: true)
+                    dialog.dismiss()
+                }))
+            } else {
+                dialog.dismiss(animated: true, completion: {
+                    let alert = SCLAlertView(appearance: SCLAlertView.getAppearance())
+                    let textView = alert.addTextView()
+                    textView.layer.cornerRadius = 5.0
+                    alert.addButton("Send", backgroundColor: color, textColor: UIColor.white) {
+                        textView.resignFirstResponder()
+                        let text = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if text.count > 120  {
+                            AppHUD.error("Please keep it under 120 characters. Current: \(text.count)", isDarkTheme: true)
+                        } else if text.isEmpty {
+                            AppHUD.error("Compliment is empty.", isDarkTheme: true)
+                        } else {
+                            self.checkAndSendCompliment(complimentText: text)
+                            alert.hideView()
+                        }
+                    }
+                    let image = UIImage.fontAwesomeIcon(name: .pencil, textColor: .white, size: CGSize(width: 40, height: 40))
+                    alert.showCustom("Compliment", subTitle: "(please be direct and sincere)", color: color, icon: image)
+                })
+            }
+        }))
+        
+        dialog.show(in: self)
+    }
+    
+    func sendCompliment(complimentText: String) {
+        guard let curUid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = self.senderUser?.uid else { return }
+        
+        CurrentUser.getUser { (user, error) in
+            if let sender = user {
+                let userData = ["userId": sender.uid, "username": sender.username, "profileImgUrl": sender.profileImgUrl, "fullName": sender.fullName]
+                let notifData = ["text":complimentText, "type": NotificationType.compliment.rawValue, "user": userData, "isRead": false, "createdTime": Date()] as [String : Any]
+                let complimentData = ["compliment": complimentText, "sender": userData, "createdTime": Date()] as [String : Any]
+                
+                let batch = Firestore.firestore().batch()
+                batch.setData(["lastComplimentTime": Date()], forDocument: FIRRef.getActivities().document(curUid).collection("activities").document(uid), options: SetOptions.merge())
+                batch.setData(complimentData, forDocument:  FIRRef.getCompliments().document(uid).collection("compliments").document())
+                batch.setData(notifData, forDocument: FIRRef.getNotifications().document(uid).collection("messageNotifications").document())
+                batch.commit { (error) in
+                    if let error = error {
+                        AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                        return
+                    }
+                    AppHUD.success("Sent", isDarkTheme: true)
+                }
+            }
+        }
+    }
+    
+    func checkAndSendCompliment(complimentText: String) {
+        guard let curUid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = self.senderUser?.uid else { return }
+        FIRRef.getActivities().document(curUid).collection("activities").document(uid).getDocument { (snap, error) in
+            if let error = error {
+                AppHUD.error(error.localizedDescription, isDarkTheme: true)
+                return
+            }
+            if let data = snap?.data(), let time = data["lastComplimentTime"] as? Date, Date().timeIntervalSince(time) < 60 {
+                let img = UIImage.fontAwesomeIcon(name: .warning, textColor: YELLOW_COLOR, size: CGSize(width: 44, height: 44))
+                AppHUD.custom("Please wait a minute to send another one.", img: img)
+                return
+            } else {
+                self.sendCompliment(complimentText: complimentText)
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -296,7 +410,20 @@ class ReceiverImageMessageController : UIViewController {
                 addControlsToControlPanel(leftControl: rejectControl, rightControl: showOriginalControl)
             } else {
                 addControlsToControlPanel(leftControl: rejectControl, rightControl: requestControl)
+                setupComplimentButton()
             }
+        }
+    }
+    
+    fileprivate func setupComplimentButton() {
+        complimentButton.alpha = 0
+        controlPanel.addSubview(complimentButton)
+        complimentButton.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 44, height: 44)
+        complimentButton.centerXAnchor.constraint(equalTo: controlPanel.centerXAnchor).isActive = true
+        complimentButton.centerYAnchor.constraint(equalTo: rejectControl.centerYAnchor).isActive = true
+        
+        UIView.animate(withDuration: 0.5) {
+            self.complimentButton.alpha = 1
         }
     }
     
@@ -469,8 +596,8 @@ extension ReceiverImageMessageController {
         batch.updateData([MessageSchema.IS_LIKED: true], forDocument: messageDoc)
         
         batch.commit { error in
-            if let error = error {
-                AppHUD.error("Like error: " + error.localizedDescription, isDarkTheme: false)
+            if let _ = error {
+                //AppHUD.error("Like error: " + error.localizedDescription, isDarkTheme: false)
                 return
             }
             self.message?.isLiked = true
@@ -616,6 +743,8 @@ extension ReceiverImageMessageController {
             requestControl.alpha = 1
             requestControl.frame = showOriginalControl.frame
             UIView.transition(from: showOriginalControl, to: requestControl, duration: 0.5, options: .transitionFlipFromTop, completion: nil)
+            
+            setupComplimentButton()
         }
         
         Analytics.logEvent(ACCEPT_TAPPED, parameters: nil)

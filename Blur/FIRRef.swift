@@ -10,6 +10,8 @@ import Firebase
 
 class FIRRef {
     static let fireStore = Firestore.firestore()
+    static let PROD_HIDINGCHAT_TEAM_UID = "VcaU4cIuoNV9I2JViQRIsNvxp9K2"
+    static let  DEV_HIDINGCHAT_TEAM_UID = "E6ciOBTwRXfYEnogy04F3xldfng1"
     
     static func getMessages() -> CollectionReference {
             return fireStore.collection("messages")
@@ -65,5 +67,13 @@ class FIRRef {
         //#else
             //return Storage.storage().reference().child("prod_imageMessages")
         //#endif
+    }
+    
+    static func getTeamUid() -> String {
+        #if DEBUG
+            return DEV_HIDINGCHAT_TEAM_UID
+        #else
+            return PROD_HIDINGCHAT_TEAM_UID
+        #endif
     }
 }

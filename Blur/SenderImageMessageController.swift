@@ -221,7 +221,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         guard let editedImage = self.editedImageView.image, let originalImage = self.originalImageView.image else { return }
         
         
-        let alert = UIAlertController(title: "Share on Facebook", message: nil, preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Share on Facebook", message: "(Requires the Facebook app)", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Share hiding photo", style: .default, handler: { (_) in
             self.shareOnFacebook(editedImage)
         }))
@@ -231,6 +231,7 @@ class SenderImageMessageController: UIViewController, UINavigationControllerDele
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
             alert.dismiss(animated: true, completion: nil)
         }))
+        
         present(alert, animated: true, completion: nil)
     }
     

@@ -23,15 +23,24 @@ class HomeController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "HidingChat Inbox"
+        self.navigationItem.title = "Inbox"
         self.setupNavTitleAttr()
         view.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.register(HomeChatCell.self, forCellReuseIdentifier: cellId)
-        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Send", style: .plain, target: self, action: #selector(handleShowFriends))
         listenForMessages()
     }
     
+    @objc func handleShowFriends() {
+        guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else {
+            return
+        }
+        
+        mainTabBarController.selectedIndex = 1
+        AppHUD.success("Please choose a friend and send", isDarkTheme: true)
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -46,7 +55,7 @@ class HomeController: UITableViewController {
         } else {
             let count = imageMessages.keys.count
             if count == 0 {
-                TableViewHelper.emptyMessage(message: "No chats yet~", detail: "Start by going to the Friends tab and let the fun begin 🙈", viewController: self)
+                TableViewHelper.emptyMessage(message: "No chats yet~", detail: "New to HidingChat? You can send a photo to yourself or HidingChat Monkey to see how it works.", viewController: self)
             } else {
                 tableView.backgroundView = nil
             }

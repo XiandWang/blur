@@ -258,20 +258,21 @@ class NotificationController: UICollectionViewController, UICollectionViewDelega
     }
     
     func showComplimentDialog(compliment: String, user: String) {
-        let dialog = AZDialogViewController(title: user, message: compliment, verticalSpacing: -1, buttonSpacing: 10, sideSpacing: 17, titleFontSize: 20, messageFontSize: 15, buttonsHeight: 44)
+        let blue = LIGHT_BLUE
+        let dialog = AZDialogViewController(title: user, message: compliment, verticalSpacing: -1, buttonSpacing: 10, sideSpacing: 17, titleFontSize: 20, messageFontSize: 16, buttonsHeight: 44)
         dialog.dismissWithOutsideTouch = true
         dialog.blurBackground = true
         dialog.imageHandler = { (imageView) in
-            imageView.image = UIImage.fontAwesomeIcon(name: .heart, textColor: PINK_COLOR, size: CGSize(width: 50, height: 50))
-            imageView.backgroundColor = PINK_COLOR_LIGHT
+            imageView.image = UIImage.fontAwesomeIcon(name: .heart, textColor: UIColor.white, size: CGSize(width: 50, height: 50))
+            imageView.backgroundColor = blue
             imageView.contentMode = .center
             return true //must return true, otherwise image won't show.
         }
         dialog.buttonStyle = { (button,height,position) in
-            button.setTitleColor(PINK_COLOR, for: .normal)
+            button.setTitleColor(blue, for: .normal)
             button.titleLabel?.font = TEXT_FONT
             button.layer.masksToBounds = true
-            button.layer.borderColor = PINK_COLOR.cgColor
+            button.layer.borderColor = blue.cgColor
         }
         dialog.addAction(AZDialogAction(title: "close", handler: { (dialog) -> (Void) in
             dialog.dismiss()

@@ -11,6 +11,7 @@ import Firebase
 class CurrentUser {
     static var user: User?
     static var hasShownInviteDialog = false
+    static var hasShowNewUserInstructions = false
     static var numInvites = 5
     
     static func getUser(completion: @escaping ((User?, Error?) -> ())) {

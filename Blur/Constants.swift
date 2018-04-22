@@ -33,6 +33,8 @@ let GOOGLE_COLOR = UIColor.hexStringToUIColor(hex: "#4285f4")
 let BILIBILI_BLUE = UIColor.hexStringToUIColor(hex: "#00a1d6")
 let BAR_TINT_COLOR = UIColor.hexStringToUIColor(hex: "#141e33")
 
+let LIGHT_BLUE = UIColor.hexStringToUIColor(hex: "#039BE5")
+
 let APP_FONT: String = "AvenirNext-Medium"
 let APP_FONT_BOLD: String = "AvenirNext-DemiBold"
 let BOLD_FONT = UIFont(name: APP_FONT_BOLD, size: 16) ??  UIFont.boldSystemFont(ofSize: 16)

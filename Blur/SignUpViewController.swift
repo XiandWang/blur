@@ -122,6 +122,10 @@ extension SignUpViewController {
             let time = Date().timeIntervalSince1970
             let childUpdates = ["/\(FRIENDS_NODE)/\(uid)/\(uid)": ["status": FriendStatus.added.rawValue,
                                                                    "updatedTime": time],
+                                "/\(FRIENDS_NODE)/\(uid)/\(FIRRef.getTeamUid())": ["status": FriendStatus.added.rawValue,
+                                                                   "updatedTime": time],
+                                "/\(FRIENDS_NODE)/\(FIRRef.getTeamUid())/\(uid)": ["status": FriendStatus.added.rawValue,
+                                                                                   "updatedTime": time],
                                 "/\(USERS_NODE)/\(uid)": ["hasAcceptedTerms": true, "createdTime": time, "fcmToken": fcmToken ?? ""]] as [String : Any]
             Database.database().reference().updateChildValues(childUpdates, withCompletionBlock: { (error, ref) in
                 if let error = error  {

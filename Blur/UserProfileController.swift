@@ -82,7 +82,7 @@ class UserProfileController: UIViewController {
     let showMoreButton: UIButton = {
         let bt = UIButton(type: .system)
         
-        bt.setTitle("More", for: .normal)
+        bt.setTitle("Ask for a photo", for: .normal)
         bt.titleLabel?.font = BOLD_FONT
         bt.setTitleColor(PURPLE_COLOR_LIGHT, for: .normal)
         bt.layer.cornerRadius = 22
@@ -141,7 +141,7 @@ class UserProfileController: UIViewController {
     
     @objc func handleShowAdvanced() {
         let color = UIColor.hexStringToUIColor(hex: "#BA68C8")
-        let dialog = AZDialogViewController(title: "More", message: nil, titleFontSize: 22, messageFontSize: 14, buttonsHeight: 50, cancelButtonHeight: 50)
+        let dialog = AZDialogViewController(title: "Ask for a photo", message: "Miss your friend? Ask for a photo", titleFontSize: 22, messageFontSize: 16, buttonsHeight: 50, cancelButtonHeight: 50)
         dialog.blurBackground = false
         dialog.buttonStyle = { (button,height,position) in
             button.setTitleColor(color, for: .normal)
@@ -158,41 +158,7 @@ class UserProfileController: UIViewController {
             button.titleLabel?.font = TEXT_FONT
             return true
         }
-        dialog.addAction(AZDialogAction(title: "Compliment", handler: { (dialog) -> (Void) in
-            let currentInvites = CurrentUser.numInvites
-            if currentInvites < 3 {
-                dialog.removeAllActions()
-                dialog.title = "Invites to unlock"
-                let message = "3 total invites to unlock. Currently: \(currentInvites)/3"
-                dialog.message = message
-                dialog.addAction(AZDialogAction(title: "Invite", handler: { (dialog) -> (Void) in
-                    let contactController = ContactsController()
-                    self.navigationController?.pushViewController(contactController, animated: true)
-                    dialog.dismiss()
-                }))
-            } else {
-                dialog.dismiss(animated: true, completion: {
-                    let alert = SCLAlertView(appearance: SCLAlertView.getAppearance())
-                    let textView = alert.addTextView()
-                    textView.layer.cornerRadius = 5.0
-                    alert.addButton("Send", backgroundColor: color, textColor: UIColor.white) {
-                        textView.resignFirstResponder()
-                        let text = textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-                        if text.count > 120  {
-                            AppHUD.error("Please keep it under 120 characters. Current: \(text.count)", isDarkTheme: true)
-                        } else if text.isEmpty {
-                            AppHUD.error("Compliment is empty.", isDarkTheme: true)
-                        } else {
-                            self.checkAndSendCompliment(complimentText: text)
-                            alert.hideView()
-                        }
-                    }
-                    let image = UIImage.fontAwesomeIcon(name: .pencil, textColor: .white, size: CGSize(width: 40, height: 40))
-                    alert.showCustom("Compliment", subTitle: "(please be direct and sincere)", color: color, icon: image)
-                })
-            }
-        }))
-        dialog.addAction(AZDialogAction(title: "Ask for a chat", handler: { (dialog) -> (Void) in
+        dialog.addAction(AZDialogAction(title: "Ask for a photo", handler: { (dialog) -> (Void) in
             let currentInvites = CurrentUser.numInvites
             if currentInvites < 5 {
                 dialog.removeAllActions()
@@ -238,50 +204,7 @@ class UserProfileController: UIViewController {
             }
         }
     }
-    
-    func sendCompliment(complimentText: String) {
-        guard let curUid = Auth.auth().currentUser?.uid else { return }
-        guard let uid = self.user?.uid else { return }
-        
-        CurrentUser.getUser { (user, error) in
-            if let sender = user {
-                let userData = ["userId": sender.uid, "username": sender.username, "profileImgUrl": sender.profileImgUrl, "fullName": sender.fullName]
-                let notifData = ["text":complimentText, "type": NotificationType.compliment.rawValue, "user": userData, "isRead": false, "createdTime": Date()] as [String : Any]
-                let complimentData = ["compliment": complimentText, "sender": userData, "createdTime": Date()] as [String : Any]
-                
-                let batch = Firestore.firestore().batch()
-                batch.setData(["lastComplimentTime": Date()], forDocument: FIRRef.getActivities().document(curUid).collection("activities").document(uid), options: SetOptions.merge())
-                batch.setData(complimentData, forDocument:  FIRRef.getCompliments().document(uid).collection("compliments").document())
-                batch.setData(notifData, forDocument: FIRRef.getNotifications().document(uid).collection("messageNotifications").document())
-                batch.commit { (error) in
-                    if let error = error {
-                        AppHUD.error(error.localizedDescription, isDarkTheme: true)
-                        return
-                    }
-                    AppHUD.success("Sent", isDarkTheme: true)
-                }
-            }
-        }
-    }
-    
-    func checkAndSendCompliment(complimentText: String) {
-        guard let curUid = Auth.auth().currentUser?.uid else { return }
-        guard let uid = self.user?.uid else { return }
-        FIRRef.getActivities().document(curUid).collection("activities").document(uid).getDocument { (snap, error) in
-            if let error = error {
-                AppHUD.error(error.localizedDescription, isDarkTheme: true)
-                return
-            }
-            if let data = snap?.data(), let time = data["lastComplimentTime"] as? Date, Date().timeIntervalSince(time) < 60 {
-                let img = UIImage.fontAwesomeIcon(name: .warning, textColor: YELLOW_COLOR, size: CGSize(width: 44, height: 44))
-                AppHUD.custom("Please wait a minute to send another one.", img: img)
-                return
-            } else {
-                self.sendCompliment(complimentText: complimentText)
-            }
-        }
-    }
-    
+
     func checkAndAsk() {
         guard let curUid = Auth.auth().currentUser?.uid else { return }
         guard let uid = self.user?.uid else { return }
@@ -417,56 +340,6 @@ class UserProfileController: UIViewController {
     
     
     func configureViews() {
-//        view.backgroundColor = .white
-//
-//        view.addSubview(userProfileImageView)
-//        userProfileImageView.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: imageWidth, height: imageWidth)
-//        userProfileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-//
-//        view.addSubview(fullNameLabel)
-//        fullNameLabel.anchor(top: userProfileImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
-//
-//        view.addSubview(userNameLabel)
-//        userNameLabel.anchor(top: fullNameLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 2, paddingLeft: 8, paddingBottom: 0, paddingRight: 9, width: 0, height: 0)
-//
-//        let divider = UIView()
-//        view.addSubview(divider)
-//        divider.backgroundColor = .clear
-//        divider.anchor(top: userNameLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.8)
-//
-//        view.addSubview(statsTitleLabel)
-//        statsTitleLabel.anchor(top: divider.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-//
-//        view.addSubview(chatStatsLabel)
-//        view.addSubview(likeStatsLabel)
-//
-//        chatStatsLabel.anchor(top: statsTitleLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 10, paddingLeft: 60, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-//        likeStatsLabel.anchor(top: statsTitleLabel.bottomAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 10, paddingLeft: 0, paddingBottom: 0, paddingRight: 60, width: 0, height: 0)
-//
-//        let bottomdivider = UIView()
-//        view.addSubview(bottomdivider)
-//        bottomdivider.backgroundColor = BACKGROUND_GRAY
-//        bottomdivider.anchor(top: chatStatsLabel.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 0.8)
-//
-//        view.addSubview(sendChatButton)
-//        sendChatButton.anchor(top: bottomdivider.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 30, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
-//        UIView.addShadow(for: sendChatButton)
-//
-//        view.addSubview(showMoreButton)
-//        showMoreButton.anchor(top: sendChatButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 0, paddingRight: 20, width: 0, height: 44)
-//        UIView.addShadow(for: showMoreButton)
-        
-        
-        
-//        let v = UIView()
-//        v.backgroundColor = UIColor.hexStringToUIColor(hex: "#fafafa")
-//        view.insertSubview(v, at: 0)
-//        v.anchor(top: divider.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)n
-        
-//        print(NSString(string: chatStatsLabel.text!).size(withAttributes: [NSAttributedStringKey.font : TEXT_FONT]).height)
-//        print(NSString(string: statsTitleLabel.text!).size(withAttributes: [NSAttributedStringKey.font : UIFont(name: APP_FONT_BOLD, size: 17)]).height)
-//        print(NSString(string: userNameLabel.text!).size(withAttributes: [NSAttributedStringKey.font : UIFont(name: APP_FONT_BOLD, size: 18)]).height)
-
         self.automaticallyAdjustsScrollViewInsets = false
 
         let scrollView = UIScrollView()

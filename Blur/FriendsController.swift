@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import Kingfisher
 import Foundation
+import AZDialogView
 import AudioToolbox
 
 class FriendsController: UITableViewController {
@@ -38,6 +39,27 @@ class FriendsController: UITableViewController {
         setupBarItems()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if !isIntialLoading && self.users.count <= 2 && self.users.count > 0 && !CurrentUser.hasShowNewUserInstructions {
+            let dialog = AZDialogViewController(title: "New to HidingChat?", message: "Send a photo to yourself or Chat Monkey to see how it works. ", titleFontSize: 22, messageFontSize: 16, buttonsHeight: 50, cancelButtonHeight: 50)
+            dialog.blurBackground = false
+            dialog.buttonStyle = { (button,height,position) in
+                button.setTitleColor(.white, for: .normal)
+                button.titleLabel?.font = TEXT_FONT
+                button.layer.masksToBounds = true
+                button.layer.borderColor = PURPLE_COLOR.cgColor
+                button.backgroundColor = PURPLE_COLOR
+            }
+            dialog.dismissWithOutsideTouch = true
+            dialog.addAction(AZDialogAction(title: "Got it", handler: { (dialog) -> (Void) in
+                dialog.dismiss()
+            }))
+            dialog.show(in: self)
+            CurrentUser.hasShowNewUserInstructions = true
+        }
+    }
     
     func setupBarItems() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Invite", style: .plain, target: self, action: #selector(handleInvite))
