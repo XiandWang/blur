@@ -84,6 +84,7 @@
 		EEE57DFC204C19FA002CB81C /* XWEmojiTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE57DFB204C19FA002CB81C /* XWEmojiTool.swift */; };
 		EEECC407204FD9F000D520F8 /* GSTimeIntervalPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = EEECC406204FD9F000D520F8 /* GSTimeIntervalPicker.m */; };
 		EEEDB8602079E8E3009A9D27 /* EULAController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEDB85F2079E8E3009A9D27 /* EULAController.swift */; };
+		EEF8703320956FA6000A9A9E /* TypeInviterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF8703220956FA6000A9A9E /* TypeInviterController.swift */; };
 		EEFE52891F9981C000F7C1D7 /* TableViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFE52881F9981C000F7C1D7 /* TableViewHelper.swift */; };
 		EEFE528B1F99B61A00F7C1D7 /* NewFriendsRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFE528A1F99B61A00F7C1D7 /* NewFriendsRequestController.swift */; };
 /* End PBXBuildFile section */
@@ -194,6 +195,7 @@
 		EEECC405204FD9EF00D520F8 /* GSTimeIntervalPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSTimeIntervalPicker.h; sourceTree = "<group>"; };
 		EEECC406204FD9F000D520F8 /* GSTimeIntervalPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSTimeIntervalPicker.m; sourceTree = "<group>"; };
 		EEEDB85F2079E8E3009A9D27 /* EULAController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EULAController.swift; sourceTree = "<group>"; };
+		EEF8703220956FA6000A9A9E /* TypeInviterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeInviterController.swift; sourceTree = "<group>"; };
 		EEFE52881F9981C000F7C1D7 /* TableViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewHelper.swift; sourceTree = "<group>"; };
 		EEFE528A1F99B61A00F7C1D7 /* NewFriendsRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFriendsRequestController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -242,6 +244,7 @@
 				EE33B3E71FD2430C000816D0 /* ChooseUserNameController.swift */,
 				EEEDB85F2079E8E3009A9D27 /* EULAController.swift */,
 				EE3791F5207C4052006AD8D5 /* TermsOfServiceDelegate.swift */,
+				EEF8703220956FA6000A9A9E /* TypeInviterController.swift */,
 			);
 			name = "Login+SignUp";
 			sourceTree = "<group>";
@@ -756,6 +759,7 @@
 				EE73E9FE1F8B320E00BED900 /* Message.swift in Sources */,
 				EE4C0D682047C7C700740CFE /* ChooseLoginSignupController.swift in Sources */,
 				EE9E0FB51FBE89930034E44C /* XWMosaicTool.swift in Sources */,
+				EEF8703320956FA6000A9A9E /* TypeInviterController.swift in Sources */,
 				EE9E0FB31FBE89930034E44C /* XWImageEditorController.swift in Sources */,
 				EE6837CE1FAD66FA002E561E /* ReceiverImageMessageController.swift in Sources */,
 				EE29A355201AEBFC00EA6112 /* ControlItemView.swift in Sources */,

@@ -9,6 +9,7 @@
 import UIKit
 import Static
 import Firebase
+import FBSDKLoginKit
 
 class SettingsController: TableViewController {
 
@@ -102,6 +103,7 @@ class SettingsController: TableViewController {
             do {
                 CurrentUser.user = nil
                 self.stopListeners()
+                FBSDKLoginManager().logOut()
                 try Auth.auth().signOut()
                 let navController = UINavigationController(rootViewController: ChooseLoginSignupController())
                 self.present(navController, animated: true, completion: nil)

@@ -197,13 +197,14 @@ class ReceiverImageMessageController : UIViewController {
         }
         dialog.addAction(AZDialogAction(title: "Compliment", handler: { (dialog) -> (Void) in
             let currentInvites = CurrentUser.numInvites
-            if currentInvites < 3 {
+            if currentInvites < 10 {
                 dialog.removeAllActions()
                 dialog.title = "Invites to unlock"
                 let message = "3 total invites to unlock. Currently: \(currentInvites)/3"
                 dialog.message = message
                 dialog.addAction(AZDialogAction(title: "Invite", handler: { (dialog) -> (Void) in
                     let contactController = ContactsController()
+                    self.pageController?.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
                     self.navigationController?.pushViewController(contactController, animated: true)
                     dialog.dismiss()
                 }))
@@ -321,6 +322,8 @@ class ReceiverImageMessageController : UIViewController {
         let flag = UIImage.fontAwesomeIcon(name: .flag, textColor: .black, size: CGSize(width: 30, height: 38))
         let barItem = UIBarButtonItem(image: flag, style: .plain, target: self, action: #selector(self.handleReportAbuse))
         self.pageController?.navigationItem.rightBarButtonItem = barItem
+        self.pageController?.navigationController?.navigationBar.tintColor = PURPLE_COLOR_LIGHT
+        self.pageController?.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: PURPLE_COLOR_LIGHT]
         
         guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) else { return }
         guard let message = message else { return }

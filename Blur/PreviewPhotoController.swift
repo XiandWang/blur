@@ -303,8 +303,8 @@ class PreviewPhotoController: UIViewController {
                     return
                 }
                 
-                print(editedImageUrl, "edited")
-                print(originalImageUrl, "original")
+                //print(editedImageUrl, "edited")
+                //print(originalImageUrl, "original")
                 let countDown = self.timerValues[safe: self.picker.selectedRow(inComponent: 0)]
                 let data = [MessageSchema.SENDER_ID: senderId, MessageSchema.RECEIVER_ID: receiverId,
                             MessageSchema.SENDER_USER: ["username": senderUser.username, "profileImgUrl": senderUser.profileImgUrl ?? "", "fullName": senderUser.fullName],

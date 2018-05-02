@@ -306,10 +306,15 @@ extension UIViewController {
         navigationController?.navigationBar.tintColor = color
         navigationItem.backBarButtonItem?.tintColor = color
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: color]
+        
     }
     
     public func setupNavTitleAttr() {
         let font = UIFont(name: APP_FONT_BOLD, size: 18) ?? UIFont.boldSystemFont(ofSize: 18)
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.font: font]
+    }
+    
+    public func hideBackButton() {
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }

@@ -10,8 +10,8 @@ import UIKit
 
 
 class ContactCell : UITableViewCell {
-    let circle = UIImage.fontAwesomeIcon(name: .circleO, textColor: BLUE_COLOR, size: CGSize(width: 30, height: 30))
-    let circleO = UIImage.fontAwesomeIcon(name: .dotCircleO, textColor: BLUE_COLOR, size: CGSize(width: 30, height: 30))
+    let circle = UIImage.fontAwesomeIcon(name: .circleO, textColor: PURPLE_COLOR.withAlphaComponent(0.8), size: CGSize(width: 30, height: 30))
+    let circleO = UIImage.fontAwesomeIcon(name: .dotCircleO, textColor:  PURPLE_COLOR.withAlphaComponent(0.8), size: CGSize(width: 30, height: 30))
 
     var isChosen: Bool = false {
         didSet {

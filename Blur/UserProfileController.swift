@@ -84,7 +84,7 @@ class UserProfileController: UIViewController {
         
         bt.setTitle("Ask for a photo", for: .normal)
         bt.titleLabel?.font = BOLD_FONT
-        bt.setTitleColor(PURPLE_COLOR_LIGHT, for: .normal)
+        bt.setTitleColor(TINT_COLOR, for: .normal)
         bt.layer.cornerRadius = 22
         bt.backgroundColor = .white
 
@@ -140,7 +140,7 @@ class UserProfileController: UIViewController {
     }
     
     @objc func handleShowAdvanced() {
-        let color = UIColor.hexStringToUIColor(hex: "#BA68C8")
+        let color = TINT_COLOR
         let dialog = AZDialogViewController(title: "Ask for a photo", message: "Miss your friend? Ask for a photo", titleFontSize: 22, messageFontSize: 16, buttonsHeight: 50, cancelButtonHeight: 50)
         dialog.blurBackground = false
         dialog.buttonStyle = { (button,height,position) in
