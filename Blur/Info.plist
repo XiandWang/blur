@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.1.5</string>
+	<string>2.1.7</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -59,7 +59,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>HidingChat uses your camera to take photos and send to your friends. Your photos won't be shared without your permission.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>HidingChat needs your contacts to invite friends. You can invite verbally, too. So the permission is optional.</string>
+	<string>HidingChat needs your contacts to invite your boyfriend/girlfriend/or friends.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>HidingChat uses your photos to send to your friends. Your photos won't be shared without your permission.</string>
 	<key>UIAppFonts</key>

@@ -11,13 +11,14 @@ import Firebase
 import GoogleSignIn
 import FBSDKLoginKit
 import AZDialogView
+import MessageUI
 
-class ChooseLoginSignupController: UIViewController, FBSDKLoginButtonDelegate, InviteDelegate {
+class ChooseLoginSignupController: UIViewController, FBSDKLoginButtonDelegate, InviteDelegate, MFMessageComposeViewControllerDelegate {
     let hasPassedQuestions = "hasPassedQuestions"
     
     func invitesDidSend(_ controller: UIViewController) {
         UserDefaults.standard.set(true, forKey: self.hasPassedQuestions)
-        AppHUD.success("Please sign up.", isDarkTheme: true)
+        AppHUD.success("Thank you. Please sign up now", isDarkTheme: true)
     }
     
     func invitesDidCancel(_ controller: UIViewController) {
@@ -112,7 +113,7 @@ class ChooseLoginSignupController: UIViewController, FBSDKLoginButtonDelegate, I
     }()
     
     func showQuestionDialog() {
-        let dialog = AZDialogViewController(title: "Question: Are you a fun person?", message: "(HidingChat, like Snapchat, is for fun and teasing 😜)", titleFontSize: 22, messageFontSize: 16, buttonsHeight: 50, cancelButtonHeight: 50)
+        let dialog = AZDialogViewController(title: "Are you a fun person? (1/3)", message: "(HidingChat, like Snapchat, is for fun and teasing 😜)", titleFontSize: 22, messageFontSize: 16, buttonsHeight: 50, cancelButtonHeight: 50)
         dialog.blurBackground = false
         dialog.buttonStyle = { (button,height,position) in
             button.setTitleColor(PURPLE_COLOR, for: .normal)
@@ -134,7 +135,7 @@ class ChooseLoginSignupController: UIViewController, FBSDKLoginButtonDelegate, I
     }
     
     func showTryNewThingsQuestion(dialog: AZDialogViewController) {
-        dialog.title = "Do you like trying new things?"
+        dialog.title = "Do you like trying new things? (2/3)"
         dialog.message = "(HidingChat is a new app in the market ♥️.)"
         dialog.removeAllActions()
         dialog.addAction(AZDialogAction(title: "Yes", handler: { (dialog) -> (Void) in
@@ -148,16 +149,16 @@ class ChooseLoginSignupController: UIViewController, FBSDKLoginButtonDelegate, I
     }
     
     func showInviteQuestions(dialog: AZDialogViewController) {
-        dialog.title = "Do you have a boyfriend/girlfriend/or friends to share fun photos?"
-        dialog.message = "(HidingChat, like Snapchat, is sharing and sending photos 😜.)"
+        dialog.title = "Do you have a boyfriend/girlfriend/or friends to share fun photos? (3/3)"
+        dialog.message = "(HidingChat, like Snapchat, needs you to invite your friends ♥️.)"
         dialog.removeAllActions()
         dialog.addAction(AZDialogAction(title: "Yes", handler: { (dialog) -> (Void) in
-            let contacts = ContactsController()
-            contacts.delegate = self
-            contacts.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: contacts, action: #selector(contacts.handleDismiss))
+            let controller = MFMessageComposeViewController()
+            controller.messageComposeDelegate = self
+            controller.body = "Hi I am inviting you to use HidingChat, the opposite of Snapchat. Join it with me! Download link: https://itunes.apple.com/us/app/hidingchat/id1366697857?ls=1&mt=8"
+            controller.recipients = nil
             dialog.dismiss(animated: true, completion: {
-                AppHUD.success("You will sign up after inviting your boyfriend/girlfriend/or friends ❤️.", isDarkTheme: true)
-                self.present(UINavigationController(rootViewController: contacts), animated: true, completion: nil)
+                self.present(controller, animated: true, completion: nil)
             })
         }))
         dialog.addAction(AZDialogAction(title: "No", handler: { (dialog) -> (Void) in
@@ -172,6 +173,19 @@ class ChooseLoginSignupController: UIViewController, FBSDKLoginButtonDelegate, I
             self.navigationController?.pushViewController(typeInviter, animated: true)
             dialog.dismiss()
         }))
+    }
+    
+    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+        if result == .cancelled || result == .failed {
+            controller.dismiss(animated: true) {
+                AppHUD.error("Sorry, HidingChat might not be the right app for you. Feel free to delete it 😜.", isDarkTheme: true)
+            }
+        } else if result == .sent {
+            UserDefaults.standard.set(true, forKey: self.hasPassedQuestions)
+            controller.dismiss(animated: true) {
+                AppHUD.success("Thank you. Please sign up now ♥️", isDarkTheme: true)
+            }
+        }
     }
 
     override func viewDidLoad() {
