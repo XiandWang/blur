@@ -176,7 +176,7 @@ extension SettingsController: UIImagePickerControllerDelegate, UINavigationContr
                 AppHUD.error(error.localizedDescription + "\nPlease try again.",  isDarkTheme: false)
                 return
             }
-            
+
             guard let profileImgUrl = metaData?.downloadURL()?.absoluteString else { return }
             let update = ["/\(USERS_NODE)/\(uid)/profileImgUrl": profileImgUrl]
             Database.database().reference().updateChildValues(update, withCompletionBlock: { (error, ref) in

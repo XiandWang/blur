@@ -14,7 +14,7 @@ target 'Blur' do
   pod 'Firebase/Messaging'
   pod 'GoogleSignIn'
 
-  pod 'FontAwesome.swift'  
+  pod 'FontAwesome.swift', '1.3.2'  
   pod 'MBProgressHUD'
   pod 'Kingfisher'
 #  pod 'TDBadgedCell', '~> 5.2'
